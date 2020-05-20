@@ -42,9 +42,6 @@ darglint = "^1.5.1"
 reorder-python-imports = "^2.3.1"
 pre-commit-hooks = "^3.1.0"
 
-[tool.poetry.scripts]
-nox-poetry = "nox_poetry.__main__:main"
-
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 
