@@ -19,7 +19,6 @@ Changelog = "https://github.com/cjolowicz/nox-poetry/releases"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-click = "^7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.3"
