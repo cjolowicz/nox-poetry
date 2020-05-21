@@ -1,0 +1,42 @@
+name: Release
+on:
+  release:
+    types: [published]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - run: |
+          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install --constraint=.github/workflows/constraints.txt nox poetry
+      - name: Compute cache key prefix
+        if: matrix.os != 'windows-latest'
+        id: cache_key_prefix
+        shell: python
+        run: |
+          import hashlib
+          import sys
+
+          python = "py{}.{}".format(*sys.version_info[:2])
+          payload = sys.version.encode() + sys.executable.encode()
+          digest = hashlib.sha256(payload).hexdigest()
+          result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
+
+          print("::set-output name=result::{}".format(result))
+      - uses: actions/cache@v1.2.0
+        if: matrix.os != 'windows-latest'
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ steps.cache_key_prefix.outputs.result }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ steps.cache_key_prefix.outputs.result }}-
+      - run: nox --force-color
+      - run: poetry build --ansi
+      - uses: pypa/gh-action-pypi-publish@v1.1.0
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
