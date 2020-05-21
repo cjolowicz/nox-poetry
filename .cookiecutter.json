@@ -1,0 +1,10 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Claudio Jolowicz",
+  "email": "mail@claudiojolowicz.com",
+  "friendly_name": "nox-poetry",
+  "github_user": "cjolowicz",
+  "package_name": "nox_poetry",
+  "project_name": "nox-poetry",
+  "version": "0.1.0"
+}
