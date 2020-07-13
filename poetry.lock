@@ -720,7 +720,7 @@ description = "A rewrite of the builtin doctest module"
 name = "xdoctest"
 optional = false
 python-versions = "*"
-version = "0.12.0"
+version = "0.13.0"
 
 [package.dependencies]
 six = "*"
@@ -744,7 +744,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "22562d32f821aca447bcb38e0240f12ad840af068bbee3a03ab6f1e7d2dff591"
+content-hash = "6956b1ea6cbc627a796b338525ab2c536778810171aac0b8b854a4ad88526876"
 python-versions = "^3.6.1"
 
 [metadata.files]
@@ -986,6 +986,7 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 requests = [
+    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
@@ -1096,8 +1097,8 @@ wcwidth = [
     {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
 ]
 xdoctest = [
-    {file = "xdoctest-0.12.0-py2.py3-none-any.whl", hash = "sha256:82424d2cc4b6d6b96b7b7134c81e97a4594c536547c1954533128a6a26cf1cb2"},
-    {file = "xdoctest-0.12.0.tar.gz", hash = "sha256:2d985d8d78d4444079d3b072965327ab06a5e6dcb4882f3561d7596eb4da6b13"},
+    {file = "xdoctest-0.13.0-py2.py3-none-any.whl", hash = "sha256:de861fd5230a46bd26c054b4981169dd963f813768cb62b62e104e4d2644ac94"},
+    {file = "xdoctest-0.13.0.tar.gz", hash = "sha256:4f113a430076561a9d7f31af65b5d5acda62ee06b05cb6894264cb9efb8196ac"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
