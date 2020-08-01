@@ -1,36 +1,36 @@
-
 nox-poetry
 ==========
 
-|Tests| |Codecov| |PyPI| |Python Version| |Read the Docs| |License| |Black| |pre-commit| |Dependabot|
+|PyPI| |Python Version| |License|
 
-.. |Tests| image:: https://github.com/cjolowicz/nox-poetry/workflows/Tests/badge.svg
-   :target: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
-   :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/cjolowicz/nox-poetry
-   :alt: Codecov
+|Read the Docs| |Tests| |Codecov|
+
+|pre-commit| |Black|
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/nox-poetry.svg
    :target: https://pypi.org/project/nox-poetry/
    :alt: PyPI
 .. |Python Version| image:: https://img.shields.io/pypi/pyversions/nox-poetry
    :target: https://pypi.org/project/nox-poetry
    :alt: Python Version
-.. |Read the Docs| image:: https://readthedocs.org/projects/nox-poetry/badge/
-   :target: https://nox-poetry.readthedocs.io/
-   :alt: Read the Docs
 .. |License| image:: https://img.shields.io/pypi/l/nox-poetry
    :target: https://opensource.org/licenses/MIT
    :alt: License
-.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
-   :alt: Black
+.. |Read the Docs| image:: https://img.shields.io/readthedocs/nox-poetry/latest.svg?label=Read%20the%20Docs
+   :target: https://nox-poetry.readthedocs.io/
+   :alt: Read the documentation at https://nox-poetry.readthedocs.io/
+.. |Tests| image:: https://github.com/cjolowicz/nox-poetry/workflows/Tests/badge.svg
+   :target: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
+   :alt: Tests
+.. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/cjolowicz/nox-poetry
+   :alt: Codecov
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
    :target: https://github.com/pre-commit/pre-commit
    :alt: pre-commit
-.. |Dependabot| image:: https://api.dependabot.com/badges/status?host=github&repo=cjolowicz/nox-poetry
-   :target: https://dependabot.com
-   :alt: Dependabot
+.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+   :alt: Black
 
 
 Features
