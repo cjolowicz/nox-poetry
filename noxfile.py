@@ -9,9 +9,9 @@ from nox.sessions import Session
 
 sys.path.insert(0, "src")
 
-from nox_poetry import _Poetry
-from nox_poetry import install
-from nox_poetry import install_package
+from nox_poetry import _Poetry  # noqa: E402
+from nox_poetry import install  # noqa: E402
+from nox_poetry import install_package  # noqa: E402
 
 
 package = "nox_poetry"
