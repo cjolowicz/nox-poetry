@@ -26,7 +26,7 @@ typeguard = "^2.7.1"
 xdoctest = "^0.12.0"
 sphinx = "^3.0.3"
 sphinx-autobuild = "^0.7.1"
-pre-commit = "^2.4.0"
+pre-commit = "^2.7.1"
 
 [tool.poetry.scripts]
 nox-poetry = "nox_poetry.__main__:main"

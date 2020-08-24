@@ -341,7 +341,7 @@ description = "A framework for managing and maintaining multi-language pre-commi
 name = "pre-commit"
 optional = false
 python-versions = ">=3.6.1"
-version = "2.4.0"
+version = "2.7.1"
 
 [package.dependencies]
 cfgv = ">=2.0.0"
@@ -744,7 +744,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "22562d32f821aca447bcb38e0240f12ad840af068bbee3a03ab6f1e7d2dff591"
+content-hash = "b16b299dc168d0ad13e6f650ecbb08e851ec45dbf1ebf2ea7a51a14150ff37fa"
 python-versions = "^3.6.1"
 
 [metadata.files]
@@ -929,6 +929,7 @@ mypy-extensions = [
 ]
 nodeenv = [
     {file = "nodeenv-1.3.5-py2.py3-none-any.whl", hash = "sha256:5b2438f2e42af54ca968dd1b374d14a1194848955187b0e5e4be1f73813a5212"},
+    {file = "nodeenv-1.3.5.tar.gz", hash = "sha256:7389d06a7ea50c80ca51eda1b185db7b9ec38af1304d12d8b8299d6218486e91"},
 ]
 packaging = [
     {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},
@@ -945,8 +946,8 @@ port-for = [
     {file = "port-for-0.3.1.tar.gz", hash = "sha256:b16a84bb29c2954db44c29be38b17c659c9c27e33918dec16b90d375cc596f1c"},
 ]
 pre-commit = [
-    {file = "pre_commit-2.4.0-py2.py3-none-any.whl", hash = "sha256:5559e09afcac7808933951ffaf4ff9aac524f31efbc3f24d021540b6c579813c"},
-    {file = "pre_commit-2.4.0.tar.gz", hash = "sha256:703e2e34cbe0eedb0d319eff9f7b83e2022bb5a3ab5289a6a8841441076514d0"},
+    {file = "pre_commit-2.7.1-py2.py3-none-any.whl", hash = "sha256:810aef2a2ba4f31eed1941fc270e72696a1ad5590b9751839c90807d0fff6b9a"},
+    {file = "pre_commit-2.7.1.tar.gz", hash = "sha256:c54fd3e574565fe128ecc5e7d2f91279772ddb03f8729645fa812fe809084a70"},
 ]
 py = [
     {file = "py-1.8.1-py2.py3-none-any.whl", hash = "sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"},
@@ -986,6 +987,7 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 requests = [
+    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
