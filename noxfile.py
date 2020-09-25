@@ -19,7 +19,6 @@ nox.options.sessions = (
     "safety",
     "mypy",
     "tests",
-    "typeguard",
     "docs-build",
 )
 
