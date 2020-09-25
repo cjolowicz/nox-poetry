@@ -6,8 +6,8 @@ Reference
     :backlinks: none
 
 
-nox_poetry.__init__
--------------------
+nox_poetry
+----------
 
-.. automodule:: nox_poetry.__init__
+.. automodule:: nox_poetry
    :members:
