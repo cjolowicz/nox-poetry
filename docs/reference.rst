@@ -1,4 +1,3 @@
-
 Reference
 =========
 
@@ -7,8 +6,8 @@ Reference
     :backlinks: none
 
 
-nox_poetry.__main__
--------------------
+nox_poetry
+----------
 
-.. automodule:: nox_poetry.__main__
+.. automodule:: nox_poetry
    :members:

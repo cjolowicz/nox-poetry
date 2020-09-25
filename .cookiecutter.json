@@ -1,5 +1,5 @@
 {
-  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "_template": "https://github.com/cjolowicz/cookiecutter-hypermodern-python.git",
   "author": "Claudio Jolowicz",
   "email": "mail@claudiojolowicz.com",
   "friendly_name": "nox-poetry",
