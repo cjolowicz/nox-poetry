@@ -19,6 +19,10 @@ class FakeSession:
         """Install."""
         pass
 
+    def create_tmp(self, *args: str, **kargs: Any) -> None:
+        """Create temporary directory."""
+        pass
+
 
 def test_install() -> None:
     """It installs."""

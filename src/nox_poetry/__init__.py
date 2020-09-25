@@ -1,8 +1,6 @@
 """Using Poetry in Nox sessions."""
-import contextlib
-import tempfile
+import hashlib
 from pathlib import Path
-from typing import Iterator
 
 from nox.sessions import Session
 
@@ -15,34 +13,25 @@ class _Poetry:
     """
 
     def __init__(self, session: Session) -> None:
-        """Constructor."""
+        """Initialize."""
         self.session = session
 
-    def install(self, *args: str) -> None:
-        """Install the dependencies."""
-        self.session.run("poetry", "install", *args, external=True)
-
-    @contextlib.contextmanager
-    def export(self, *args: str) -> Iterator[Path]:
+    def export(self, path: Path, *, dev: bool) -> None:
         """Export the lock file to requirements format.
 
         Args:
-            args: Command-line arguments for ``poetry export``.
-
-        Yields:
-            The path to the requirements file.
+            path: The destination path.
+            dev: If True, include development dependencies.
         """
-        with tempfile.TemporaryDirectory() as directory:
-            requirements = Path(directory) / "requirements.txt"
-            self.session.run(
-                "poetry",
-                "export",
-                *args,
-                "--format=requirements.txt",
-                f"--output={requirements}",
-                external=True,
-            )
-            yield requirements
+        options = ["--dev"] if dev else []
+        self.session.run(
+            "poetry",
+            "export",
+            "--format=requirements.txt",
+            f"--output={path}",
+            *options,
+            external=True,
+        )
 
     def build(self, *args: str) -> str:
         """Build the package.
@@ -60,6 +49,31 @@ class _Poetry:
         return output.split()[-1]
 
 
+def export_requirements(session: Session, *, dev: bool) -> Path:
+    """Export the lock file to requirements format.
+
+    Args:
+        session: The Session object.
+        dev: If True, include development dependencies.
+
+    Returns:
+        The path to the requirements file.
+    """
+    tmpdir = Path(session.create_tmp())
+    name = "dev-requirements.txt" if dev else "requirements.txt"
+    path = tmpdir / name
+    hashfile = tmpdir / f"{name}.hash"
+
+    lockdata = Path("poetry.lock").read_bytes()
+    digest = hashlib.blake2b(lockdata).hexdigest()
+
+    if not hashfile.is_file() or hashfile.read_text() != digest:
+        _Poetry(session).export(path, dev=dev)
+        hashfile.write_text(digest)
+
+    return path
+
+
 def install_package(session: Session) -> None:
     """Build and install the package.
 
@@ -73,10 +87,10 @@ def install_package(session: Session) -> None:
         session: The Session object.
     """
     poetry = _Poetry(session)
-
-    poetry.install("--no-root")
     wheel = poetry.build("--format=wheel")
+    requirements = export_requirements(session, dev=False)
 
+    session.install(f"--requirement={requirements}")
     session.install("--no-deps", "--force-reinstall", f"dist/{wheel}")
 
 
@@ -91,6 +105,5 @@ def install(session: Session, *args: str) -> None:
         session: The Session object.
         args: Command-line arguments for ``pip install``.
     """
-    poetry = _Poetry(session)
-    with poetry.export("--dev") as requirements:
-        session.install(f"--constraint={requirements}", *args)
+    requirements = export_requirements(session, dev=True)
+    session.install(f"--constraint={requirements}", *args)

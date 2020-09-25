@@ -7,14 +7,21 @@ from textwrap import dedent
 import nox
 from nox.sessions import Session
 
-from nox_poetry import _Poetry
+from nox_poetry import export_requirements
 from nox_poetry import install
 from nox_poetry import install_package
 
 
 package = "nox_poetry"
 python_versions = ["3.8", "3.7", "3.6"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
+nox.options.sessions = (
+    "pre-commit",
+    "safety",
+    "mypy",
+    "tests",
+    "typeguard",
+    "docs-build",
+)
 
 
 def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
@@ -94,10 +101,9 @@ def precommit(session: Session) -> None:
 @nox.session(python="3.8")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    poetry = _Poetry(session)
-    with poetry.export("--dev", "--without-hashes") as requirements:
-        install(session, "safety")
-        session.run("safety", "check", f"--file={requirements}", "--bare")
+    install(session, "safety")
+    requirements = export_requirements(session, dev=True)
+    session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
 @nox.session(python=python_versions)
@@ -154,22 +160,29 @@ def xdoctest(session: Session) -> None:
     session.run("python", "-m", "xdoctest", package, *args)
 
 
-@nox.session(python="3.8")
-def docs(session: Session) -> None:
+@nox.session(name="docs-build", python="3.8")
+def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
+    install_package(session)
+    install(session, "sphinx")
 
-    if session.interactive and not session.posargs:
-        args.insert(0, "--open-browser")
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
 
-    builddir = Path("docs", "_build")
-    if builddir.exists():
-        shutil.rmtree(builddir)
+    session.run("sphinx-build", *args)
 
+
+@nox.session(python="3.8")
+def docs(session: Session) -> None:
+    """Build and serve the documentation with live reloading on file changes."""
+    args = session.posargs or ["--open-browser", "docs", "docs/_build"]
     install_package(session)
     install(session, "sphinx", "sphinx-autobuild")
 
-    if session.interactive:
-        session.run("sphinx-autobuild", *args)
-    else:
-        session.run("sphinx-build", *args)
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
+
+    session.run("sphinx-autobuild", *args)
