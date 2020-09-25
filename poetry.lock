@@ -508,7 +508,7 @@ description = "Flexible test automation."
 name = "nox"
 optional = false
 python-versions = ">=3.5"
-version = "2020.5.24"
+version = "2020.8.22"
 
 [package.dependencies]
 argcomplete = ">=1.9.4,<2.0"
@@ -1323,8 +1323,8 @@ nodeenv = [
     {file = "nodeenv-1.4.0.tar.gz", hash = "sha256:26941644654d8dd5378720e38f62a3bac5f9240811fb3b8913d2663a17baa91c"},
 ]
 nox = [
-    {file = "nox-2020.5.24-py3-none-any.whl", hash = "sha256:c4509621fead99473a1401870e680b0aadadce5c88440f0532863595176d64c1"},
-    {file = "nox-2020.5.24.tar.gz", hash = "sha256:61a55705736a1a73efbd18d5b262a43d55a1176546e0eb28b29064cfcffe26c0"},
+    {file = "nox-2020.8.22-py3-none-any.whl", hash = "sha256:55f8cab16bcfaaea08b141c83bf2b7c779e943518d0de6cd9c38cd8da95d11ea"},
+    {file = "nox-2020.8.22.tar.gz", hash = "sha256:efa5adcf1134012f96bcd0a496ccebd4c9e9da53a831888a2a779462440eebcf"},
 ]
 packaging = [
     {file = "packaging-20.4-py2.py3-none-any.whl", hash = "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"},
