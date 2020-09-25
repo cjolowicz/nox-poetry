@@ -1,12 +1,9 @@
 """Nox sessions."""
-import contextlib
+import hashlib
 import shutil
 import sys
-import tempfile
 from pathlib import Path
 from textwrap import dedent
-from typing import cast
-from typing import Iterator
 
 import nox
 from nox.sessions import Session
@@ -14,7 +11,14 @@ from nox.sessions import Session
 
 package = "nox_poetry"
 python_versions = ["3.8", "3.7", "3.6"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
+nox.options.sessions = (
+    "pre-commit",
+    "safety",
+    "mypy",
+    "tests",
+    "typeguard",
+    "docs-build",
+)
 
 
 class Poetry:
@@ -28,46 +32,62 @@ class Poetry:
         """Constructor."""
         self.session = session
 
-    @contextlib.contextmanager
-    def export(self, *args: str) -> Iterator[Path]:
+    def export(self, path: Path, *, dev: bool) -> None:
         """Export the lock file to requirements format.
 
         Args:
-            args: Command-line arguments for ``poetry export``.
-
-        Yields:
-            The path to the requirements file.
+            path: The destination path.
+            dev: If True, include development dependencies.
         """
-        with tempfile.TemporaryDirectory() as directory:
-            requirements = Path(directory) / "requirements.txt"
-            self.session.run(
-                "poetry",
-                "export",
-                *args,
-                "--format=requirements.txt",
-                f"--output={requirements}",
-                external=True,
-            )
-            yield requirements
-
-    def version(self) -> str:
-        """Retrieve the package version.
-
-        Returns:
-            The package version.
-        """
-        output = self.session.run(
-            "poetry", "version", external=True, silent=True, stderr=None
+        options = ["--dev"] if dev else []
+        self.session.run(
+            "poetry",
+            "export",
+            "--format=requirements.txt",
+            f"--output={path}",
+            *options,
+            external=True,
         )
-        return cast(str, output).split()[1]
 
-    def build(self, *args: str) -> None:
+    def build(self, *args: str) -> str:
         """Build the package.
 
         Args:
             args: Command-line arguments for ``poetry build``.
+
+        Returns:
+            The basename of the wheel built by Poetry.
         """
-        self.session.run("poetry", "build", *args, external=True)
+        output = self.session.run(
+            "poetry", "build", *args, external=True, silent=True, stderr=None
+        )
+        assert isinstance(output, str)  # noqa: S101
+        return output.split()[-1]
+
+
+def export_requirements(session: Session, *, dev: bool) -> Path:
+    """Export the lock file to requirements format.
+
+    Args:
+        session: The Session object.
+        dev: If True, include development dependencies.
+
+    Returns:
+        The path to the requirements file.
+    """
+    tmpdir = Path(session.create_tmp())
+    name = "dev-requirements.txt" if dev else "requirements.txt"
+    path = tmpdir / name
+    hashfile = tmpdir / f"{name}.hash"
+
+    lockdata = Path("poetry.lock").read_bytes()
+    digest = hashlib.blake2b(lockdata).hexdigest()
+
+    if not hashfile.is_file() or hashfile.read_text() != digest:
+        Poetry(session).export(path, dev=dev)
+        hashfile.write_text(digest)
+
+    return path
 
 
 def install_package(session: Session) -> None:
@@ -83,16 +103,11 @@ def install_package(session: Session) -> None:
         session: The Session object.
     """
     poetry = Poetry(session)
+    wheel = poetry.build("--format=wheel")
+    requirements = export_requirements(session, dev=False)
 
-    with poetry.export() as requirements:
-        session.install(f"--requirement={requirements}")
-
-    poetry.build("--format=wheel")
-
-    version = poetry.version()
-    session.install(
-        "--no-deps", "--force-reinstall", f"dist/{package}-{version}-py3-none-any.whl"
-    )
+    session.install(f"--requirement={requirements}")
+    session.install("--no-deps", "--force-reinstall", f"dist/{wheel}")
 
 
 def install(session: Session, *args: str) -> None:
@@ -106,9 +121,8 @@ def install(session: Session, *args: str) -> None:
         session: The Session object.
         args: Command-line arguments for ``pip install``.
     """
-    poetry = Poetry(session)
-    with poetry.export("--dev") as requirements:
-        session.install(f"--constraint={requirements}", *args)
+    requirements = export_requirements(session, dev=True)
+    session.install(f"--constraint={requirements}", *args)
 
 
 def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
@@ -188,10 +202,9 @@ def precommit(session: Session) -> None:
 @nox.session(python="3.8")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    poetry = Poetry(session)
-    with poetry.export("--dev", "--without-hashes") as requirements:
-        install(session, "safety")
-        session.run("safety", "check", f"--file={requirements}", "--bare")
+    install(session, "safety")
+    requirements = export_requirements(session, dev=True)
+    session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
 @nox.session(python=python_versions)
@@ -248,22 +261,29 @@ def xdoctest(session: Session) -> None:
     session.run("python", "-m", "xdoctest", package, *args)
 
 
-@nox.session(python="3.8")
-def docs(session: Session) -> None:
+@nox.session(name="docs-build", python="3.8")
+def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
+    install_package(session)
+    install(session, "sphinx")
 
-    if session.interactive and not session.posargs:
-        args.insert(0, "--open-browser")
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
 
-    builddir = Path("docs", "_build")
-    if builddir.exists():
-        shutil.rmtree(builddir)
+    session.run("sphinx-build", *args)
 
+
+@nox.session(python="3.8")
+def docs(session: Session) -> None:
+    """Build and serve the documentation with live reloading on file changes."""
+    args = session.posargs or ["--open-browser", "docs", "docs/_build"]
     install_package(session)
     install(session, "sphinx", "sphinx-autobuild")
 
-    if session.interactive:
-        session.run("sphinx-autobuild", *args)
-    else:
-        session.run("sphinx-build", *args)
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
+
+    session.run("sphinx-autobuild", *args)
