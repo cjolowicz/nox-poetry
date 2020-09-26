@@ -1,10 +1,20 @@
 """Core functions."""
 import hashlib
+from enum import Enum
 from pathlib import Path
+from typing import Mapping
+from typing import Union
 
 from nox.sessions import Session
 
 from nox_poetry.poetry import Poetry
+
+
+class PackageType(Enum):
+    """Type of distribution archive for a Python package."""
+
+    WHEEL = "wheel"
+    SDIST = "sdist"
 
 
 def export_requirements(session: Session) -> Path:
@@ -30,43 +40,49 @@ def export_requirements(session: Session) -> Path:
     return path
 
 
-def install_package(session: Session) -> None:
-    """Build and install the package.
-
-    Build a wheel from the package, and install it into the virtual environment
-    of the specified Nox session.
-
-    The package requirements are installed using the versions specified in
-    Poetry's lock file.
+def build_package(session: Session, *, package_type: PackageType) -> str:
+    """Build a distribution archive for the package.
 
     Args:
         session: The Session object.
-    """
-    requirements = export_requirements(session)
+        package_type: The package format, either wheel or sdist.
 
+    Returns:
+        The file URL for the distribution package.
+    """
     # Provide a hash for the wheel since its requirements have hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
     poetry = Poetry(session)
-    wheel = Path("dist") / poetry.build("--format=wheel")
+    wheel = Path("dist") / poetry.build(f"--format={package_type.value}")
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
-    session.run("pip", "uninstall", "--yes", str(wheel))
-    session.install(
-        f"--constraint={requirements}",
-        f"file://{wheel.resolve()}#sha256={digest}",
-    )
+    return f"file://{wheel.resolve()}#sha256={digest}"
 
 
-def install(session: Session, *args: str) -> None:
-    """Install development dependencies into the session's virtual environment.
+def install(session: Session, *args: Union[PackageType, str]) -> None:
+    """Install packages into the session's virtual environment.
 
     This function is a wrapper for nox.sessions.Session.install.
 
-    The packages must be managed as development dependencies in Poetry.
+    The packages must be managed as dependencies in Poetry.
 
     Args:
         session: The Session object.
         args: Command-line arguments for ``pip install``.
     """
+    resolved: Mapping[Union[PackageType, str], str] = {
+        arg: (
+            build_package(session, package_type=arg)
+            if isinstance(arg, PackageType)
+            else arg
+        )
+        for arg in args
+    }
+
+    for package_type in PackageType:
+        package = resolved.get(package_type)
+        if package is not None:
+            session.run("pip", "uninstall", "--yes", package)
+
     requirements = export_requirements(session)
-    session.install(f"--constraint={requirements}", *args)
+    session.install(f"--constraint={requirements}", *resolved.values())
