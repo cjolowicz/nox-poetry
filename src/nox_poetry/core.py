@@ -50,7 +50,7 @@ def build_package(session: Session, *, package_type: PackageType) -> str:
     Returns:
         The file URL for the distribution package.
     """
-    # Provide a hash for the wheel since its requirements have hashes.
+    # Provide a hash for the wheel since the constraints file uses hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
     poetry = Poetry(session)
     wheel = Path("dist") / poetry.build(f"--format={package_type.value}")
