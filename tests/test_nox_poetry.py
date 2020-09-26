@@ -8,7 +8,7 @@ from nox.sessions import Session
 
 from nox_poetry import export_requirements
 from nox_poetry import install
-from nox_poetry import install_package
+from nox_poetry import WHEEL
 
 
 class FakeSession:
@@ -20,7 +20,9 @@ class FakeSession:
 
     def run(self, *args: str, **kargs: Any) -> str:
         """Run."""
-        return "example.whl"
+        path = Path("dist") / "example.whl"
+        path.touch()
+        return path.name
 
     def install(self, *args: str, **kargs: Any) -> None:
         """Install."""
@@ -40,15 +42,10 @@ def session(tmp_path: Path) -> Session:
 
 def test_install(session: Session) -> None:
     """It installs the dependencies."""
-    install(session, "pip")
-
-
-def test_install_package(session: Session) -> None:
-    """It installs the package."""
-    install_package(session)
+    install(session, WHEEL, "pip")
 
 
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
-    export_requirements(session, dev=True).touch()
-    export_requirements(session, dev=True)
+    export_requirements(session).touch()
+    export_requirements(session)

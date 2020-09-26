@@ -59,9 +59,9 @@ use the following command to install this package into the same environment:
 Usage
 -----
 
-- Use ``nox_poetry.install_package(session)`` to install your own package.
-- Use ``nox_poetry.install(session, *args)`` to install third-party packages.
-- Packages installed like this must be declared as development dependencies using Poetry.
+- The function ``nox_poetry.install(session, ...)`` is a drop-in replacement for ``session.install(...)``.
+- Packages installed like this must be declared as dependencies using Poetry.
+- Use the constants ``WHEEL`` and ``SDIST`` to build and install your own package.
 
 For example, the following Nox session runs your test suite:
 
@@ -70,14 +70,17 @@ For example, the following Nox session runs your test suite:
    # noxfile.py
    import nox
    from nox.sessions import Session
-   from nox_poetry import install, install_package
+   from nox_poetry import install, WHEEL
 
    @nox.session
    def tests(session: Session) -> None:
        """Run the test suite."""
-       install_package(session)
-       install(session, "pytest")
-       session.run("pytest", *session.posargs)
+       install(session, WHEEL, "pytest")
+       session.run("pytest")
+
+More precisely, the session builds a wheel from the local package,
+installs the wheel as well as the ``pytest`` package, and
+invokes ``pytest`` to run the test suite against the installation.
 
 
 Why?
@@ -92,12 +95,13 @@ Compare the session above to one written without this package:
        """Run the test suite."""
        session.install(".")
        session.install("pytest")
-       session.run("pytest", *session.posargs)
+       session.run("pytest")
 
 This session has several problems:
 
 - Poetry is installed as a build backend every time.
-- Package dependencies are only constrained by the wheel metadata, not by the lock file (*pinned*).
+- Package dependencies are only constrained by the wheel metadata, not by the lock file.
+  In other words, their versions are not *pinned*.
 - The ``pytest`` dependency is not constrained at all.
 
 You can solve these issues by declaring ``pytest`` as a development dependency,
@@ -109,7 +113,7 @@ and installing your package and its dependencies using ``poetry install``:
    def tests(session: Session) -> None:
        """Run the test suite."""
        session.run("poetry", "install", external=True)
-       session.run("pytest", *session.posargs)
+       session.run("pytest")
 
 Unfortunately, this approach creates problems of its own:
 
@@ -141,27 +145,17 @@ API
 ---
 
 ``nox_poetry.install(session, *args)``:
-   Install development dependencies into a Nox session using Poetry.
+   Install packages into a Nox session using Poetry.
 
    The ``nox_poetry.install`` function
-   installs development dependencies into a Nox session,
+   installs dependencies into a Nox session,
    using the versions specified in Poetry's lock file.
    The function arguments are the same as those for `nox.sessions.Session.install`_:
    The first argument is the ``Session`` object,
    and the remaining arguments are command-line arguments for `pip install`_,
    typically just the package or packages to be installed.
-
-``nox_poetry.install_package(session)``:
-   Install the package into a Nox session using Poetry.
-
-   The ``nox_poetry.install_package`` function
-   installs your package into a Nox session,
-   including the core dependencies as specified in Poetry's lock file.
-   This is done by building a wheel from the package,
-   and installing it using pip_.
-   Dependencies are installed in the same way as in the ``nox_poetry.install`` function,
-   i.e. using a constraints file.
-   Its only argument is the ``Session`` object from Nox.
+   The constants ``WHEEL`` and ``SDIST`` are replaced by a distribution archive
+   built for the local package.
 
 
 Contributing
