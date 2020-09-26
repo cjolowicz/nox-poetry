@@ -44,12 +44,19 @@ def install_package(session: Session) -> None:
     Args:
         session: The Session object.
     """
-    poetry = Poetry(session)
-    wheel = poetry.build("--format=wheel")
     requirements = export_requirements(session, dev=False)
 
-    session.install(f"--requirement={requirements}")
-    session.install("--no-deps", "--force-reinstall", f"dist/{wheel}")
+    # Provide a hash for the wheel since its requirements have hashes.
+    # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
+    poetry = Poetry(session)
+    wheel = Path("dist") / poetry.build("--format=wheel")
+    digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
+
+    session.run("pip", "uninstall", "--yes", str(wheel))
+    session.install(
+        f"--constraint={requirements}",
+        f"file://{wheel.resolve()}#sha256={digest}",
+    )
 
 
 def install(session: Session, *args: str) -> None:
