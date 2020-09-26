@@ -48,7 +48,7 @@ def build_package(session: Session, *, format: DistributionFormat) -> str:
     wheel = Path("dist") / poetry.build(format=format)
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
-    return f"file://{wheel.resolve()}#sha256={digest}"
+    return f"file://{wheel.resolve().as_posix()}#sha256={digest}"
 
 
 def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
