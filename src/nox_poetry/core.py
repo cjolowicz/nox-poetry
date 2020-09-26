@@ -60,7 +60,9 @@ def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
 
     Args:
         session: The Session object.
-        args: Command-line arguments for ``pip install``.
+        args: Command-line arguments for ``pip install``. The ``WHEEL``
+            and ``SDIST`` constants are replaced by a wheel or sdist
+            archive built from the local package.
     """
     resolved = {
         arg: (
