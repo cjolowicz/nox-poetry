@@ -8,7 +8,7 @@ from nox.sessions import Session
 
 from nox_poetry import export_requirements
 from nox_poetry import install
-from nox_poetry import PackageType
+from nox_poetry import WHEEL
 
 
 class FakeSession:
@@ -42,7 +42,7 @@ def session(tmp_path: Path) -> Session:
 
 def test_install(session: Session) -> None:
     """It installs the dependencies."""
-    install(session, PackageType.WHEEL, "pip")
+    install(session, WHEEL, "pip")
 
 
 def test_export_requirements(session: Session) -> None:
