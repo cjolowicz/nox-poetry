@@ -20,7 +20,9 @@ class FakeSession:
 
     def run(self, *args: str, **kargs: Any) -> str:
         """Run."""
-        return "example.whl"
+        path = Path("dist") / "example.whl"
+        path.touch()
+        return path.name
 
     def install(self, *args: str, **kargs: Any) -> None:
         """Install."""
