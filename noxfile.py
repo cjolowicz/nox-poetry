@@ -101,7 +101,7 @@ def precommit(session: Session) -> None:
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     install(session, "safety")
-    requirements = export_requirements(session, dev=True)
+    requirements = export_requirements(session)
     session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
