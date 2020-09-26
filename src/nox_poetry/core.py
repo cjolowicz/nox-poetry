@@ -2,7 +2,6 @@
 import hashlib
 from enum import Enum
 from pathlib import Path
-from typing import Mapping
 from typing import Union
 
 from nox.sessions import Session
@@ -70,7 +69,7 @@ def install(session: Session, *args: Union[PackageType, str]) -> None:
         session: The Session object.
         args: Command-line arguments for ``pip install``.
     """
-    resolved: Mapping[Union[PackageType, str], str] = {
+    resolved = {
         arg: (
             build_package(session, package_type=arg)
             if isinstance(arg, PackageType)
