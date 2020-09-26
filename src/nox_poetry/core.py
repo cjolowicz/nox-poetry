@@ -7,26 +7,24 @@ from nox.sessions import Session
 from nox_poetry.poetry import Poetry
 
 
-def export_requirements(session: Session, *, dev: bool) -> Path:
+def export_requirements(session: Session) -> Path:
     """Export the lock file to requirements format.
 
     Args:
         session: The Session object.
-        dev: If True, include development dependencies.
 
     Returns:
         The path to the requirements file.
     """
     tmpdir = Path(session.create_tmp())
-    name = "dev-requirements.txt" if dev else "requirements.txt"
-    path = tmpdir / name
-    hashfile = tmpdir / f"{name}.hash"
+    path = tmpdir / "requirements.txt"
+    hashfile = tmpdir / f"{path.name}.hash"
 
     lockdata = Path("poetry.lock").read_bytes()
     digest = hashlib.blake2b(lockdata).hexdigest()
 
     if not hashfile.is_file() or hashfile.read_text() != digest:
-        Poetry(session).export(path, dev=dev)
+        Poetry(session).export(path, dev=True)
         hashfile.write_text(digest)
 
     return path
@@ -44,7 +42,7 @@ def install_package(session: Session) -> None:
     Args:
         session: The Session object.
     """
-    requirements = export_requirements(session, dev=False)
+    requirements = export_requirements(session)
 
     # Provide a hash for the wheel since its requirements have hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
@@ -70,5 +68,5 @@ def install(session: Session, *args: str) -> None:
         session: The Session object.
         args: Command-line arguments for ``pip install``.
     """
-    requirements = export_requirements(session, dev=True)
+    requirements = export_requirements(session)
     session.install(f"--constraint={requirements}", *args)
