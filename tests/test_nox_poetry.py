@@ -50,5 +50,5 @@ def test_install_package(session: Session) -> None:
 
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
-    export_requirements(session, dev=True).touch()
-    export_requirements(session, dev=True)
+    export_requirements(session).touch()
+    export_requirements(session)
