@@ -1,7 +1,15 @@
 """Poetry interface."""
+from enum import Enum
 from pathlib import Path
 
 from nox.sessions import Session
+
+
+class PackageType(Enum):
+    """Type of distribution archive for a Python package."""
+
+    WHEEL = "wheel"
+    SDIST = "sdist"
 
 
 class Poetry:
@@ -32,17 +40,22 @@ class Poetry:
             external=True,
         )
 
-    def build(self, *args: str) -> str:
+    def build(self, *, package_type: PackageType) -> str:
         """Build the package.
 
         Args:
-            args: Command-line arguments for ``poetry build``.
+            package_type: The package format, either wheel or sdist.
 
         Returns:
             The basename of the wheel built by Poetry.
         """
         output = self.session.run(
-            "poetry", "build", *args, external=True, silent=True, stderr=None
+            "poetry",
+            "build",
+            f"--format={package_type.value}",
+            external=True,
+            silent=True,
+            stderr=None,
         )
         assert isinstance(output, str)  # noqa: S101
         return output.split()[-1]

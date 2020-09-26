@@ -1,19 +1,12 @@
 """Core functions."""
 import hashlib
-from enum import Enum
 from pathlib import Path
 from typing import Union
 
 from nox.sessions import Session
 
+from nox_poetry.poetry import PackageType
 from nox_poetry.poetry import Poetry
-
-
-class PackageType(Enum):
-    """Type of distribution archive for a Python package."""
-
-    WHEEL = "wheel"
-    SDIST = "sdist"
 
 
 def export_requirements(session: Session) -> Path:
@@ -52,7 +45,7 @@ def build_package(session: Session, *, package_type: PackageType) -> str:
     # Provide a hash for the wheel since the constraints file uses hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
     poetry = Poetry(session)
-    wheel = Path("dist") / poetry.build(f"--format={package_type.value}")
+    wheel = Path("dist") / poetry.build(package_type=package_type)
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
     return f"file://{wheel.resolve()}#sha256={digest}"
