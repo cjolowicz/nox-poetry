@@ -9,7 +9,7 @@ from nox.sessions import Session
 
 from nox_poetry import export_requirements
 from nox_poetry import install
-from nox_poetry import PackageType
+from nox_poetry import WHEEL
 
 
 package = "nox_poetry"
@@ -109,7 +109,7 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
-    install(session, PackageType.WHEEL, "mypy")
+    install(session, WHEEL, "mypy")
     session.run("mypy", *args)
     if not session.posargs:
         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
@@ -118,7 +118,7 @@ def mypy(session: Session) -> None:
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
-    install(session, PackageType.WHEEL, "coverage[toml]", "pytest")
+    install(session, WHEEL, "coverage[toml]", "pytest")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
@@ -143,7 +143,7 @@ def coverage(session: Session) -> None:
 @nox.session(python=python_versions)
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
-    install(session, PackageType.WHEEL, "pytest", "typeguard")
+    install(session, WHEEL, "pytest", "typeguard")
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
@@ -151,7 +151,7 @@ def typeguard(session: Session) -> None:
 def xdoctest(session: Session) -> None:
     """Run examples with xdoctest."""
     args = session.posargs or ["all"]
-    install(session, PackageType.WHEEL, "xdoctest")
+    install(session, WHEEL, "xdoctest")
     session.run("python", "-m", "xdoctest", package, *args)
 
 
@@ -159,7 +159,7 @@ def xdoctest(session: Session) -> None:
 def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
-    install(session, PackageType.WHEEL, "sphinx")
+    install(session, WHEEL, "sphinx")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
@@ -172,7 +172,7 @@ def docs_build(session: Session) -> None:
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]
-    install(session, PackageType.WHEEL, "sphinx", "sphinx-autobuild")
+    install(session, WHEEL, "sphinx", "sphinx-autobuild")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
