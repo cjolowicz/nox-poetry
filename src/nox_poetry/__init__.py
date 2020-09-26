@@ -4,49 +4,7 @@ from pathlib import Path
 
 from nox.sessions import Session
 
-
-class _Poetry:
-    """Helper class for invoking Poetry inside a Nox session.
-
-    Attributes:
-        session: The Session object.
-    """
-
-    def __init__(self, session: Session) -> None:
-        """Initialize."""
-        self.session = session
-
-    def export(self, path: Path, *, dev: bool) -> None:
-        """Export the lock file to requirements format.
-
-        Args:
-            path: The destination path.
-            dev: If True, include development dependencies.
-        """
-        options = ["--dev"] if dev else []
-        self.session.run(
-            "poetry",
-            "export",
-            "--format=requirements.txt",
-            f"--output={path}",
-            *options,
-            external=True,
-        )
-
-    def build(self, *args: str) -> str:
-        """Build the package.
-
-        Args:
-            args: Command-line arguments for ``poetry build``.
-
-        Returns:
-            The basename of the wheel built by Poetry.
-        """
-        output = self.session.run(
-            "poetry", "build", *args, external=True, silent=True, stderr=None
-        )
-        assert isinstance(output, str)  # noqa: S101
-        return output.split()[-1]
+from .poetry import Poetry
 
 
 def export_requirements(session: Session, *, dev: bool) -> Path:
@@ -68,7 +26,7 @@ def export_requirements(session: Session, *, dev: bool) -> Path:
     digest = hashlib.blake2b(lockdata).hexdigest()
 
     if not hashfile.is_file() or hashfile.read_text() != digest:
-        _Poetry(session).export(path, dev=dev)
+        Poetry(session).export(path, dev=dev)
         hashfile.write_text(digest)
 
     return path
@@ -86,7 +44,7 @@ def install_package(session: Session) -> None:
     Args:
         session: The Session object.
     """
-    poetry = _Poetry(session)
+    poetry = Poetry(session)
     wheel = poetry.build("--format=wheel")
     requirements = export_requirements(session, dev=False)
 
