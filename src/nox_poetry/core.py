@@ -26,7 +26,7 @@ def export_requirements(session: Session) -> Path:
     digest = hashlib.blake2b(lockdata).hexdigest()
 
     if not hashfile.is_file() or hashfile.read_text() != digest:
-        Poetry(session).export(path, dev=True)
+        Poetry(session).export(path)
         hashfile.write_text(digest)
 
     return path

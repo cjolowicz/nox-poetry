@@ -23,20 +23,18 @@ class Poetry:
         """Initialize."""
         self.session = session
 
-    def export(self, path: Path, *, dev: bool) -> None:
+    def export(self, path: Path) -> None:
         """Export the lock file to requirements format.
 
         Args:
             path: The destination path.
-            dev: If True, include development dependencies.
         """
-        options = ["--dev"] if dev else []
         self.session.run(
             "poetry",
             "export",
             "--format=requirements.txt",
             f"--output={path}",
-            *options,
+            "--dev",
             external=True,
         )
 
