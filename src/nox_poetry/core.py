@@ -81,7 +81,7 @@ def install(session: Session, *args: Union[PackageType, str]) -> None:
     for package_type in PackageType:
         package = resolved.get(package_type)
         if package is not None:
-            session.run("pip", "uninstall", "--yes", package)
+            session.run("pip", "uninstall", "--yes", package, silent=True)
 
     requirements = export_requirements(session)
     session.install(f"--constraint={requirements}", *resolved.values())
