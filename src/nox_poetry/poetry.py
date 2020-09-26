@@ -5,7 +5,7 @@ from pathlib import Path
 from nox.sessions import Session
 
 
-class PackageType(Enum):
+class DistributionFormat(Enum):
     """Type of distribution archive for a Python package."""
 
     WHEEL = "wheel"
@@ -40,11 +40,11 @@ class Poetry:
             external=True,
         )
 
-    def build(self, *, package_type: PackageType) -> str:
+    def build(self, *, format: DistributionFormat) -> str:
         """Build the package.
 
         Args:
-            package_type: The package format, either wheel or sdist.
+            format: The distribution format, either wheel or sdist.
 
         Returns:
             The basename of the wheel built by Poetry.
@@ -52,7 +52,7 @@ class Poetry:
         output = self.session.run(
             "poetry",
             "build",
-            f"--format={package_type.value}",
+            f"--format={format.value}",
             external=True,
             silent=True,
             stderr=None,

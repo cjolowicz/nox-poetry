@@ -5,7 +5,7 @@ from typing import Union
 
 from nox.sessions import Session
 
-from nox_poetry.poetry import PackageType
+from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
 
 
@@ -32,12 +32,12 @@ def export_requirements(session: Session) -> Path:
     return path
 
 
-def build_package(session: Session, *, package_type: PackageType) -> str:
+def build_package(session: Session, *, format: DistributionFormat) -> str:
     """Build a distribution archive for the package.
 
     Args:
         session: The Session object.
-        package_type: The package format, either wheel or sdist.
+        format: The distribution format, either wheel or sdist.
 
     Returns:
         The file URL for the distribution package.
@@ -45,13 +45,13 @@ def build_package(session: Session, *, package_type: PackageType) -> str:
     # Provide a hash for the wheel since the constraints file uses hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
     poetry = Poetry(session)
-    wheel = Path("dist") / poetry.build(package_type=package_type)
+    wheel = Path("dist") / poetry.build(format=format)
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
     return f"file://{wheel.resolve()}#sha256={digest}"
 
 
-def install(session: Session, *args: Union[PackageType, str]) -> None:
+def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
     """Install packages into the session's virtual environment.
 
     This function is a wrapper for nox.sessions.Session.install.
@@ -64,15 +64,15 @@ def install(session: Session, *args: Union[PackageType, str]) -> None:
     """
     resolved = {
         arg: (
-            build_package(session, package_type=arg)
-            if isinstance(arg, PackageType)
+            build_package(session, format=arg)
+            if isinstance(arg, DistributionFormat)
             else arg
         )
         for arg in args
     }
 
-    for package_type in PackageType:
-        package = resolved.get(package_type)
+    for format in DistributionFormat:
+        package = resolved.get(format)
         if package is not None:
             session.run("pip", "uninstall", "--yes", package, silent=True)
 
