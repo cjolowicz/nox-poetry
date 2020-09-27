@@ -6,6 +6,7 @@ from typing import cast
 import pytest
 from nox.sessions import Session
 
+import nox_poetry.core
 from nox_poetry import export_requirements
 from nox_poetry import install
 from nox_poetry import WHEEL
@@ -31,6 +32,9 @@ class FakeSession:
     def create_tmp(self, *args: str, **kargs: Any) -> str:
         """Create temporary directory."""
         return str(self.tmpdir)
+
+
+nox_poetry.core.Session_install = FakeSession.install  # type: ignore[assignment]
 
 
 @pytest.fixture
