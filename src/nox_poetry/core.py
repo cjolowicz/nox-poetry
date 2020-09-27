@@ -103,4 +103,4 @@ def patch(
         ]
         install(self, *newargs, **kwargs)
 
-    setattr(Session, "install", patched_install)
+    Session.install = patched_install  # type: ignore[assignment]
