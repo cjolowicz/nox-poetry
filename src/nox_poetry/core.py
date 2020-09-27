@@ -81,8 +81,8 @@ def install(
         for arg in args
     }
 
-    for format in DistributionFormat:
-        package = resolved.get(format)
+    for distribution_format in DistributionFormat:
+        package = resolved.get(distribution_format)
         if package is not None:
             session.run("pip", "uninstall", "--yes", package, silent=True)
 
