@@ -2,12 +2,16 @@
 import hashlib
 from pathlib import Path
 from typing import Any
+from typing import List
 from typing import Union
 
 from nox.sessions import Session
 
 from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
+
+
+Session_install = Session.install
 
 
 def export_requirements(session: Session) -> Path:
@@ -83,4 +87,18 @@ def install(
             session.run("pip", "uninstall", "--yes", package, silent=True)
 
     requirements = export_requirements(session)
-    session.install(f"--constraint={requirements}", *resolved.values(), **kwargs)
+    Session_install(
+        session, f"--constraint={requirements}", *resolved.values(), **kwargs
+    )
+
+
+def patch(
+    *, distribution_format: DistributionFormat = DistributionFormat.WHEEL
+) -> None:
+    """Monkey-patch nox.sessions.Session.install with nox_poetry.install."""
+
+    def patched_install(self: Session, *args: str, **kwargs: Any) -> None:
+        newargs: List[Union[DistributionFormat, str]] = [distribution_format if arg == "." else arg for arg in args]
+        install(self, *newargs, **kwargs)
+
+    setattr(Session, "install", patched_install)
