@@ -1,6 +1,7 @@
 """Core functions."""
 import hashlib
 from pathlib import Path
+from typing import Any
 from typing import Union
 
 from nox.sessions import Session
@@ -51,10 +52,12 @@ def build_package(session: Session, *, format: DistributionFormat) -> str:
     return f"file://{wheel.resolve().as_posix()}#sha256={digest}"
 
 
-def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
+def install(
+    session: Session, *args: Union[DistributionFormat, str], **kwargs: Any
+) -> None:
     """Install packages into the session's virtual environment.
 
-    This function is a wrapper for nox.sessions.Session.install.
+    This function is a wrapper for ``nox.sessions.Session.install``.
 
     The packages must be managed as dependencies in Poetry.
 
@@ -63,6 +66,7 @@ def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
         args: Command-line arguments for ``pip install``. The ``WHEEL``
             and ``SDIST`` constants are replaced by a wheel or sdist
             archive built from the local package.
+        kwargs: Keyword-arguments for ``session.install``.
     """
     resolved = {
         arg: (
@@ -79,4 +83,4 @@ def install(session: Session, *args: Union[DistributionFormat, str]) -> None:
             session.run("pip", "uninstall", "--yes", package, silent=True)
 
     requirements = export_requirements(session)
-    session.install(f"--constraint={requirements}", *resolved.values())
+    session.install(f"--constraint={requirements}", *resolved.values(), **kwargs)
