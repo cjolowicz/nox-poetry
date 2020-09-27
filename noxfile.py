@@ -7,9 +7,10 @@ from textwrap import dedent
 import nox
 from nox.sessions import Session
 
-from nox_poetry import export_requirements
-from nox_poetry import install
-from nox_poetry import WHEEL
+import nox_poetry
+
+
+nox_poetry.patch()
 
 
 package = "nox_poetry"
@@ -78,8 +79,7 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
-    install(
-        session,
+    session.install(
         "black",
         "darglint",
         "flake8",
@@ -100,8 +100,8 @@ def precommit(session: Session) -> None:
 @nox.session(python="3.8")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    install(session, "safety")
-    requirements = export_requirements(session)
+    session.install("safety")
+    requirements = nox_poetry.export_requirements(session)
     session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
@@ -109,7 +109,7 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
-    install(session, WHEEL, "mypy")
+    session.install(".", "mypy")
     session.run("mypy", *args)
     if not session.posargs:
         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
@@ -118,7 +118,7 @@ def mypy(session: Session) -> None:
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
-    install(session, WHEEL, "coverage[toml]", "pytest")
+    session.install(".", "coverage[toml]", "pytest")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
@@ -132,7 +132,7 @@ def coverage(session: Session) -> None:
     has_args = session.posargs and len(session._runner.manifest) == 1
     args = session.posargs if has_args else ["report"]
 
-    install(session, "coverage[toml]")
+    session.install("coverage[toml]")
 
     if not has_args and any(Path().glob(".coverage.*")):
         session.run("coverage", "combine")
@@ -143,7 +143,7 @@ def coverage(session: Session) -> None:
 @nox.session(python=python_versions)
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
-    install(session, WHEEL, "pytest", "typeguard")
+    session.install(".", "pytest", "typeguard")
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
@@ -151,7 +151,7 @@ def typeguard(session: Session) -> None:
 def xdoctest(session: Session) -> None:
     """Run examples with xdoctest."""
     args = session.posargs or ["all"]
-    install(session, WHEEL, "xdoctest")
+    session.install(".", "xdoctest")
     session.run("python", "-m", "xdoctest", package, *args)
 
 
@@ -159,7 +159,7 @@ def xdoctest(session: Session) -> None:
 def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
-    install(session, WHEEL, "sphinx")
+    session.install(".", "sphinx")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
@@ -172,7 +172,7 @@ def docs_build(session: Session) -> None:
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]
-    install(session, WHEEL, "sphinx", "sphinx-autobuild")
+    session.install(".", "sphinx", "sphinx-autobuild")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
