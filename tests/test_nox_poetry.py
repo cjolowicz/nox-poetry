@@ -7,9 +7,6 @@ import pytest
 from nox.sessions import Session
 
 import nox_poetry.core
-from nox_poetry import export_requirements
-from nox_poetry import install
-from nox_poetry import WHEEL
 
 
 class FakeSession:
@@ -46,10 +43,10 @@ def session(tmp_path: Path) -> Session:
 
 def test_install(session: Session) -> None:
     """It installs the dependencies."""
-    install(session, WHEEL, "pip")
+    nox_poetry.install(session, nox_poetry.WHEEL, "pip")
 
 
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
-    export_requirements(session).touch()
-    export_requirements(session)
+    nox_poetry.export_requirements(session).touch()
+    nox_poetry.export_requirements(session)
