@@ -37,12 +37,12 @@ def export_requirements(session: Session) -> Path:
     return path
 
 
-def build_package(session: Session, *, format: DistributionFormat) -> str:
+def build_package(session: Session, *, distribution_format: DistributionFormat) -> str:
     """Build a distribution archive for the package.
 
     Args:
         session: The Session object.
-        format: The distribution format, either wheel or sdist.
+        distribution_format: The distribution format, either wheel or sdist.
 
     Returns:
         The file URL for the distribution package.
@@ -50,7 +50,7 @@ def build_package(session: Session, *, format: DistributionFormat) -> str:
     # Provide a hash for the wheel since the constraints file uses hashes.
     # https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
     poetry = Poetry(session)
-    wheel = Path("dist") / poetry.build(format=format)
+    wheel = Path("dist") / poetry.build(format=distribution_format)
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
 
     return f"file://{wheel.resolve().as_posix()}#sha256={digest}"
@@ -74,7 +74,7 @@ def install(
     """
     resolved = {
         arg: (
-            build_package(session, format=arg)
+            build_package(session, distribution_format=arg)
             if isinstance(arg, DistributionFormat)
             else arg
         )
@@ -98,7 +98,9 @@ def patch(
     """Monkey-patch nox.sessions.Session.install with nox_poetry.install."""
 
     def patched_install(self: Session, *args: str, **kwargs: Any) -> None:
-        newargs: List[Union[DistributionFormat, str]] = [distribution_format if arg == "." else arg for arg in args]
+        newargs: List[Union[DistributionFormat, str]] = [
+            distribution_format if arg == "." else arg for arg in args
+        ]
         install(self, *newargs, **kwargs)
 
     setattr(Session, "install", patched_install)
