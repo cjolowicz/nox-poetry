@@ -161,24 +161,6 @@ For more details, take a look at `this article`__.
 __ https://cjolowicz.github.io/posts/hypermodern-python-03-linting/#managing-dependencies-in-nox-sessions-with-poetry
 
 
-API
----
-
-``nox_poetry.install(session, *args, **kwargs)``:
-   Install packages into a Nox session using Poetry.
-
-   The ``nox_poetry.install`` function
-   installs dependencies into a Nox session,
-   using the versions specified in Poetry's lock file.
-   The function arguments are the same as those for `nox.sessions.Session.install`_:
-   The first argument is the ``Session`` object,
-   and the remaining arguments are command-line arguments for `pip install`_,
-   typically just the package or packages to be installed.
-   The constants ``nox_poetry.WHEEL`` and ``nox_poetry.SDIST``
-   are replaced by a distribution archive built for the local package.
-   Keyword arguments are the same as those for `nox.sessions.Session.run`_.
-
-
 Contributing
 ------------
 
