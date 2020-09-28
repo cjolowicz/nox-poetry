@@ -1,10 +1,6 @@
 Reference
 =========
 
-.. contents::
-    :local:
-    :backlinks: none
-
 
 nox_poetry
 ----------
