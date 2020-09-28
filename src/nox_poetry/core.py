@@ -150,6 +150,9 @@ def patch(
     Instead of invoking this function directly, you can simply import
     :mod:`nox_poetry.patch`.
 
+    .. _nox.sessions.Session.install:
+       https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install
+
     Args:
         distribution_format: The distribution format to use when the ``"."``
             argument is encountered in calls to ``session.install``.
