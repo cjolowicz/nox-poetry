@@ -65,7 +65,8 @@ use the following command to install this package into the same environment:
 Usage
 -----
 
-Import ``nox_poetry.patch`` at the top of your ``noxfile.py``, and you're good to go.
+Import ``nox_poetry.patch`` at the top of your ``noxfile.py``.
+
 ``nox-poetry`` intercepts calls to ``session.install``
 and uses Poetry to export a `constraints file`_ and build the package behind the scenes.
 All packages installed in Nox sessions must be managed as dependencies in Poetry.
@@ -90,8 +91,8 @@ More precisely, the session builds a wheel from the local package,
 installs the wheel as well as the ``pytest`` package, and
 invokes ``pytest`` to run the test suite against the installation.
 
-If you prefer a less magical, more explicit approach,
-you can also invoke ``nox_poetry.install(session, ...)`` instead of ``session.install(...)``.
+If you prefer a more explicit approach,
+you can also invoke ``nox_poetry.install`` instead of ``session.install``.
 Pass ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` to build and install the local package
 using the specified distribution format.
 
