@@ -41,6 +41,7 @@ pep8-naming = "^0.11.1"
 darglint = "^1.5.4"
 reorder-python-imports = "^2.3.5"
 pre-commit-hooks = "^3.2.0"
+furo = "^2020.9.28-beta.8"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
