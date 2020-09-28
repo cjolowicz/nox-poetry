@@ -7,10 +7,7 @@ from textwrap import dedent
 import nox
 from nox.sessions import Session
 
-import nox_poetry
-
-
-nox_poetry.patch()
+import nox_poetry.patch
 
 
 package = "nox_poetry"
