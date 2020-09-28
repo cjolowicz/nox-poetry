@@ -54,5 +54,6 @@ def test_export_requirements(session: Session) -> None:
 
 def test_patch(session: Session) -> None:
     """It patches Session.install."""
-    nox_poetry.patch()
+    import nox_poetry.patch  # noqa: F401
+
     Session.install(session, ".")
