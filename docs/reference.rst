@@ -1,17 +1,25 @@
-Reference
-=========
-
-
-nox_poetry
-----------
+API Reference
+=============
 
 .. automodule:: nox_poetry
-   :members:
 
-nox_poetry.patch
-----------------
+Constants
+.........
+
+.. autodata:: WHEEL
+.. autodata:: SDIST
+
+Functions
+.........
+
+.. autofunction:: install
+.. autofunction:: build_package
+.. autofunction:: export_requirements
+.. autofunction:: nox_poetry.core.patch
+
+Modules
+.......
+
+**nox_poetry.patch**
 
 .. automodule:: nox_poetry.patch
-   :members:
-
-.. autofunction:: nox_poetry.core.patch
