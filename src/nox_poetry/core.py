@@ -144,8 +144,9 @@ def patch(
     """Monkey-patch Nox to intercept ``session.install``.
 
     This function monkey-patches `nox.sessions.Session.install`_ to invoke
-    :func:`install` instead. In addition, the argument ``"."`` is replaced by
-    the specified distribution format, or :const:`WHEEL` if none is specified.
+    :func:`nox_poetry.install` instead. In addition, the argument ``"."`` is
+    replaced by the specified distribution format, or :const:`nox_poetry.WHEEL`
+    if none is specified.
 
     Instead of invoking this function directly, you can simply import
     :mod:`nox_poetry.patch`.

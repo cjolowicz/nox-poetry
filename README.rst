@@ -96,6 +96,8 @@ you can also invoke ``nox_poetry.install`` instead of ``session.install``.
 Pass ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` to build and install the local package
 using the specified distribution format.
 
+Here is that same example using the more explicit approach:
+
 .. code:: python
 
    # noxfile.py
@@ -114,13 +116,13 @@ using the specified distribution format.
 Why?
 ----
 
-Consider what would happen in the first session without the ``nox-poetry`` import:
+Consider what would happen in the first version without the line importing ``nox-poetry.patch``:
 
 - Package dependencies would only be constrained by the wheel metadata, not by the lock file.
   In other words, their versions would not be *pinned*.
 - The ``pytest`` dependency would not be constrained at all.
 - Poetry would be installed as a build backend every time
-  (although this could be avoided by passing the ``"--no-build-isolation"`` option).
+  (although this could be avoided by passing the option ``--no-build-isolation``).
 
 Unpinned dependencies mean that your checks are not reproducible and deterministic,
 which can lead to surprises in Continuous Integration and when collaborating with others.
@@ -139,15 +141,21 @@ Unfortunately, this approach comes with its own set of problems:
 
 - Checks run against an editable installation of your package,
   i.e. your local copy of the code, instead of the installed wheel your users see.
-- The package is installed, as well as all of its core and development dependencies.
-  This is wasteful when you only need to run ``black`` or ``flake8``.
-  It also goes against the idea of running checks in isolated environments.
-- Poetry may decide to install packages into its own virtual environment instead of the one provided by Nox.
+  In the best case, any mistakes will still be caught during Continuous Integration.
+  In the worst case, you publish a buggy release because you forgot to commit some changes.
+- The package is installed, as well as all of its core and development dependencies,
+  no matter which tools a session actually runs.
+  Code formatters or linters, for example, don't need your package installed at all.
+  Besides being wasteful, it goes against the idea of running checks in isolated environments.
 
-``nox-poetry`` uses a third approach.
-Third-party packages are installed by exporting the lock file in ``requirements.txt`` format,
-and passing it as a `constraints file`_ to pip.
-When installing your own package, Poetry is used to build a wheel, which is then installed by pip.
+``nox-poetry`` uses a third approach:
+
+- Installations are performed by pip, via the ``session.install`` method.
+- When installing your own package, Poetry is used to build a wheel, which is passed to pip.
+- When installing third-party packages, Poetry is used to export a `constraints file`_,
+  which is passed to pip along with the packages.
+  The constraints file ensures that package versions are pinned by the lock file,
+  without forcing an installation of every listed dependency and sub-dependency.
 
 In summary, this approach brings the following advantages:
 
