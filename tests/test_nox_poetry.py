@@ -48,7 +48,19 @@ def test_install(session: Session) -> None:
     nox_poetry.install(session, nox_poetry.WHEEL, "pip")
 
 
-def test_hookimpl(session: Session) -> None:
+def test_hookimpl_no_dot(session: Session) -> None:
+    """It installs the dependencies."""
+    args = ["pip"]
+    kwargs: Dict[str, Any] = {}
+    result = nox_session_install(session, args, kwargs)
+
+    assert result is None
+    assert any(arg.startswith("--constraint") for arg in args)
+    assert "pip" in args
+    assert not kwargs
+
+
+def test_hookimpl_dot(session: Session) -> None:
     """It installs the dependencies."""
     args = [".", "pip"]
     kwargs: Dict[str, Any] = {}
