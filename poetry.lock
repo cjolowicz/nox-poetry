@@ -552,6 +552,7 @@ tox_to_nox = ["jinja2", "tox"]
 reference = ""
 type = "url"
 url = "https://github.com/cjolowicz/nox/archive/plugins.zip"
+
 [[package]]
 category = "dev"
 description = "Core utilities for Python packages"
@@ -1103,7 +1104,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "c80cfedfe7d261b2b59bafa5b6c6644181f5cf6d8f84eed92ee1d190fb26e0ad"
+content-hash = "c0b6cedb68ff638d7b583846f14bbf57351b706ab57db6b2001ca541b224ba64"
 lock-version = "1.0"
 python-versions = "^3.6.1"
 

@@ -22,7 +22,7 @@ poetry = "nox_poetry.hookimpl"
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-nox = {url = "https://github.com/cjolowicz/nox/archive/plugins.zip"}
+nox = {url = "https://github.com/cjolowicz/nox/archive/plugins.zip#md5=52d62a1b58ec062fb7fee6fc9abca603"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.0"
