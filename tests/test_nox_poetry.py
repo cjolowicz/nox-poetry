@@ -73,6 +73,18 @@ def test_hookimpl_dot(session: Session) -> None:
     assert not kwargs
 
 
+def test_hookimpl_no_lockfile(session: Session, tmp_path: Path) -> None:
+    """It installs the dependencies."""
+    import os
+
+    cwd = Path.cwd()
+    os.chdir(tmp_path)
+    try:
+        assert nox_session_install(session, [], {}) is None
+    finally:
+        os.chdir(cwd)
+
+
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
     nox_poetry.export_requirements(session).touch()
