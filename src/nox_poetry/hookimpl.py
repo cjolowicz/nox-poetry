@@ -13,7 +13,7 @@ from nox_poetry import export_requirements
 from nox_poetry import WHEEL
 
 
-@hookimpl
+@hookimpl  # type: ignore[misc]  # Untyped decorator makes function untyped.
 def nox_session_install(
     session: Session, args: List[str], kwargs: Dict[str, Any]
 ) -> Optional[Done]:
