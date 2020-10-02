@@ -4,7 +4,7 @@ from typing import Dict
 from typing import List
 from typing import Optional
 
-from nox.hookspec import Done
+from nox.hookspec import Done  # type: ignore[import]
 from nox.hookspec import hookimpl
 from nox.sessions import Session
 
