@@ -1,4 +1,5 @@
 """Hook implementations."""
+from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import List
@@ -18,6 +19,9 @@ def nox_session_install(
     session: Session, args: List[str], kwargs: Dict[str, Any]
 ) -> Optional[Done]:
     """Implement the `nox_session_install` hook."""
+    if not Path("poetry.lock").exists():
+        return None
+
     requirements = export_requirements(session)
     args.insert(0, f"--constraint={requirements}")
 
