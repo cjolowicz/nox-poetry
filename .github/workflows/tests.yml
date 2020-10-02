@@ -48,7 +48,7 @@ jobs:
 
       - name: Install Nox
         run: |
-          pip install --constraint=.github/workflows/constraints.txt nox
+          pip install https://github.com/cjolowicz/nox/archive/plugins.zip
           nox --version
 
       - name: Install nox-poetry
