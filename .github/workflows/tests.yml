@@ -12,16 +12,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { python-version: 3.8, os: ubuntu-latest, session: "pre-commit" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "safety" }
+          - { python-version: 3.9, os: ubuntu-latest, session: "pre-commit" }
+          - { python-version: 3.9, os: ubuntu-latest, session: "safety" }
+          - { python-version: 3.9, os: ubuntu-latest, session: "mypy" }
           - { python-version: 3.8, os: ubuntu-latest, session: "mypy" }
           - { python-version: 3.7, os: ubuntu-latest, session: "mypy" }
           - { python-version: 3.6, os: ubuntu-latest, session: "mypy" }
+          - { python-version: 3.9, os: ubuntu-latest, session: "tests" }
           - { python-version: 3.8, os: ubuntu-latest, session: "tests" }
           - { python-version: 3.7, os: ubuntu-latest, session: "tests" }
           - { python-version: 3.6, os: ubuntu-latest, session: "tests" }
-          - { python-version: 3.8, os: windows-latest, session: "tests" }
-          - { python-version: 3.8, os: macos-latest, session: "tests" }
+          - { python-version: 3.9, os: windows-latest, session: "tests" }
+          - { python-version: 3.9, os: macos-latest, session: "tests" }
+          - { python-version: 3.9, os: ubuntu-latest, session: "xdoctest" }
           - { python-version: 3.8, os: ubuntu-latest, session: "docs-build" }
 
     env:
@@ -71,7 +74,7 @@ jobs:
           print("::set-output name=result::{}".format(result))
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.3
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -83,18 +86,63 @@ jobs:
         run: |
           nox --force-color --python=${{ matrix.python-version }}
 
+      - name: Upload coverage data
+        if: always() && matrix.session == 'tests'
+        uses: "actions/upload-artifact@v2.2.0"
+        with:
+          name: coverage-data
+          path: ".coverage.*"
+
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2.2.0
         with:
           name: docs
           path: docs/_build
 
+  coverage:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2.3.4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2.1.4
+        with:
+          python-version: 3.9
+
+      - name: Upgrade pip
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt pip
+          pip --version
+
+      - name: Install Poetry
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt poetry
+          poetry --version
+
+      - name: Install Nox
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt nox
+          nox --version
+
+      - name: Install nox-poetry
+        run: |
+          pip install .
+
+      - name: Download coverage data
+        uses: actions/download-artifact@v2.0.5
+        with:
+          name: coverage-data
+
+      - name: Combine coverage data and display human readable report
+        run: |
+          nox --force-color --session=coverage
+
       - name: Create coverage report
-        if: always() && matrix.session == 'tests'
         run: |
           nox --force-color --session=coverage -- xml
 
       - name: Upload coverage report
-        if: always() && matrix.session == 'tests'
         uses: codecov/codecov-action@v1.0.14
