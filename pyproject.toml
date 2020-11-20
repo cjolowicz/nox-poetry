@@ -43,7 +43,7 @@ pep8-naming = "^0.11.1"
 darglint = "^1.5.5"
 reorder-python-imports = "^2.3.6"
 pre-commit-hooks = "^3.3.0"
-furo = "^2020.11.15b17"
+furo = "^2020.11.19b18"
 Pygments = "^2.7.2"
 
 [tool.coverage.paths]
