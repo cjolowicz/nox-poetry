@@ -13,6 +13,7 @@ Functions
 .........
 
 .. autofunction:: install
+.. autofunction:: installroot
 .. autofunction:: build_package
 .. autofunction:: export_requirements
 .. autofunction:: nox_poetry.core.patch
