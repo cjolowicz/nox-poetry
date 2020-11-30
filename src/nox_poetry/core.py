@@ -2,6 +2,7 @@
 import hashlib
 from pathlib import Path
 from typing import Any
+from typing import Iterable
 
 from nox.sessions import Session
 
@@ -128,6 +129,7 @@ def installroot(
     session: Session,
     *,
     distribution_format: DistributionFormat,
+    extras: Iterable[str] = (),
 ) -> None:
     """Install the root package into a Nox session using Poetry.
 
@@ -142,11 +144,19 @@ def installroot(
     Args:
         session: The Session object.
         distribution_format: The distribution format, either wheel or sdist.
+        extras: Extras to install for the package.
     """
     package = build_package(session, distribution_format=distribution_format)
     requirements = export_requirements(session)
 
     session.run("pip", "uninstall", "--yes", package, silent=True)
+
+    suffix = ",".join(extras)
+    if suffix.strip():
+        suffix = suffix.join("[]")
+        name = Poetry(session).config.name
+        package = f"{name}{suffix} @ {package}"
+
     Session_install(session, f"--constraint={requirements}", package)
 
 
