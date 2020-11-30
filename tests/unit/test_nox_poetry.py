@@ -6,10 +6,14 @@ import nox_poetry
 from nox_poetry.poetry import DistributionFormat
 
 
-@pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
-def test_install(session: Session, distribution_format: DistributionFormat) -> None:
-    """It installs the dependencies."""
-    nox_poetry.install(session, distribution_format, "pip")
+def test_install_package(session: Session) -> None:
+    """It installs the package."""
+    nox_poetry.install(session, ".")
+
+
+def test_install_dependency(session: Session) -> None:
+    """It installs the dependency."""
+    nox_poetry.install(session, "pip")
 
 
 @pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
