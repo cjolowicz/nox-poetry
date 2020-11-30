@@ -2,8 +2,6 @@
 import hashlib
 from pathlib import Path
 from typing import Any
-from typing import List
-from typing import Union
 
 from nox.sessions import Session
 
@@ -173,11 +171,4 @@ def patch(
         distribution_format: The distribution format to use when the ``"."``
             argument is encountered in calls to ``session.install``.
     """
-
-    def patched_install(self: Session, *args: str, **kwargs: Any) -> None:
-        newargs: List[Union[DistributionFormat, str]] = [
-            distribution_format if arg == "." else arg for arg in args
-        ]
-        install(self, *newargs, **kwargs)
-
-    Session.install = patched_install  # type: ignore[assignment]
+    Session.install = install  # type: ignore[assignment]
