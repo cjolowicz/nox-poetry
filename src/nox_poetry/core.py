@@ -84,9 +84,7 @@ def build_package(session: Session, *, distribution_format: DistributionFormat) 
     return url
 
 
-def install(
-    session: Session, *args: Union[DistributionFormat, str], **kwargs: Any
-) -> None:
+def install(session: Session, *args: str, **kwargs: Any) -> None:
     """Install packages into a Nox session using Poetry.
 
     This function installs packages into the session's virtual environment. It
@@ -94,10 +92,9 @@ def install(
     arguments are command-line arguments for `pip install`_, and whose keyword
     arguments are the same as those for `nox.sessions.Session.run`_.
 
-    If a positional argument is :const:`WHEEL` or :const:`SDIST`, a
-    distribution archive is built using :func:`build_package`, and the argument
-    is replaced with the file URL returned by that function. Otherwise, the
-    argument is forwarded unchanged.
+    If a positional argument is ".", a wheel is built using
+    :func:`build_package`, and the argument is replaced with the file URL
+    returned by that function. Otherwise, the argument is forwarded unchanged.
 
     In addition, a `constraints file`_ is generated for the package
     dependencies using :func:`export_requirements`, and passed to ``pip
@@ -117,30 +114,17 @@ def install(
 
     Args:
         session: The Session object.
-        args: Command-line arguments for ``pip install``. The constants
-            :const:`WHEEL` and :const:`SDIST` are replaced by a distribution
-            archive built for the local package.
+        args: Command-line arguments for ``pip install``.
         kwargs: Keyword-arguments for ``session.install``. These are the same
             as those for `nox.sessions.Session.run`_.
     """
-    resolved = {
-        arg: (
-            build_package(session, distribution_format=arg)
-            if isinstance(arg, DistributionFormat)
-            else arg
-        )
-        for arg in args
-    }
-
-    for distribution_format in DistributionFormat:
-        package = resolved.get(distribution_format)
-        if package is not None:
-            session.run("pip", "uninstall", "--yes", package, silent=True)
+    if "." in args:
+        package = build_package(session, distribution_format=DistributionFormat.WHEEL)
+        args = tuple(package if arg == "." else arg for arg in args)
+        session.run("pip", "uninstall", "--yes", package, silent=True)
 
     requirements = export_requirements(session)
-    Session_install(
-        session, f"--constraint={requirements}", *resolved.values(), **kwargs
-    )
+    Session_install(session, f"--constraint={requirements}", *args, **kwargs)
 
 
 def installroot(
