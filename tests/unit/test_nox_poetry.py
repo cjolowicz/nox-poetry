@@ -1,20 +1,21 @@
-"""Tests."""
+"""Unit tests."""
 from pathlib import Path
 from typing import Any
 from typing import cast
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 from nox.sessions import Session
 
-import nox_poetry.core
+import nox_poetry
 
 
 class FakeSession:
     """Fake session."""
 
-    def __init__(self, tmpdir: Path) -> None:
+    def __init__(self, path: Path) -> None:
         """Initialize."""
-        self.tmpdir = tmpdir
+        self.path = path
 
     def run(self, *args: str, **kargs: Any) -> str:
         """Run."""
@@ -28,15 +29,13 @@ class FakeSession:
 
     def create_tmp(self, *args: str, **kargs: Any) -> str:
         """Create temporary directory."""
-        return str(self.tmpdir)
-
-
-nox_poetry.core.Session_install = FakeSession.install  # type: ignore[assignment]
+        return str(self.path)
 
 
 @pytest.fixture
-def session(tmp_path: Path) -> Session:
+def session(tmp_path: Path, monkeypatch: MonkeyPatch) -> Session:
     """Return a fake Nox session."""
+    monkeypatch.setattr("nox_poetry.core.Session_install", FakeSession.install)
     session = FakeSession(tmp_path)
     return cast(Session, session)
 
