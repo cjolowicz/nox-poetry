@@ -45,6 +45,7 @@ reorder-python-imports = "^2.3.6"
 pre-commit-hooks = "^3.3.0"
 furo = "^2020.11.27b19"
 Pygments = "^2.7.2"
+poetry = "^1.1.4"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
