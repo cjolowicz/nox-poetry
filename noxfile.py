@@ -125,6 +125,9 @@ def tests(session: Session) -> None:
         "pytest-datadir",
         "pygments",
     )
+    if session.python == "3.6":
+        session.install("dataclasses")
+
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
