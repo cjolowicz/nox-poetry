@@ -122,6 +122,7 @@ def tests(session: Session) -> None:
         "coverage[toml]",
         "poetry",
         "pytest",
+        "pytest-datadir",
         "pygments",
     )
     try:
