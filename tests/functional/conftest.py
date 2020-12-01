@@ -1,6 +1,7 @@
 """Fixtures for functional tests."""
 import functools
 import inspect
+import os
 import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
@@ -85,6 +86,9 @@ def project(datadir: Path) -> Project:
 
 
 def _run_nox(project: Project) -> CompletedProcess:
+    env = os.environ.copy()
+    env.pop("NOXSESSION", None)
+
     try:
         return subprocess.run(  # noqa: S603, S607
             ["nox"],
@@ -93,6 +97,7 @@ def _run_nox(project: Project) -> CompletedProcess:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             cwd=project.path,
+            env=env,
         )
     except subprocess.CalledProcessError as error:
         raise RuntimeError(f"{error}\n{error.stderr}")
