@@ -73,6 +73,7 @@ class Poetry:
             "--format=requirements.txt",
             f"--output={path}",
             "--dev",
+            *[f"--extras={extra}" for extra in self.config.extras],
             external=True,
         )
 
