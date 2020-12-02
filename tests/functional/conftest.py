@@ -2,6 +2,7 @@
 import functools
 import inspect
 import os
+import re
 import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
@@ -167,6 +168,14 @@ def run_nox_with_noxfile(project: Project) -> RunNoxWithNoxfile:
     return functools.partial(_run_nox_with_noxfile, project)
 
 
+_CANONICALIZE_PATTERN = re.compile(r"[-_.]+")
+
+
+def _canonicalize_name(name: str) -> str:
+    # From ``packaging.utils.canonicalize_name`` (PEP 503)
+    return _CANONICALIZE_PATTERN.sub("-", name).lower()
+
+
 def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
     bindir = "Scripts" if sys.platform == "win32" else "bin"
     pip = project.path / ".nox" / session.__name__ / bindir / "pip"
@@ -180,6 +189,7 @@ def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
 
     def parse(line: str) -> Package:
         name, _, version = line.partition("==")
+        name = _canonicalize_name(name)
         if not version and name.startswith(f"{project.package.name} @ file://"):
             # Local package is listed without version, but it does not matter.
             return project.package
