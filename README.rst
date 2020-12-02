@@ -95,10 +95,10 @@ installs the wheel as well as the ``pytest`` package, and
 invokes ``pytest`` to run the test suite against the installation.
 
 If you prefer a more explicit approach,
-you can invoke ``nox_poetry.install`` and ``nox_poetry.installroot`` instead of ``session.install``.
+invoke ``nox_poetry.install`` and ``nox_poetry.installroot`` instead of ``session.install``.
 Use the ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` constants to specify the distribution format for the local package.
 
-Here is that same example using the more explicit approach:
+Here is the example above using the more explicit approach:
 
 .. code:: python
 
