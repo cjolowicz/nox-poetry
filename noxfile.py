@@ -114,6 +114,31 @@ def mypy(session: Session) -> None:
         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
 
 
+def setup_subprocess_coverage(session: Session) -> None:
+    """Set up session to measure coverage in subprocesses."""
+    config = Path.cwd() / "pyproject.toml"
+    session.env["COVERAGE_PROCESS_START"] = str(config)
+
+    sitepackages = session.run(
+        "python",
+        "-c",
+        "import site; print(site.getsitepackages()[-1], end='')",
+        silent=True,
+        stderr=None,
+    )
+    assert sitepackages is not None  # noqa: S101
+
+    path = Path(sitepackages) / "sitecustomize.py"
+    text = dedent(
+        """
+        import coverage
+        coverage.process_startup()
+        """
+    )
+
+    path.write_text(text)
+
+
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
@@ -127,6 +152,8 @@ def tests(session: Session) -> None:
     )
     if session.python == "3.6":
         session.install("dataclasses")
+
+    setup_subprocess_coverage(session)
 
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
