@@ -129,6 +129,7 @@ def tests(session: Session) -> None:
         session.install("dataclasses")
 
     try:
+        session.env.pop("TMPDIR", None)
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
         if session.interactive:
