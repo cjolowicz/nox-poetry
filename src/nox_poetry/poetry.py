@@ -97,19 +97,3 @@ class Poetry:
         )
         assert isinstance(output, str)  # noqa: S101
         return output.split()[-1]
-
-    def version(self) -> str:
-        """Return the package name and version.
-
-        Returns:
-            The package name and version.
-        """
-        output = self.session.run(
-            "poetry",
-            "version",
-            external=True,
-            silent=True,
-            stderr=None,
-        )
-        assert isinstance(output, str)  # noqa: S101
-        return output.strip()
