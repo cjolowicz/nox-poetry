@@ -13,6 +13,9 @@ Pygments = {version = "^2.7.1", optional = true}
 pyflakes = "^2.1.1"
 pycodestyle = "^2.5.0"
 
+[tool.poetry.extras]
+pygments = ["pygments"]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

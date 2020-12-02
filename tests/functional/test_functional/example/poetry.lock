@@ -30,10 +30,13 @@ category = "main"
 optional = true
 python-versions = ">=3.5"
 
+[extras]
+pygments = ["Pygments"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "f5547369ad3ec6982e639f14762f208d11df24ddb8e43c51a0af88d9fb2f6198"
+content-hash = "65a484a1a7ee49c3993d8103bddeeef3c94fc4fb6c3f3805d58941333e49e82a"
 
 [metadata.files]
 first = [
