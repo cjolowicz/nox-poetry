@@ -1,12 +1,15 @@
 """Unit tests."""
+import pytest
 from nox.sessions import Session
 
 import nox_poetry
+from nox_poetry.poetry import DistributionFormat
 
 
-def test_install(session: Session) -> None:
+@pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
+def test_install(session: Session, distribution_format: DistributionFormat) -> None:
     """It installs the dependencies."""
-    nox_poetry.install(session, nox_poetry.WHEEL, "pip")
+    nox_poetry.install(session, distribution_format, "pip")
 
 
 def test_export_requirements(session: Session) -> None:
