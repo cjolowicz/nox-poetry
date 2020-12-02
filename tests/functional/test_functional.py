@@ -1,6 +1,5 @@
 """Functional tests."""
 import nox.sessions
-import pytest
 from tests.functional.conftest import ListPackages
 from tests.functional.conftest import Project
 from tests.functional.conftest import RunNoxWithNoxfile
@@ -48,7 +47,6 @@ def test_install_local_wheel(
     assert set(expected) == set(packages)
 
 
-@pytest.mark.xfail(reason="https://github.com/cjolowicz/nox-poetry/issues/127")
 def test_install_local_sdist(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,

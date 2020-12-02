@@ -75,8 +75,13 @@ def build_package(session: Session, *, distribution_format: DistributionFormat) 
     poetry = Poetry(session)
     wheel = Path("dist") / poetry.build(format=distribution_format)
     digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
+    url = f"file://{wheel.resolve().as_posix()}#sha256={digest}"
 
-    return f"file://{wheel.resolve().as_posix()}#sha256={digest}"
+    if distribution_format is DistributionFormat.SDIST:
+        name = poetry.version().split()[0]
+        url += f"&egg={name}"
+
+    return url
 
 
 def install(
