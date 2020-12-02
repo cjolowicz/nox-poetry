@@ -95,9 +95,8 @@ installs the wheel as well as the ``pytest`` package, and
 invokes ``pytest`` to run the test suite against the installation.
 
 If you prefer a more explicit approach,
-you can also invoke ``nox_poetry.install`` instead of ``session.install``.
-Pass ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` to build and install the local package
-using the specified distribution format.
+you can invoke ``nox_poetry.install`` and ``nox_poetry.installroot`` instead of ``session.install``.
+Use the ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` constants to specify the distribution format for the local package.
 
 Here is that same example using the more explicit approach:
 
@@ -111,7 +110,8 @@ Here is that same example using the more explicit approach:
    @nox.session
    def tests(session: Session) -> None:
        """Run the test suite."""
-       nox_poetry.install(session, nox_poetry.WHEEL)
+       nox_poetry.installroot(session, distribution_format=nox_poetry.WHEEL)
+       #nox_poetry.install(session, ".")  # this is equivalent to the statement above
        nox_poetry.install(session, "pytest")
        session.run("pytest")
 

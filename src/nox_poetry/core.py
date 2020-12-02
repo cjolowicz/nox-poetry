@@ -143,6 +143,32 @@ def install(
     )
 
 
+def installroot(
+    session: Session,
+    *,
+    distribution_format: DistributionFormat,
+) -> None:
+    """Install the root package into a Nox session using Poetry.
+
+    This function installs the package located in the current directory into the
+    session's virtual environment.
+
+    A constraints file is generated for the package dependencies using
+    :func:`export_requirements`, and passed to ``pip install`` via its
+    ``--constraint`` option. This ensures that core dependencies are installed
+    using the versions specified in Poetry's lock file.
+
+    Args:
+        session: The Session object.
+        distribution_format: The distribution format, either wheel or sdist.
+    """
+    package = build_package(session, distribution_format=distribution_format)
+    requirements = export_requirements(session)
+
+    session.run("pip", "uninstall", "--yes", package, silent=True)
+    Session_install(session, f"--constraint={requirements}", package)
+
+
 def patch(
     *, distribution_format: DistributionFormat = DistributionFormat.WHEEL
 ) -> None:

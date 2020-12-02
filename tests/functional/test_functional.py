@@ -67,6 +67,46 @@ def test_install_local_sdist(
     assert set(expected) == set(packages)
 
 
+def test_installroot_wheel(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It builds and installs a wheel from the local package."""
+
+    @nox.session
+    def test(session: nox.sessions.Session) -> None:
+        """Install the local package."""
+        nox_poetry.installroot(session, distribution_format=nox_poetry.WHEEL)
+
+    run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
+
+    expected = [project.package, *project.dependencies]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+def test_installroot_sdist(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It builds and installs an sdist from the local package."""
+
+    @nox.session
+    def test(session: nox.sessions.Session) -> None:
+        """Install the local package."""
+        nox_poetry.installroot(session, distribution_format=nox_poetry.SDIST)
+
+    run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
+
+    expected = [project.package, *project.dependencies]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
 def test_install_dependency_using_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
