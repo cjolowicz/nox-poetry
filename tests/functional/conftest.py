@@ -66,12 +66,17 @@ class Project:
     @property
     def dependencies(self) -> List[Package]:
         """Return the package dependencies."""
-        dependencies: List[str] = list(self._get_config("dependencies"))
-        return [
-            self.get_dependency(package)
-            for package in dependencies
-            if package != "python"
+        table = self._get_config("dependencies")
+        dependencies: List[str] = [
+            package
+            for package, info in table.items()
+            if not (
+                package == "python"
+                or isinstance(info, dict)
+                and info.get("optional", None)
+            )
         ]
+        return [self.get_dependency(package) for package in dependencies]
 
     @property
     def development_dependencies(self) -> List[Package]:
