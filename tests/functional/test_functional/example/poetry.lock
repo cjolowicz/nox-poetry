@@ -1,0 +1,42 @@
+[[package]]
+name = "first"
+version = "2.0.0"
+description = "Return the first true value of an iterable."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pycodestyle"
+version = "2.5.0"
+description = "Python style guide checker"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "pyflakes"
+version = "2.1.1"
+description = "passive checker of Python programs"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.6.1"
+content-hash = "22284e63f0c4ea15ae0dbf8679100d32c868b2be6ff62c4033fdf1f624c48c83"
+
+[metadata.files]
+first = [
+    {file = "first-2.0.0-py2.py3-none-any.whl", hash = "sha256:7ce8c2d25d2f7f54ad6d8a725df71e7a35ae11052d41cbeafcd19f71661a1107"},
+    {file = "first-2.0.0.tar.gz", hash = "sha256:c5711941f8ba8b091e73713eb0b45ddab663c060de324973b4cdd2290a1524ec"},
+]
+pycodestyle = [
+    {file = "pycodestyle-2.5.0-py2.py3-none-any.whl", hash = "sha256:95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56"},
+    {file = "pycodestyle-2.5.0.tar.gz", hash = "sha256:e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c"},
+]
+pyflakes = [
+    {file = "pyflakes-2.1.1-py2.py3-none-any.whl", hash = "sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0"},
+    {file = "pyflakes-2.1.1.tar.gz", hash = "sha256:d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"},
+]
