@@ -7,6 +7,7 @@ authors = ["Your Name <your.name@example.com>"]
 [tool.poetry.dependencies]
 python = "^3.6.1"
 first = "^2.0.0"
+Pygments = {version = "^2.7.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 pyflakes = "^2.1.1"
