@@ -31,7 +31,6 @@ def test_installroot(session: Session, distribution_format: DistributionFormat) 
     nox_poetry.installroot(session, distribution_format=distribution_format)
 
 
-@pytest.mark.xfail(reason="not implemented")
 @pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
 @pytest.mark.parametrize("extras", [[], ["noodles"], ["spicy", "noodles"]])
 def test_installroot_with_extras(
