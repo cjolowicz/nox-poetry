@@ -2,6 +2,7 @@
 from enum import Enum
 from pathlib import Path
 
+import tomlkit
 from nox.sessions import Session
 
 
@@ -10,6 +11,24 @@ class DistributionFormat(Enum):
 
     WHEEL = "wheel"
     SDIST = "sdist"
+
+
+class Config:
+    """Poetry configuration."""
+
+    def __init__(self, project: Path) -> None:
+        """Initialize."""
+        path = project / "pyproject.toml"
+        text = path.read_text()
+        data = tomlkit.parse(text)
+        self._config = data["tool"]["poetry"]
+
+    @property
+    def name(self) -> str:
+        """Return the package name."""
+        name = self._config["name"]
+        assert isinstance(name, str)  # noqa: S101
+        return name
 
 
 class Poetry:
