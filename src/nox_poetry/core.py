@@ -1,7 +1,11 @@
 """Core functions."""
 import hashlib
+import re
 from pathlib import Path
 from typing import Any
+from typing import Iterable
+from typing import Optional
+from typing import Tuple
 
 from nox.sessions import Session
 
@@ -81,6 +85,17 @@ def build_package(session: Session, *, distribution_format: DistributionFormat) 
     return url
 
 
+_EXTRAS_PATTERN = re.compile(r"^(.+)(\[[^\]]+\])$")
+
+
+def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
+    # From ``pip._internal.req.constructors._strip_extras``
+    match = _EXTRAS_PATTERN.match(arg)
+    if match:
+        return match.group(1), match.group(2)
+    return arg, None
+
+
 def install(session: Session, *args: str, **kwargs: Any) -> None:
     """Install packages into a Nox session using Poetry.
 
@@ -115,9 +130,23 @@ def install(session: Session, *args: str, **kwargs: Any) -> None:
         kwargs: Keyword-arguments for ``session.install``. These are the same
             as those for `nox.sessions.Session.run`_.
     """
-    if "." in args:
+    args_extras = [_split_extras(arg) for arg in args]
+
+    if "." in [arg for arg, _ in args_extras]:
         package = build_package(session, distribution_format=DistributionFormat.WHEEL)
-        args = tuple(package if arg == "." else arg for arg in args)
+
+        def rewrite(arg: str, extras: Optional[str]) -> str:
+            if arg != ".":
+                return arg if extras is None else arg + extras
+
+            if extras is None:
+                return package
+
+            name = Poetry(session).config.name
+            return f"{name}{extras} @ {package}"
+
+        args = tuple(rewrite(arg, extras) for arg, extras in args_extras)
+
         session.run("pip", "uninstall", "--yes", package, silent=True)
 
     requirements = export_requirements(session)
@@ -128,6 +157,7 @@ def installroot(
     session: Session,
     *,
     distribution_format: DistributionFormat,
+    extras: Iterable[str] = (),
 ) -> None:
     """Install the root package into a Nox session using Poetry.
 
@@ -142,11 +172,19 @@ def installroot(
     Args:
         session: The Session object.
         distribution_format: The distribution format, either wheel or sdist.
+        extras: Extras to install for the package.
     """
     package = build_package(session, distribution_format=distribution_format)
     requirements = export_requirements(session)
 
     session.run("pip", "uninstall", "--yes", package, silent=True)
+
+    suffix = ",".join(extras)
+    if suffix.strip():
+        suffix = suffix.join("[]")
+        name = Poetry(session).config.name
+        package = f"{name}{suffix} @ {package}"
+
     Session_install(session, f"--constraint={requirements}", package)
 
 

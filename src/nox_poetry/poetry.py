@@ -1,6 +1,7 @@
 """Poetry interface."""
 from enum import Enum
 from pathlib import Path
+from typing import List
 from typing import Optional
 
 import tomlkit
@@ -30,6 +31,15 @@ class Config:
         name = self._config["name"]
         assert isinstance(name, str)  # noqa: S101
         return name
+
+    @property
+    def extras(self) -> List[str]:
+        """Return the package extras."""
+        extras = self._config.get("extras", {})
+        assert isinstance(extras, dict) and all(  # noqa: S101
+            isinstance(extra, str) for extra in extras
+        )
+        return list(extras)
 
 
 class Poetry:
@@ -63,6 +73,7 @@ class Poetry:
             "--format=requirements.txt",
             f"--output={path}",
             "--dev",
+            *[f"--extras={extra}" for extra in self.config.extras],
             external=True,
         )
 
