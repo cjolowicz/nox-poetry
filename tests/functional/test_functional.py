@@ -13,7 +13,7 @@ def test_install_local_using_patch(
     run_nox_with_noxfile: RunNoxWithNoxfile,
     list_packages: ListPackages,
 ) -> None:
-    """Invoking session.install(".") installs the local package."""
+    """It installs the local package."""
 
     @nox.session
     def test(session: nox.sessions.Session) -> None:
@@ -23,6 +23,31 @@ def test_install_local_using_patch(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry.patch])
 
     expected = [project.package, *project.dependencies]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+@pytest.mark.xfail(reason="not implemented")
+def test_install_local_using_patch_with_extras(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the extra."""
+
+    @nox.session
+    def test(session: nox.sessions.Session) -> None:
+        """Install the local package."""
+        session.install(".[pygments]")
+
+    run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry.patch])
+
+    expected = [
+        project.package,
+        *project.dependencies,
+        project.get_dependency("pygments"),
+    ]
     packages = list_packages(test)
 
     assert set(expected) == set(packages)
@@ -43,6 +68,31 @@ def test_install_local_wheel(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
 
     expected = [project.package, *project.dependencies]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+@pytest.mark.xfail(reason="not implemented")
+def test_install_local_wheel_with_extras(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the extra."""
+
+    @nox.session
+    def test(session: nox.sessions.Session) -> None:
+        """Install the local package."""
+        nox_poetry.install(session, ".[pygments]")
+
+    run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
+
+    expected = [
+        project.package,
+        *project.dependencies,
+        project.get_dependency("pygments"),
+    ]
     packages = list_packages(test)
 
     assert set(expected) == set(packages)
