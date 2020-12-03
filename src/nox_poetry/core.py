@@ -76,8 +76,7 @@ def build_package(session: Session, *, distribution_format: DistributionFormat) 
     url = f"file://{wheel.resolve().as_posix()}#sha256={digest}"
 
     if distribution_format is DistributionFormat.SDIST:
-        name = poetry.version().split()[0]
-        url += f"&egg={name}"
+        url += f"&egg={poetry.config.name}"
 
     return url
 

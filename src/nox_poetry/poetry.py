@@ -1,7 +1,9 @@
 """Poetry interface."""
 from enum import Enum
 from pathlib import Path
+from typing import Optional
 
+import tomlkit
 from nox.sessions import Session
 
 
@@ -10,6 +12,24 @@ class DistributionFormat(Enum):
 
     WHEEL = "wheel"
     SDIST = "sdist"
+
+
+class Config:
+    """Poetry configuration."""
+
+    def __init__(self, project: Path) -> None:
+        """Initialize."""
+        path = project / "pyproject.toml"
+        text = path.read_text()
+        data = tomlkit.parse(text)
+        self._config = data["tool"]["poetry"]
+
+    @property
+    def name(self) -> str:
+        """Return the package name."""
+        name = self._config["name"]
+        assert isinstance(name, str)  # noqa: S101
+        return name
 
 
 class Poetry:
@@ -22,6 +42,14 @@ class Poetry:
     def __init__(self, session: Session) -> None:
         """Initialize."""
         self.session = session
+        self._config: Optional[Config] = None
+
+    @property
+    def config(self) -> Config:
+        """Return the package configuration."""
+        if self._config is None:
+            self._config = Config(Path.cwd())
+        return self._config
 
     def export(self, path: Path) -> None:
         """Export the lock file to requirements format.
@@ -69,19 +97,3 @@ class Poetry:
         )
         assert isinstance(output, str)  # noqa: S101
         return output.split()[-1]
-
-    def version(self) -> str:
-        """Return the package name and version.
-
-        Returns:
-            The package name and version.
-        """
-        output = self.session.run(
-            "poetry",
-            "version",
-            external=True,
-            silent=True,
-            stderr=None,
-        )
-        assert isinstance(output, str)  # noqa: S101
-        return output.strip()

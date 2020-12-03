@@ -22,6 +22,7 @@ Changelog = "https://github.com/cjolowicz/nox-poetry/releases"
 [tool.poetry.dependencies]
 python = "^3.6.1"
 nox = "^2020.5.24"
+tomlkit = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"

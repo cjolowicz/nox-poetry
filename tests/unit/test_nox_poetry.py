@@ -4,6 +4,7 @@ from nox.sessions import Session
 
 import nox_poetry
 from nox_poetry.poetry import DistributionFormat
+from nox_poetry.poetry import Poetry
 
 
 def test_install_package(session: Session) -> None:
@@ -33,3 +34,10 @@ def test_patch(session: Session) -> None:
     import nox_poetry.patch  # noqa: F401
 
     Session.install(session, ".")
+
+
+def test_poetry_config(session: Session) -> None:
+    """It caches the configuration when accessed multiple times."""
+    poetry = Poetry(session)
+    poetry.config
+    assert poetry.config.name == "nox-poetry"
