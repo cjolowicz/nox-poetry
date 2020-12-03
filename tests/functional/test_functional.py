@@ -1,6 +1,5 @@
 """Functional tests."""
 import nox.sessions
-import pytest
 from tests.functional.conftest import ListPackages
 from tests.functional.conftest import Project
 from tests.functional.conftest import RunNoxWithNoxfile
@@ -28,7 +27,6 @@ def test_install_local_using_patch(
     assert set(expected) == set(packages)
 
 
-@pytest.mark.xfail(reason="not implemented")
 def test_install_local_using_patch_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
@@ -73,7 +71,6 @@ def test_install_local_wheel(
     assert set(expected) == set(packages)
 
 
-@pytest.mark.xfail(reason="not implemented")
 def test_install_local_wheel_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
@@ -118,7 +115,6 @@ def test_installroot_wheel(
     assert set(expected) == set(packages)
 
 
-@pytest.mark.xfail(reason="not implemented")
 def test_installroot_wheel_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
@@ -165,7 +161,6 @@ def test_installroot_sdist(
     assert set(expected) == set(packages)
 
 
-@pytest.mark.xfail(reason="not implemented")
 def test_installroot_sdist_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
