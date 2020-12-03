@@ -15,6 +15,9 @@ from nox_poetry.poetry import Poetry
         ["."],
         ["pyflakes"],
         [".", "pyflakes"],
+        [".[noodles]"],
+        ["pyflakes[honey]"],
+        [".[spicy, noodles]", "pyflakes[honey]"],
     ],
 )
 def test_install(session: Session, args: Iterable[str]) -> None:
