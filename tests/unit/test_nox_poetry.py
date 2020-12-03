@@ -1,4 +1,6 @@
 """Unit tests."""
+from typing import Iterable
+
 import pytest
 from nox.sessions import Session
 
@@ -7,14 +9,17 @@ from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
 
 
-def test_install_package(session: Session) -> None:
-    """It installs the package."""
-    nox_poetry.install(session, ".")
-
-
-def test_install_dependency(session: Session) -> None:
-    """It installs the dependency."""
-    nox_poetry.install(session, "pip")
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["."],
+        ["pyflakes"],
+        [".", "pyflakes"],
+    ],
+)
+def test_install(session: Session, args: Iterable[str]) -> None:
+    """It installs the specified packages."""
+    nox_poetry.install(session, *args)
 
 
 @pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
