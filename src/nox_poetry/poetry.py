@@ -1,6 +1,7 @@
 """Poetry interface."""
 from enum import Enum
 from pathlib import Path
+from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
@@ -41,6 +42,14 @@ class Poetry:
     def __init__(self, session: Session) -> None:
         """Initialize."""
         self.session = session
+        self._config: Optional[Config] = None
+
+    @property
+    def config(self) -> Config:
+        """Return the package configuration."""
+        if self._config is None:
+            self._config = Config(Path.cwd())
+        return self._config
 
     def export(self, path: Path) -> None:
         """Export the lock file to requirements format.
