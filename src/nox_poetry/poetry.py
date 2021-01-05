@@ -74,6 +74,7 @@ class Poetry:
             f"--output={path}",
             "--dev",
             *[f"--extras={extra}" for extra in self.config.extras],
+            "--without-hashes",
             external=True,
         )
 
