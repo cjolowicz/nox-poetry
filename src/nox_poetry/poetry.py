@@ -21,7 +21,7 @@ class Config:
     def __init__(self, project: Path) -> None:
         """Initialize."""
         path = project / "pyproject.toml"
-        text = path.read_bytes()
+        text = path.read_text(encoding="utf-8")
         data = tomlkit.parse(text)
         self._config = data["tool"]["poetry"]
 
