@@ -1048,7 +1048,7 @@ python-versions = "*"
 
 [[package]]
 name = "safety"
-version = "1.10.2.post1"
+version = "1.10.3"
 description = "Checks installed dependencies for known vulnerabilities."
 category = "dev"
 optional = false
@@ -1368,7 +1368,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "cce9adc6cbdb45b382d985399fee06f130ff981c2cf7d2c51dd4c460fe6ddbee"
+content-hash = "4066cd8ae53ae5990bb52c3779e4c566846fcf8d88c67d8ce1f388dc35e36f71"
 
 [metadata.files]
 alabaster = [
@@ -1955,8 +1955,8 @@ restructuredtext-lint = [
     {file = "ruamel.yaml.clib-0.2.0.tar.gz", hash = "sha256:b66832ea8077d9b3f6e311c4a53d06273db5dc2db6e8a908550f3c14d67e718c"},
 ]
 safety = [
-    {file = "safety-1.10.2.post1-py2.py3-none-any.whl", hash = "sha256:6f50edff1c5162d096cacd9557406b32c021c77fe8d2229750eeff22a3e10dfe"},
-    {file = "safety-1.10.2.post1.tar.gz", hash = "sha256:1d8f904c7df7c99f094154a6d2c3ae9703fd2fa58914bd80e005e860a9f4045c"},
+    {file = "safety-1.10.3-py2.py3-none-any.whl", hash = "sha256:5f802ad5df5614f9622d8d71fedec2757099705c2356f862847c58c6dfe13e84"},
+    {file = "safety-1.10.3.tar.gz", hash = "sha256:30e394d02a20ac49b7f65292d19d38fa927a8f9582cdfd3ad1adbbc66c641ad5"},
 ]
 secretstorage = [
     {file = "SecretStorage-3.3.0-py3-none-any.whl", hash = "sha256:5c36f6537a523ec5f969ef9fad61c98eb9e017bc601d811e53aa25bece64892f"},
