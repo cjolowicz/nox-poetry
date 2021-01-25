@@ -28,7 +28,7 @@ tomlkit = "^0.7.0"
 pytest = "^6.2.1"
 coverage = {extras = ["toml"], version = "^5.3"}
 safety = "^1.10.3"
-mypy = "^0.790"
+mypy = "^0.800"
 typeguard = "^2.9.1"
 xdoctest = {extras = ["colors"], version = "^0.15.0"}
 sphinx = "^3.4.3"
