@@ -273,3 +273,91 @@ def test_install_local_wheel_and_dependency_without_patch(
     packages = list_packages(test)
 
     assert set(expected) == set(packages)
+
+
+def test_session_install_local(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the local package."""
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the local package."""
+        session.install(".")
+
+    run_nox_with_noxfile([test], [nox_poetry])
+
+    expected = [project.package, *project.dependencies]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+def test_session_install_local_with_extras(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the extra."""
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the local package."""
+        session.install(".[pygments]")
+
+    run_nox_with_noxfile([test], [nox_poetry])
+
+    expected = [
+        project.package,
+        *project.dependencies,
+        project.get_dependency("pygments"),
+    ]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+def test_session_install_dependency(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the pinned dependency."""
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the dependency."""
+        session.install("pyflakes")
+
+    run_nox_with_noxfile([test], [nox_poetry])
+
+    expected = [project.get_dependency("pyflakes")]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
+
+
+def test_session_install_local_wheel_and_dependency(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+    list_packages: ListPackages,
+) -> None:
+    """It installs the wheel with pinned dependencies."""
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the dependency."""
+        session.install(".", "pyflakes")
+
+    run_nox_with_noxfile([test], [nox_poetry])
+
+    expected = [
+        project.package,
+        *project.dependencies,
+        project.get_dependency("pyflakes"),
+    ]
+    packages = list_packages(test)
+
+    assert set(expected) == set(packages)
