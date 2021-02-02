@@ -189,15 +189,9 @@ class _PoetrySession:
 
         This function uses `poetry build`_ to build a wheel or sdist archive for
         the local package, as specified via the ``distribution_format`` parameter.
-        It returns a file URL with the absolute path to the built archive, and an
-        embedded `SHA-256 hash`_ computed for the archive. This makes it suitable
-        as an argument to `pip install`_ when a constraints file is also being
-        passed, as in :meth:`install`.
+        It returns a file URL with the absolute path to the built archive.
 
         .. _poetry build: https://python-poetry.org/docs/cli/#export
-        .. _pip install: https://pip.pypa.io/en/stable/reference/pip_install/
-        .. _SHA-256 hash:
-            https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode
 
         Args:
             distribution_format: The distribution format, either wheel or sdist.
@@ -206,11 +200,10 @@ class _PoetrySession:
             The file URL for the distribution package.
         """
         wheel = Path("dist") / self.poetry.build(format=distribution_format)
-        digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
-        url = f"file://{wheel.resolve().as_posix()}#sha256={digest}"
+        url = f"file://{wheel.resolve().as_posix()}"
 
         if distribution_format is DistributionFormat.SDIST:
-            url += f"&egg={self.poetry.config.name}"
+            url += f"#egg={self.poetry.config.name}"
 
         return url
 
