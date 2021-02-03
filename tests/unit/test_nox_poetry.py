@@ -38,6 +38,12 @@ def test_installroot(session: Session, distribution_format: str) -> None:
     nox_poetry.installroot(session, distribution_format=distribution_format)
 
 
+def test_installroot_invalid_format(session: Session) -> None:
+    """It raises an error."""
+    with pytest.raises(ValueError):
+        nox_poetry.installroot(session, distribution_format="egg")
+
+
 @pytest.mark.parametrize(
     "distribution_format",
     [
