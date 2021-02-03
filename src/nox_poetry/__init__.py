@@ -36,10 +36,10 @@ from nox_poetry.sessions import session
 
 
 #: A wheel archive.
-WHEEL = DistributionFormat.WHEEL
+WHEEL: str = DistributionFormat.WHEEL
 
 #: A source archive.
-SDIST = DistributionFormat.SDIST
+SDIST: str = DistributionFormat.SDIST
 
 __all__ = [
     "build_package",
