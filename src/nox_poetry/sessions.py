@@ -61,6 +61,7 @@ class _PoetrySession:
     def __init__(self, session: nox.Session) -> None:
         """Initialize."""
         self.session = session
+        self.poetry = Poetry(session)
 
     def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry.
@@ -106,7 +107,7 @@ class _PoetrySession:
                 if extras is None:
                     return package
 
-                name = Poetry(self.session).config.name
+                name = self.poetry.config.name
                 return f"{name}{extras} @ {package}"
 
             args = tuple(rewrite(arg, extras) for arg, extras in args_extras)
@@ -146,7 +147,7 @@ class _PoetrySession:
         suffix = ",".join(extras)
         if suffix.strip():
             suffix = suffix.join("[]")
-            name = Poetry(self.session).config.name
+            name = self.poetry.config.name
             package = f"{name}{suffix} @ {package}"
 
         Session_install(self.session, f"--constraint={requirements}", package)
@@ -178,7 +179,7 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            Poetry(self.session).export(path)
+            self.poetry.export(path)
             hashfile.write_text(digest)
 
         return path
@@ -204,13 +205,12 @@ class _PoetrySession:
         Returns:
             The file URL for the distribution package.
         """
-        poetry = Poetry(self.session)
-        wheel = Path("dist") / poetry.build(format=distribution_format)
+        wheel = Path("dist") / self.poetry.build(format=distribution_format)
         digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
         url = f"file://{wheel.resolve().as_posix()}#sha256={digest}"
 
         if distribution_format is DistributionFormat.SDIST:
-            url += f"&egg={poetry.config.name}"
+            url += f"&egg={self.poetry.config.name}"
 
         return url
 
