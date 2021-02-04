@@ -6,3 +6,4 @@ max-complexity = 10
 docstring-convention = google
 per-file-ignores = tests/*:S101
 rst-roles = const,class,func,meth,mod
+rst-directives = deprecated
