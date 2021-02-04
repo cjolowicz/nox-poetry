@@ -67,9 +67,6 @@ class _PoetrySession:
         install`` via its ``--constraint`` option. This ensures that any package
         installed will be at the version specified in Poetry's lock file.
 
-        Every package passed to this function must be managed as a dependency in
-        Poetry, to avoid an error due to missing archive hashes.
-
         .. _pip install: https://pip.pypa.io/en/stable/reference/pip_install/
         .. _nox.sessions.Session.install:
             https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install
