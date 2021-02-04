@@ -42,6 +42,14 @@ def test_installroot_with_extras(
     )
 
 
+@pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
+def test_build_package(
+    session: Session, distribution_format: DistributionFormat
+) -> None:
+    """It builds the package."""
+    nox_poetry.build_package(session, distribution_format=distribution_format)
+
+
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
     nox_poetry.export_requirements(session).touch()
