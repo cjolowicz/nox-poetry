@@ -1,16 +1,17 @@
 """Replacements for the ``nox.session`` decorator and the ``nox.Session`` class."""
 import functools
+import hashlib
+import re
 from pathlib import Path
 from typing import Any
 from typing import Iterable
+from typing import Optional
+from typing import Tuple
 
 import nox
 
-from nox_poetry.core import build_package
-from nox_poetry.core import export_requirements
-from nox_poetry.core import install
-from nox_poetry.core import installroot
 from nox_poetry.poetry import DistributionFormat
+from nox_poetry.poetry import Poetry
 
 
 def session(*args: Any, **kwargs: Any) -> Any:
@@ -41,6 +42,17 @@ def session(*args: Any, **kwargs: Any) -> Any:
         function(proxy)
 
     return nox.session(wrapper, **kwargs)  # type: ignore[call-overload]
+
+
+_EXTRAS_PATTERN = re.compile(r"^(.+)(\[[^\]]+\])$")
+
+
+def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
+    # From ``pip._internal.req.constructors._strip_extras``
+    match = _EXTRAS_PATTERN.match(arg)
+    if match:
+        return match.group(1), match.group(2)
+    return arg, None
 
 
 class _PoetrySession:
@@ -80,7 +92,29 @@ class _PoetrySession:
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for `nox.sessions.Session.run`_.
         """
-        install(self.session, *args, **kwargs)
+        from nox_poetry.core import Session_install
+
+        args_extras = [_split_extras(arg) for arg in args]
+
+        if "." in [arg for arg, _ in args_extras]:
+            package = self.build_package(distribution_format=DistributionFormat.WHEEL)
+
+            def rewrite(arg: str, extras: Optional[str]) -> str:
+                if arg != ".":
+                    return arg if extras is None else arg + extras
+
+                if extras is None:
+                    return package
+
+                name = Poetry(self.session).config.name
+                return f"{name}{extras} @ {package}"
+
+            args = tuple(rewrite(arg, extras) for arg, extras in args_extras)
+
+            self.session.run("pip", "uninstall", "--yes", package, silent=True)
+
+        requirements = self.export_requirements()
+        Session_install(self.session, f"--constraint={requirements}", *args, **kwargs)
 
     def installroot(
         self,
@@ -102,9 +136,20 @@ class _PoetrySession:
             distribution_format: The distribution format, either wheel or sdist.
             extras: Extras to install for the package.
         """
-        installroot(
-            self.session, distribution_format=distribution_format, extras=extras
-        )
+        from nox_poetry.core import Session_install
+
+        package = self.build_package(distribution_format=distribution_format)
+        requirements = self.export_requirements()
+
+        self.session.run("pip", "uninstall", "--yes", package, silent=True)
+
+        suffix = ",".join(extras)
+        if suffix.strip():
+            suffix = suffix.join("[]")
+            name = Poetry(self.session).config.name
+            package = f"{name}{suffix} @ {package}"
+
+        Session_install(self.session, f"--constraint={requirements}", package)
 
     def export_requirements(self) -> Path:
         """Export a requirements file from Poetry.
@@ -125,7 +170,18 @@ class _PoetrySession:
         Returns:
             The path to the requirements file.
         """
-        return export_requirements(self.session)
+        tmpdir = Path(self.session.create_tmp())
+        path = tmpdir / "requirements.txt"
+        hashfile = tmpdir / f"{path.name}.hash"
+
+        lockdata = Path("poetry.lock").read_bytes()
+        digest = hashlib.blake2b(lockdata).hexdigest()
+
+        if not hashfile.is_file() or hashfile.read_text() != digest:
+            Poetry(self.session).export(path)
+            hashfile.write_text(digest)
+
+        return path
 
     def build_package(self, *, distribution_format: DistributionFormat) -> str:
         """Build a distribution archive for the package.
@@ -148,7 +204,15 @@ class _PoetrySession:
         Returns:
             The file URL for the distribution package.
         """
-        return build_package(self.session, distribution_format=distribution_format)
+        poetry = Poetry(self.session)
+        wheel = Path("dist") / poetry.build(format=distribution_format)
+        digest = hashlib.sha256(wheel.read_bytes()).hexdigest()
+        url = f"file://{wheel.resolve().as_posix()}#sha256={digest}"
+
+        if distribution_format is DistributionFormat.SDIST:
+            url += f"&egg={poetry.config.name}"
+
+        return url
 
 
 class _SessionProxy:
