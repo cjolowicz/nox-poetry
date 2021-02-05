@@ -8,7 +8,7 @@ import tomlkit
 from nox.sessions import Session
 
 
-class DistributionFormat(Enum):
+class DistributionFormat(str, Enum):
     """Type of distribution archive for a Python package."""
 
     WHEEL = "wheel"
@@ -78,7 +78,7 @@ class Poetry:
             external=True,
         )
 
-    def build(self, *, format: DistributionFormat) -> str:
+    def build(self, *, format: str) -> str:
         """Build the package.
 
         The filename of the archive is extracted from the output Poetry writes
@@ -99,10 +99,13 @@ class Poetry:
         Returns:
             The basename of the wheel built by Poetry.
         """
+        if not isinstance(format, DistributionFormat):
+            format = DistributionFormat(format)
+
         output = self.session.run(
             "poetry",
             "build",
-            f"--format={format.value}",
+            f"--format={format}",
             external=True,
             silent=True,
             stderr=None,

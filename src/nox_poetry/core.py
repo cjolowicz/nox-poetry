@@ -35,10 +35,8 @@ def export_requirements(session: nox.sessions.Session) -> Path:
     return Session(session).poetry.export_requirements()
 
 
-def build_package(
-    session: nox.sessions.Session, *, distribution_format: DistributionFormat
-) -> str:  # noqa: D
-    """Build a distribution archive for the package.
+def build_package(session: nox.sessions.Session, *, distribution_format: str) -> str:
+    """Build a distribution archive for the package.  # noqa: DAR
 
     .. deprecated:: 0.8
        Use :func:`session` instead.
@@ -61,8 +59,8 @@ def install(session: nox.sessions.Session, *args: str, **kwargs: Any) -> None:
 
 def installroot(
     session: nox.sessions.Session,
-    *,  # noqa: D
-    distribution_format: DistributionFormat,
+    *,  # noqa: DAR
+    distribution_format: str,
     extras: Iterable[str] = (),
 ) -> None:
     """Install the root package into a Nox session using Poetry.
@@ -76,9 +74,7 @@ def installroot(
     )
 
 
-def patch(
-    *, distribution_format: DistributionFormat = DistributionFormat.WHEEL
-) -> None:
+def patch(*, distribution_format: str = DistributionFormat.WHEEL) -> None:
     """Monkey-patch Nox to intercept ``session.install``.
 
     .. deprecated:: 0.8

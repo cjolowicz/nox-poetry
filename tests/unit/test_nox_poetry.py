@@ -5,7 +5,6 @@ import pytest
 from nox.sessions import Session
 
 import nox_poetry
-from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
 
 
@@ -25,16 +24,40 @@ def test_install(session: Session, args: Iterable[str]) -> None:
     nox_poetry.install(session, *args)
 
 
-@pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
-def test_installroot(session: Session, distribution_format: DistributionFormat) -> None:
+@pytest.mark.parametrize(
+    "distribution_format",
+    [
+        nox_poetry.WHEEL,
+        nox_poetry.SDIST,
+        "wheel",
+        "sdist",
+    ],
+)
+def test_installroot(session: Session, distribution_format: str) -> None:
     """It installs the package."""
     nox_poetry.installroot(session, distribution_format=distribution_format)
 
 
-@pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
+def test_installroot_invalid_format(session: Session) -> None:
+    """It raises an error."""
+    with pytest.raises(ValueError):
+        nox_poetry.installroot(session, distribution_format="egg")
+
+
+@pytest.mark.parametrize(
+    "distribution_format",
+    [
+        nox_poetry.WHEEL,
+        nox_poetry.SDIST,
+        "wheel",
+        "sdist",
+    ],
+)
 @pytest.mark.parametrize("extras", [[], ["noodles"], ["spicy", "noodles"]])
 def test_installroot_with_extras(
-    session: Session, distribution_format: DistributionFormat, extras: Iterable[str]
+    session: Session,
+    distribution_format: str,
+    extras: Iterable[str],
 ) -> None:
     """It installs the package with extras."""
     nox_poetry.installroot(
@@ -43,9 +66,7 @@ def test_installroot_with_extras(
 
 
 @pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
-def test_build_package(
-    session: Session, distribution_format: DistributionFormat
-) -> None:
+def test_build_package(session: Session, distribution_format: str) -> None:
     """It builds the package."""
     nox_poetry.build_package(session, distribution_format=distribution_format)
 
