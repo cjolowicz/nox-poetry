@@ -43,11 +43,7 @@ Request features on the `Issue Tracker`_.
 How to set up your development environment
 ------------------------------------------
 
-You need Python 3.6+ and the following tools:
-
-- Poetry_
-- Nox_
-- nox-poetry_
+You need Python 3.6+ and Poetry_.
 
 Install the package with development requirements:
 
@@ -64,8 +60,6 @@ or the command-line interface:
    $ poetry run nox-poetry
 
 .. _Poetry: https://python-poetry.org/
-.. _Nox: https://nox.thea.codes/
-.. _nox-poetry: https://nox-poetry.readthedocs.io/
 
 
 How to test the project
@@ -75,20 +69,20 @@ Run the full test suite:
 
 .. code:: console
 
-   $ nox
+   $ poetry run nox
 
 List the available Nox sessions:
 
 .. code:: console
 
-   $ nox --list-sessions
+   $ poetry run nox --list-sessions
 
 You can also run a specific Nox session.
 For example, invoke the unit test suite like this:
 
 .. code:: console
 
-   $ nox --session=tests
+   $ poetry run nox --session=tests
 
 Unit tests are located in the ``tests`` directory,
 and are written using the pytest_ testing framework.
