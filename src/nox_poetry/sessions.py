@@ -65,21 +65,18 @@ class _PoetrySession:
 
         This function installs packages into the session's virtual environment. It
         is a wrapper for :meth:`nox.sessions.Session.install`, whose positional
-        arguments are command-line arguments for `pip install`_, and whose keyword
+        arguments are command-line arguments for :ref:`pip install`, and whose keyword
         arguments are the same as those for :meth:`nox.sessions.Session.run`.
 
         If a positional argument is ".", a wheel is built using
         :meth:`build_package`, and the argument is replaced with the file URL
         returned by that function. Otherwise, the argument is forwarded unchanged.
 
-        In addition, a `constraints file`_ is generated for the package
-        dependencies using :meth:`export_requirements`, and passed to ``pip
-        install`` via its ``--constraint`` option. This ensures that any package
-        installed will be at the version specified in Poetry's lock file.
-
-        .. _pip install: https://pip.pypa.io/en/stable/reference/pip_install/
-        .. _constraints file:
-            https://pip.pypa.io/en/stable/user_guide/#constraints-files
+        In addition, a :ref:`constraints file <Constraints Files>` is generated
+        for the package dependencies using :meth:`export_requirements`, and
+        passed to ``pip install`` via its ``--constraint`` option. This ensures
+        that any package installed will be at the version specified in Poetry's
+        lock file.
 
         Args:
             args: Command-line arguments for ``pip install``.
@@ -121,10 +118,11 @@ class _PoetrySession:
         This function installs the package located in the current directory into the
         session's virtual environment.
 
-        A constraints file is generated for the package dependencies using
-        :meth:`export_requirements`, and passed to ``pip install`` via its
-        ``--constraint`` option. This ensures that core dependencies are installed
-        using the versions specified in Poetry's lock file.
+        A :ref:`constraints file <Constraints Files>` is generated for the
+        package dependencies using :meth:`export_requirements`, and passed to
+        :ref:`pip install` via its ``--constraint`` option. This ensures that
+        core dependencies are installed using the versions specified in Poetry's
+        lock file.
 
         Args:
             distribution_format: The distribution format, either wheel or sdist.
@@ -148,18 +146,16 @@ class _PoetrySession:
     def export_requirements(self) -> Path:
         """Export a requirements file from Poetry.
 
-        This function uses `poetry export`_ to generate a `requirements file`_
-        containing the project dependencies at the versions specified in
-        ``poetry.lock``. The requirements file includes both core and development
-        dependencies.
+        This function uses `poetry export`_ to generate a :ref:`requirements
+        file <Requirements Files>` containing the project dependencies at the
+        versions specified in ``poetry.lock``. The requirements file includes
+        both core and development dependencies.
 
         The requirements file is stored in a per-session temporary directory,
         together with a hash digest over ``poetry.lock`` to avoid generating the
         file when the dependencies have not changed since the last run.
 
         .. _poetry export: https://python-poetry.org/docs/cli/#export
-        .. _requirements file:
-            https://pip.pypa.io/en/stable/user_guide/#requirements-files
 
         Returns:
             The path to the requirements file.
