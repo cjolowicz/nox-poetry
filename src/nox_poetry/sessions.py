@@ -120,7 +120,7 @@ class _PoetrySession:
     def installroot(
         self,
         *,
-        distribution_format: DistributionFormat,
+        distribution_format: str,
         extras: Iterable[str] = (),
     ) -> None:
         """Install the root package into a Nox session using Poetry.
@@ -184,7 +184,7 @@ class _PoetrySession:
 
         return path
 
-    def build_package(self, *, distribution_format: DistributionFormat) -> str:
+    def build_package(self, *, distribution_format: str) -> str:
         """Build a distribution archive for the package.
 
         This function uses `poetry build`_ to build a wheel or sdist archive for
@@ -202,7 +202,7 @@ class _PoetrySession:
         wheel = Path("dist") / self.poetry.build(format=distribution_format)
         url = f"file://{wheel.resolve().as_posix()}"
 
-        if distribution_format is DistributionFormat.SDIST:
+        if DistributionFormat(distribution_format) is DistributionFormat.SDIST:
             url += f"#egg={self.poetry.config.name}"
 
         return url
