@@ -15,14 +15,11 @@ from nox_poetry.poetry import Poetry
 
 
 def session(*args: Any, **kwargs: Any) -> Any:
-    """Drop-in replacement for the nox.session_ decorator.
+    """Drop-in replacement for the :func:`nox.session` decorator.
 
     Use this decorator instead of ``@nox.session``. Session functions are passed
-    :class:`Session` instead of ``nox.Session``; otherwise, the decorators work
-    exactly the same.
-
-    .. _nox.session:
-        https://nox.thea.codes/en/stable/config.html#nox.session
+    :class:`Session` instead of :class:`nox.sessions.Session`; otherwise, the
+    decorators work exactly the same.
 
     Args:
         args: Positional arguments are forwarded to ``nox.session``.
@@ -67,9 +64,9 @@ class _PoetrySession:
         """Install packages into a Nox session using Poetry.
 
         This function installs packages into the session's virtual environment. It
-        is a wrapper for `nox.sessions.Session.install`_, whose positional
+        is a wrapper for :meth:`nox.sessions.Session.install`, whose positional
         arguments are command-line arguments for `pip install`_, and whose keyword
-        arguments are the same as those for `nox.sessions.Session.run`_.
+        arguments are the same as those for :meth:`nox.sessions.Session.run`.
 
         If a positional argument is ".", a wheel is built using
         :meth:`build_package`, and the argument is replaced with the file URL
@@ -81,17 +78,13 @@ class _PoetrySession:
         installed will be at the version specified in Poetry's lock file.
 
         .. _pip install: https://pip.pypa.io/en/stable/reference/pip_install/
-        .. _nox.sessions.Session.install:
-            https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install
-        .. _nox.sessions.Session.run:
-            https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.run
         .. _constraints file:
             https://pip.pypa.io/en/stable/user_guide/#constraints-files
 
         Args:
             args: Command-line arguments for ``pip install``.
             kwargs: Keyword-arguments for ``session.install``. These are the same
-                as those for `nox.sessions.Session.run`_.
+                as those for :meth:`nox.sessions.Session.run`.
         """
         from nox_poetry.core import Session_install
 
@@ -211,7 +204,7 @@ class _PoetrySession:
 
 
 class _SessionProxy:
-    """Proxy for nox.Session."""
+    """Proxy for :class:`nox.sessions.Session`."""
 
     def __init__(self, session: nox.Session) -> None:
         """Initialize."""
@@ -223,10 +216,7 @@ class _SessionProxy:
 
 
 class Session(_SessionProxy):
-    """Proxy for nox.sessions.Session_, passed to user-defined session functions.
-
-    .. _nox.sessions.Session:
-        https://nox.thea.codes/en/stable/config.html#nox.sessions.Session
+    """Proxy for :class:`nox.sessions.Session`, passed to session functions.
 
     This class overrides :meth:`session.install
     <nox_poetry.sessions._PoetrySession.install>`, and provides Poetry-related
