@@ -98,7 +98,7 @@ class _PoetrySession:
         args_extras = [_split_extras(arg) for arg in args]
 
         if "." in [arg for arg, _ in args_extras]:
-            package = self.build_package(distribution_format=DistributionFormat.WHEEL)
+            package = self.build_package()
 
             def rewrite(arg: str, extras: Optional[str]) -> str:
                 if arg != ".":
@@ -184,7 +184,9 @@ class _PoetrySession:
 
         return path
 
-    def build_package(self, *, distribution_format: str) -> str:
+    def build_package(
+        self, *, distribution_format: str = DistributionFormat.WHEEL
+    ) -> str:
         """Build a distribution archive for the package.
 
         This function uses `poetry build`_ to build a wheel or sdist archive for
