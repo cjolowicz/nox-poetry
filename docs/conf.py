@@ -14,3 +14,6 @@ autodoc_typehints = "description"
 html_theme = "furo"
 html_favicon = "images/favicon.png"
 html_logo = "images/logo.png"
+intersphinx_mapping = {
+    "nox": ("https://nox.thea.codes/en/stable", None),
+}
