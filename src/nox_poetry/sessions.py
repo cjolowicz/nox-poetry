@@ -120,7 +120,7 @@ class _PoetrySession:
     def installroot(
         self,
         *,
-        distribution_format: str,
+        distribution_format: str = DistributionFormat.WHEEL,
         extras: Iterable[str] = (),
     ) -> None:
         """Install the root package into a Nox session using Poetry.
