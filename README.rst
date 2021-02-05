@@ -38,11 +38,18 @@ nox-poetry
 
 Use Poetry_ inside Nox_ sessions
 
-This package provides a drop-in replacement for ``session.install`` in Nox sessions.
-It modifies its behavior in two ways:
+This package provides a drop-in replacement for the ``nox.session`` decorator,
+and for the ``nox.Session`` object passed to user-defined session functions.
+This enables ``session.install`` to install packages at the versions specified in the Poetry lock file.
 
-- Packages are pinned to the versions specified in Poetry's lock file.
-- The argument ``"."`` is replaced by a wheel built from the package.
+.. code:: python
+
+    from nox_poetry import session
+
+    @session(python=["3.8", "3.9"])
+    def tests(session):
+        session.install("pytest", ".")
+        session.run("pytest")
 
 
 Installation
@@ -68,64 +75,38 @@ use the following command to install this package into the same environment:
 Usage
 -----
 
-Import ``nox_poetry.patch`` at the top of your ``noxfile.py``.
+Import the ``@session`` decorator from ``nox_poetry`` instead of ``nox``.
+There is nothing else you need to do.
+The ``session.install`` method automatically honors the Poetry lock file when installing dependencies.
+This allows you to manage packages used in Nox sessions as development dependencies in Poetry.
 
-``nox-poetry`` intercepts calls to ``session.install``
-and uses Poetry to export a `constraints file`_ and build the package behind the scenes.
-All packages installed in Nox sessions must be managed as dependencies in Poetry.
+This works because session functions are passed instances of ``nox_poetry.Session``,
+a proxy for ``nox.Session`` adding Poetry-related functionality.
+Behind the scenes, nox-poetry uses Poetry to export a `constraints file`_ and build the package.
 
-For example, the following Nox session runs your test suite:
+For more fine-grained control, additional utilities are available under the ``session.poetry`` attribute:
 
-.. code:: python
-
-   # noxfile.py
-   import nox
-   import nox_poetry.patch
-   from nox.sessions import Session
-
-   @nox.session
-   def tests(session: Session) -> None:
-       """Run the test suite."""
-       session.install(".")
-       session.install("pytest")
-       session.run("pytest")
-
-More precisely, the session builds a wheel from the local package,
-installs the wheel as well as the ``pytest`` package, and
-invokes ``pytest`` to run the test suite against the installation.
-
-If you prefer a more explicit approach,
-invoke ``nox_poetry.install`` and ``nox_poetry.installroot`` instead of ``session.install``.
-Use the ``nox_poetry.WHEEL`` or ``nox_poetry.SDIST`` constants to specify the distribution format for the local package.
-
-Here is the example above using the more explicit approach:
-
-.. code:: python
-
-   # noxfile.py
-   import nox
-   import nox_poetry
-   from nox.sessions import Session
-
-   @nox.session
-   def tests(session: Session) -> None:
-       """Run the test suite."""
-       nox_poetry.installroot(session, distribution_format=nox_poetry.WHEEL)
-       #nox_poetry.install(session, ".")  # this is equivalent to the statement above
-       nox_poetry.install(session, "pytest")
-       session.run("pytest")
+- ``session.poetry.installroot(distribution_format=[WHEEL|SDIST])``
+- ``session.poetry.build_package(distribution_format=[WHEEL|SDIST])``
+- ``session.poetry.export_requirements()``
 
 
 Why?
 ----
 
-Consider what would happen in the first version without the line importing ``nox-poetry.patch``:
+The example session above performs the following steps:
+
+- Build a wheel from the local package.
+- Install the wheel as well as the ``pytest`` package.
+- Invoke ``pytest`` to run the test suite against the installation.
+
+Consider what would happen in this session
+if we had imported ``@session`` from ``nox`` instead of ``nox_poetry``:
 
 - Package dependencies would only be constrained by the wheel metadata, not by the lock file.
   In other words, their versions would not be *pinned*.
 - The ``pytest`` dependency would not be constrained at all.
-- Poetry would be installed as a build backend every time
-  (although this could be avoided by passing the option ``--no-build-isolation``).
+- Poetry would be installed as a build backend every time.
 
 Unpinned dependencies mean that your checks are not reproducible and deterministic,
 which can lead to surprises in Continuous Integration and when collaborating with others.
@@ -167,10 +148,6 @@ In summary, this approach brings the following advantages:
 - You can run checks against an installed wheel, instead of your local copy of the code.
 - Every tool can run in an isolated environment with minimal dependencies.
 - No need to install your package with all its dependencies if all you need is some linter.
-
-For more details, take a look at `this article`__.
-
-__ https://cjolowicz.github.io/posts/hypermodern-python-03-linting/#managing-dependencies-in-nox-sessions-with-poetry
 
 
 Contributing
