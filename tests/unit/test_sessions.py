@@ -28,8 +28,8 @@ def iter_sessions() -> IterSessions:
     return _iter_sessions
 
 
-def test_kwargs(iter_sessions: IterSessions) -> None:
-    """It registers the session function."""
+def test_name(iter_sessions: IterSessions) -> None:
+    """It registers the session function under the given name."""
 
     @nox_poetry.session(name="tests-renamed")
     def tests(session: nox_poetry.Session) -> None:
