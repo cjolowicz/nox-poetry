@@ -88,6 +88,24 @@ def test_wrapper(session: nox.Session) -> None:
     assert proxy._session is session
 
 
+def test_wrapper_parametrize(session: nox.Session) -> None:
+    """It forwards parameters to the session function."""
+    calls = []
+
+    @nox_poetry.session
+    @nox.parametrize("number", [1, 2])
+    def tests(proxy: nox_poetry.Session, number: int) -> None:
+        calls.append((proxy, number))
+
+    tests(session, 1)  # type: ignore[no-untyped-call]
+    tests(session, 2)  # type: ignore[no-untyped-call]
+
+    proxies, numbers = zip(*calls)
+
+    assert all(proxy._session is session for proxy in proxies)
+    assert numbers == (1, 2)
+
+
 @pytest.fixture
 def proxy(session: nox.Session) -> nox_poetry.Session:
     """Fixture for session proxy."""
