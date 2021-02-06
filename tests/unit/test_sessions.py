@@ -28,6 +28,16 @@ def iter_sessions() -> IterSessions:
     return _iter_sessions
 
 
+def test_register(iter_sessions: IterSessions) -> None:
+    """It registers the session function."""
+
+    @nox_poetry.session
+    def tests(session: nox_poetry.Session) -> None:
+        pass
+
+    assert "tests" in iter_sessions()
+
+
 def test_name(iter_sessions: IterSessions) -> None:
     """It registers the session function under the given name."""
 
