@@ -1,8 +1,31 @@
 """Unit tests for the sessions module."""
+from typing import Callable
+from typing import Iterator
+
+import nox._options
+import nox.manifest
 import nox.registry
 import pytest
 
 import nox_poetry
+
+
+IterSessions = Callable[[], Iterator[str]]
+
+
+@pytest.fixture
+def iter_sessions() -> IterSessions:
+    """List the registered nox sessions."""
+    nox.registry._REGISTRY.clear()
+
+    def _iter_sessions() -> Iterator[str]:
+        options = nox._options.options.namespace()
+        manifest = nox.manifest.Manifest(nox.registry.get(), options)
+        for session in manifest:
+            yield session.name
+            yield from session.signatures
+
+    return _iter_sessions
 
 
 def test_kwargs() -> None:
