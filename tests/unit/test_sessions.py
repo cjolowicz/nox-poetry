@@ -58,6 +58,21 @@ def test_python(iter_sessions: IterSessions) -> None:
     assert set(iter_sessions()) == {"tests", "tests-3.8", "tests-3.9"}
 
 
+def test_parametrize(iter_sessions: IterSessions) -> None:
+    """It registers the session function for every parameter."""
+
+    @nox_poetry.session
+    @nox.parametrize("sphinx", ["2.4.4", "3.4.3"])
+    def tests(session: nox_poetry.Session, sphinx: str) -> None:
+        session.install(f"sphinx=={sphinx}")
+
+    assert set(iter_sessions()) == {
+        "tests",
+        "tests(sphinx='2.4.4')",
+        "tests(sphinx='3.4.3')",
+    }
+
+
 def test_wrapper(session: nox.Session) -> None:
     """It invokes the session function."""
     calls = []
