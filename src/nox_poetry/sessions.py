@@ -34,9 +34,9 @@ def session(*args: Any, **kwargs: Any) -> Any:
     [function] = args
 
     @functools.wraps(function)
-    def wrapper(session: nox.Session) -> None:
+    def wrapper(session: nox.Session, *_args, **_kwargs) -> None:
         proxy = Session(session)
-        function(proxy)
+        function(proxy, *_args, **_kwargs)
 
     return nox.session(wrapper, **kwargs)  # type: ignore[call-overload]
 

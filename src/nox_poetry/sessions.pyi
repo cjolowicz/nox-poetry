@@ -62,11 +62,10 @@ class Session:
     def error(self, *args: Any) -> NoReturn: ...
     def skip(self, *args: Any) -> NoReturn: ...
 
-SessionFunction = Callable[[Session], None]
-NoxSessionFunction = Callable[[nox.Session], None]
-SessionDecorator = Callable[[SessionFunction], NoxSessionFunction]
+SessionFunction = Callable[..., None]
+SessionDecorator = Callable[[SessionFunction], SessionFunction]
 @overload
-def session(__func: SessionFunction) -> NoxSessionFunction: ...
+def session(__func: SessionFunction) -> SessionFunction: ...
 @overload
 def session(
     __func: None = ...,

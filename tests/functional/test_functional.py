@@ -361,3 +361,17 @@ def test_session_install_local_wheel_and_dependency(
     packages = list_packages(test)
 
     assert set(expected) == set(packages)
+
+
+def test_session_parametrize(
+    project: Project,
+    run_nox_with_noxfile: RunNoxWithNoxfile,
+) -> None:
+    """It forwards parameters to sessions."""
+
+    @nox_poetry.session
+    @nox.parametrize("n", [1, 2])
+    def test(session: nox_poetry.Session, n: int) -> None:
+        """Do nothing."""
+
+    run_nox_with_noxfile([test], [nox, nox_poetry])
