@@ -28,14 +28,14 @@ def iter_sessions() -> IterSessions:
     return _iter_sessions
 
 
-def test_kwargs() -> None:
+def test_kwargs(iter_sessions: IterSessions) -> None:
     """It registers the session function."""
 
     @nox_poetry.session(name="tests-renamed")
     def tests(session: nox_poetry.Session) -> None:
         pass
 
-    assert "tests-renamed" in nox.registry.get()
+    assert "tests-renamed" in iter_sessions()
 
 
 def test_wrapper(session: nox.Session) -> None:
