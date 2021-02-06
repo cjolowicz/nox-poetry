@@ -48,6 +48,16 @@ def test_name(iter_sessions: IterSessions) -> None:
     assert "tests-renamed" in iter_sessions()
 
 
+def test_python(iter_sessions: IterSessions) -> None:
+    """It registers the session function for every python version."""
+
+    @nox_poetry.session(python=["3.8", "3.9"])
+    def tests(session: nox_poetry.Session) -> None:
+        pass
+
+    assert set(iter_sessions()) == {"tests", "tests-3.8", "tests-3.9"}
+
+
 def test_wrapper(session: nox.Session) -> None:
     """It invokes the session function."""
     calls = []
