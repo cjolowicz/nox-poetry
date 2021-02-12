@@ -7,6 +7,7 @@ from typing import Any
 from typing import Iterable
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import nox
 
@@ -89,9 +90,9 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
 class PoetrySession:
     """Poetry-related utilities for session functions."""
 
-    def __init__(self, session: nox.Session) -> None:
+    def __init__(self, session: Union[nox.Session, Session]) -> None:
         """Initialize."""
-        self.session = session
+        self.session = session if isinstance(session, nox.Session) else session._session
         self.poetry = Poetry(session)
 
     def install(self, *args: str, **kwargs: Any) -> None:
