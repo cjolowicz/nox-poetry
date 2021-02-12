@@ -31,6 +31,7 @@ from nox_poetry.core import export_requirements
 from nox_poetry.core import install
 from nox_poetry.core import installroot
 from nox_poetry.poetry import DistributionFormat
+from nox_poetry.sessions import PoetrySession
 from nox_poetry.sessions import Session
 from nox_poetry.sessions import session
 
@@ -46,6 +47,7 @@ __all__ = [
     "export_requirements",
     "install",
     "installroot",
+    "PoetrySession",
     "Session",
     "session",
     "SDIST",
