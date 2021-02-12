@@ -2,9 +2,8 @@
 
 This package provides a drop-in replacement for the :func:`session` decorator,
 and for the :class:`Session` object passed to user-defined session functions.
-This enables :meth:`session.install
-<nox_poetry.sessions._PoetrySession.install>` to install packages at the
-versions specified in the Poetry lock file.
+This enables :meth:`session.install <nox_poetry.PoetrySession.install>` to
+install packages at the versions specified in the Poetry lock file.
 
 Example:
     >>> @session(python=["3.8", "3.9"])
@@ -14,12 +13,10 @@ Example:
 
 It also provides helper functions that allow more fine-grained control:
 
-- :meth:`session.poetry.installroot
-  <nox_poetry.sessions._PoetrySession.installroot>`
-- :meth:`session.poetry.build_package
-  <nox_poetry.sessions._PoetrySession.build_package>`
+- :meth:`session.poetry.installroot <nox_poetry.PoetrySession.installroot>`
+- :meth:`session.poetry.build_package <nox_poetry.PoetrySession.build_package>`
 - :meth:`session.poetry.export_requirements
-  <nox_poetry.sessions._PoetrySession.export_requirements>`
+  <nox_poetry.PoetrySession.export_requirements>`
 
 Two constants are defined to specify the format for distribution archives:
 
