@@ -52,7 +52,7 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
     return arg, None
 
 
-class _PoetrySession:
+class PoetrySession:
     """Poetry-related utilities for session functions."""
 
     def __init__(self, session: nox.Session) -> None:
@@ -217,21 +217,18 @@ class Session(_SessionProxy):
     """Proxy for :class:`nox.sessions.Session`, passed to session functions.
 
     This class overrides :meth:`session.install
-    <nox_poetry.sessions._PoetrySession.install>`, and provides Poetry-related
-    utilities:
+    <nox_poetry.PoetrySession.install>`, and provides Poetry-related utilities:
 
-    - :meth:`Session.poetry.installroot
-      <nox_poetry.sessions._PoetrySession.installroot>`
-    - :meth:`Session.poetry.build_package
-      <nox_poetry.sessions._PoetrySession.build_package>`
+    - :meth:`Session.poetry.installroot <nox_poetry.PoetrySession.installroot>`
+    - :meth:`Session.poetry.build_package <nox_poetry.PoetrySession.build_package>`
     - :meth:`Session.poetry.export_requirements
-      <nox_poetry.sessions._PoetrySession.export_requirements>`
+      <nox_poetry.PoetrySession.export_requirements>`
     """
 
     def __init__(self, session: nox.Session) -> None:
         """Initialize."""
         super().__init__(session)
-        self.poetry = _PoetrySession(session)
+        self.poetry = PoetrySession(session)
 
     def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry."""
