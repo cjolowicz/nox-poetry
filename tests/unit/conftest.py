@@ -23,6 +23,11 @@ class FakeSession:
         """Initialize."""
         self.virtualenv = FakeVirtualenv(path)
 
+    @property
+    def _session(self) -> "FakeSession":
+        """Allow passing this instance to PoetrySession."""
+        return self
+
     def run_always(self, *args: str, **kargs: Any) -> str:
         """Run."""
         path = Path("dist") / "example.whl"
