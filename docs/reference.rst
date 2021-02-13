@@ -12,6 +12,8 @@ Classes
 .......
 
 .. autoclass:: Session
+   :members:
+
 .. autoclass:: PoetrySession
    :members:
 
