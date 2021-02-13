@@ -87,11 +87,16 @@ This works because session functions are passed instances of ``nox_poetry.Sessio
 a proxy for ``nox.Session`` adding Poetry-related functionality.
 Behind the scenes, nox-poetry uses Poetry to export a `constraints file`_ and build the package.
 
-For more fine-grained control, additional utilities are available under the ``session.poetry`` attribute:
+You can also create a ``PoetrySession`` from a ``session``;
+this works both in plain Nox sessions, and in nox-poetry sessions.
+The ``PoetrySession`` class provides the same ``install`` method as ``nox_poetry.Session``,
+as well as these additional utilities:
 
-- ``session.poetry.installroot(distribution_format=[WHEEL|SDIST])``
-- ``session.poetry.build_package(distribution_format=[WHEEL|SDIST])``
-- ``session.poetry.export_requirements()``
+- ``installroot(distribution_format=[WHEEL|SDIST])``
+- ``build_package(distribution_format=[WHEEL|SDIST])``
+- ``export_requirements()``
+
+For more details, please see the API reference in the documentation_.
 
 
 Why?
@@ -187,6 +192,7 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _Nox: https://nox.thea.codes/
 .. _Poetry: https://python-poetry.org/
 .. _constraints file: https://pip.pypa.io/en/stable/user_guide/#constraints-files
+.. _documentation: https://nox-poetry.readthedocs.io/
 .. _file an issue: https://github.com/cjolowicz/nox-poetry/issues
 .. _nox.sessions.Session.install: https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install
 .. _nox.sessions.Session.run: https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.run
