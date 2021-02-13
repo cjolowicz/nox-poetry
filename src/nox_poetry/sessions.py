@@ -58,7 +58,8 @@ class _SessionProxy:
 class Session(_SessionProxy):
     """Proxy for :class:`nox.sessions.Session`, passed to session functions.
 
-    This class overrides :meth:`session.install <nox_poetry.PoetrySession.install>`.
+    This class overrides :meth:`nox.sessions.Session.install` with
+    :meth:`PoetrySession.install`.
     """
 
     def __init__(self, session: nox.Session) -> None:
