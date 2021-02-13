@@ -69,7 +69,12 @@ class Session(_SessionProxy):
     def __init__(self, session: nox.Session) -> None:
         """Initialize."""
         super().__init__(session)
-        self.poetry = PoetrySession(session)
+        self._poetry = PoetrySession(session)
+
+    @property
+    def poetry(self) -> "PoetrySession":
+        """Provide access to Poetry-related functionality."""
+        return self._poetry
 
     def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry."""
