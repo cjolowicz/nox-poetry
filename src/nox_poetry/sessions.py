@@ -81,7 +81,10 @@ class Session(_SessionProxy):
         return self._poetry
 
     def install(self, *args: str, **kwargs: Any) -> None:
-        """Install packages into a Nox session using Poetry."""
+        """Install packages into a Nox session using Poetry.
+
+        See :meth:`PoetrySession.install` for details.
+        """
         return self.poetry.install(*args, **kwargs)
 
 
