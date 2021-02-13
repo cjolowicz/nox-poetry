@@ -2,6 +2,7 @@
 import functools
 import hashlib
 import re
+import warnings
 from pathlib import Path
 from typing import Any
 from typing import Iterable
@@ -73,7 +74,16 @@ class Session(_SessionProxy):
 
     @property
     def poetry(self) -> "PoetrySession":
-        """Provide access to Poetry-related functionality."""
+        """Provide access to Poetry-related functionality.
+
+        .. deprecated:: 0.9
+           Use :class:`PoetrySession` instead.
+        """  # noqa: DAR
+        warnings.warn(
+            "nox_poetry.Session.poetry is deprecated"
+            ", use nox_poetry.PoetrySession instead",
+            category=FutureWarning,
+        )
         return self._poetry
 
     def install(self, *args: str, **kwargs: Any) -> None:
