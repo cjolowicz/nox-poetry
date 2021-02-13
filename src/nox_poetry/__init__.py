@@ -11,12 +11,13 @@ Example:
     ...     session.install("pytest", ".")
     ...     session.run("pytest")
 
-It also provides helper functions that allow more fine-grained control:
+The :class:`PoetrySession` class provides utilities that allow more fine-grained
+control:
 
-- :meth:`session.poetry.installroot <nox_poetry.PoetrySession.installroot>`
-- :meth:`session.poetry.build_package <nox_poetry.PoetrySession.build_package>`
-- :meth:`session.poetry.export_requirements
-  <nox_poetry.PoetrySession.export_requirements>`
+- :meth:`PoetrySession.install`
+- :meth:`PoetrySession.installroot`
+- :meth:`PoetrySession.build_package`
+- :meth:`PoetrySession.export_requirements`
 
 Two constants are defined to specify the format for distribution archives:
 
