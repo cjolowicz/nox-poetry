@@ -152,10 +152,15 @@ def list_packages(project: Project, session: SessionFunction) -> List[Package]:
 
     def parse(line: str) -> Package:
         name, _, version = line.partition("==")
+        if not version and " @ " in line:
+            # Abuse Package.version to store the URL or path.
+            name, _, version = line.partition(" @ ")
+
+            if name == project.package.name:
+                # But use the known version for the local package.
+                return project.package
+
         name = _canonicalize_name(name)
-        if not version and name.startswith(f"{project.package.name} @ file://"):
-            # Local package is listed without version, but it does not matter.
-            return project.package
         return Package(name, version)
 
     return [parse(line) for line in process.stdout.splitlines()]
