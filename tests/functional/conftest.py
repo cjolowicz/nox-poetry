@@ -105,15 +105,6 @@ def _run_nox(project: Project) -> CompletedProcess:
         raise RuntimeError(f"{error}\n{error.stderr}")
 
 
-RunNox = Callable[[], CompletedProcess]
-
-
-@pytest.fixture
-def run_nox(project: Project) -> RunNox:
-    """Invoke Nox in the project."""
-    return functools.partial(_run_nox, project)
-
-
 SessionFunction = Callable[..., Any]
 
 
