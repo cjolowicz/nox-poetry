@@ -52,12 +52,12 @@ Install the package with development requirements:
    $ poetry install
 
 You can now run an interactive Python session,
-or the command-line interface:
+or Nox with nox-poetry:
 
 .. code:: console
 
    $ poetry run python
-   $ poetry run nox-poetry
+   $ poetry run nox
 
 .. _Poetry: https://python-poetry.org/
 
