@@ -1,6 +1,6 @@
 """Functional tests."""
 import nox.sessions
-from tests.functional.conftest import ListPackages
+from tests.functional.conftest import list_packages
 from tests.functional.conftest import Project
 from tests.functional.conftest import RunNoxWithNoxfile
 
@@ -10,7 +10,6 @@ import nox_poetry.patch
 def test_install_local_using_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the local package."""
 
@@ -22,7 +21,7 @@ def test_install_local_using_patch(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry.patch])
 
     expected = [project.package, *project.dependencies]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -30,7 +29,6 @@ def test_install_local_using_patch(
 def test_install_local_using_patch_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the extra."""
 
@@ -46,7 +44,7 @@ def test_install_local_using_patch_with_extras(
         *project.dependencies,
         project.get_dependency("pygments"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -54,7 +52,6 @@ def test_install_local_using_patch_with_extras(
 def test_install_local_wheel(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It builds and installs a wheel from the local package."""
 
@@ -66,7 +63,7 @@ def test_install_local_wheel(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
 
     expected = [project.package, *project.dependencies]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -74,7 +71,6 @@ def test_install_local_wheel(
 def test_install_local_wheel_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the extra."""
 
@@ -90,7 +86,7 @@ def test_install_local_wheel_with_extras(
         *project.dependencies,
         project.get_dependency("pygments"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -98,7 +94,6 @@ def test_install_local_wheel_with_extras(
 def test_installroot_wheel(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It builds and installs a wheel from the local package."""
 
@@ -110,7 +105,7 @@ def test_installroot_wheel(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
 
     expected = [project.package, *project.dependencies]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -118,7 +113,6 @@ def test_installroot_wheel(
 def test_installroot_wheel_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the extra."""
 
@@ -136,7 +130,7 @@ def test_installroot_wheel_with_extras(
         *project.dependencies,
         project.get_dependency("pygments"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -144,7 +138,6 @@ def test_installroot_wheel_with_extras(
 def test_installroot_sdist(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It builds and installs an sdist from the local package."""
 
@@ -156,7 +149,7 @@ def test_installroot_sdist(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
 
     expected = [project.package, *project.dependencies]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -164,7 +157,6 @@ def test_installroot_sdist(
 def test_installroot_sdist_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the extra."""
 
@@ -182,7 +174,7 @@ def test_installroot_sdist_with_extras(
         *project.dependencies,
         project.get_dependency("pygments"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -190,7 +182,6 @@ def test_installroot_sdist_with_extras(
 def test_install_dependency_using_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the pinned dependency."""
 
@@ -202,7 +193,7 @@ def test_install_dependency_using_patch(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry.patch])
 
     expected = [project.get_dependency("pyflakes")]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -210,7 +201,6 @@ def test_install_dependency_using_patch(
 def test_install_dependency_without_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the pinned dependency."""
 
@@ -222,7 +212,7 @@ def test_install_dependency_without_patch(
     run_nox_with_noxfile([test], [nox, nox.sessions, nox_poetry])
 
     expected = [project.get_dependency("pycodestyle")]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -230,7 +220,6 @@ def test_install_dependency_without_patch(
 def test_install_local_wheel_and_dependency_using_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the wheel with pinned dependencies."""
 
@@ -246,7 +235,7 @@ def test_install_local_wheel_and_dependency_using_patch(
         *project.dependencies,
         project.get_dependency("pyflakes"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -254,7 +243,6 @@ def test_install_local_wheel_and_dependency_using_patch(
 def test_install_local_wheel_and_dependency_without_patch(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the wheel with pinned dependencies."""
 
@@ -270,7 +258,7 @@ def test_install_local_wheel_and_dependency_without_patch(
         *project.dependencies,
         project.get_dependency("pycodestyle"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -278,7 +266,6 @@ def test_install_local_wheel_and_dependency_without_patch(
 def test_session_install_local(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the local package."""
 
@@ -290,7 +277,7 @@ def test_session_install_local(
     run_nox_with_noxfile([test], [nox_poetry])
 
     expected = [project.package, *project.dependencies]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -298,7 +285,6 @@ def test_session_install_local(
 def test_session_install_local_with_extras(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the extra."""
 
@@ -314,7 +300,7 @@ def test_session_install_local_with_extras(
         *project.dependencies,
         project.get_dependency("pygments"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -322,7 +308,6 @@ def test_session_install_local_with_extras(
 def test_session_install_dependency(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the pinned dependency."""
 
@@ -334,7 +319,7 @@ def test_session_install_dependency(
     run_nox_with_noxfile([test], [nox_poetry])
 
     expected = [project.get_dependency("pyflakes")]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 
@@ -342,7 +327,6 @@ def test_session_install_dependency(
 def test_session_install_local_wheel_and_dependency(
     project: Project,
     run_nox_with_noxfile: RunNoxWithNoxfile,
-    list_packages: ListPackages,
 ) -> None:
     """It installs the wheel with pinned dependencies."""
 
@@ -358,7 +342,7 @@ def test_session_install_local_wheel_and_dependency(
         *project.dependencies,
         project.get_dependency("pyflakes"),
     ]
-    packages = list_packages(test)
+    packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
 

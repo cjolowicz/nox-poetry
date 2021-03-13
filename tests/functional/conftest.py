@@ -177,7 +177,8 @@ def _canonicalize_name(name: str) -> str:
     return _CANONICALIZE_PATTERN.sub("-", name).lower()
 
 
-def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
+def list_packages(project: Project, session: SessionFunction) -> List[Package]:
+    """List the installed packages for a session in the given project."""
     bindir = "Scripts" if sys.platform == "win32" else "bin"
     pip = project.path / ".nox" / session.__name__ / bindir / "pip"
     process = subprocess.run(  # noqa: S603
@@ -197,12 +198,3 @@ def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
         return Package(name, version)
 
     return [parse(line) for line in process.stdout.splitlines()]
-
-
-ListPackages = Callable[[SessionFunction], List[Package]]
-
-
-@pytest.fixture
-def list_packages(project: Project) -> ListPackages:
-    """Return a function that lists the installed packages for a session."""
-    return functools.partial(_list_packages, project)
