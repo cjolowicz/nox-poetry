@@ -52,6 +52,10 @@ class Project:
         data = self._read_toml("poetry.lock")
         for package in data["package"]:
             if package["name"] == name:
+                url = package.get("source", {}).get("url")
+                if url is not None:
+                    # Abuse Package.version to store the URL (for ``list_packages``).
+                    return Package(name, url)
                 return Package(name, package["version"])
         raise ValueError(f"{name}: package not found")
 
