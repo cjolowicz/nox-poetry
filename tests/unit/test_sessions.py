@@ -114,7 +114,7 @@ def proxy(session: nox.Session) -> nox_poetry.Session:
 
 def test_session_getattr(proxy: nox_poetry.Session) -> None:
     """It delegates to the real session."""
-    assert proxy.create_tmp()
+    assert proxy.virtualenv.location
 
 
 def test_session_install(proxy: nox_poetry.Session) -> None:
