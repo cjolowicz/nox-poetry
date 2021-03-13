@@ -3,6 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 from textwrap import dedent
+from typing import Optional
 
 import nox
 
@@ -117,7 +118,8 @@ def mypy(session: Session) -> None:
 
 
 @session(python=python_versions)
-def tests(session: Session) -> None:
+@nox.parametrize("poetry", ["1.0.10", None])
+def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
     session.install(".")
     session.install(
@@ -129,6 +131,14 @@ def tests(session: Session) -> None:
     )
     if session.python == "3.6":
         session.install("dataclasses")
+
+    if poetry is not None:
+        if session.python != python_versions[0]:
+            session.skip()
+
+        session.run_always(
+            "python", "-m", "pip", "install", f"poetry=={poetry}", silent=True
+        )
 
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
