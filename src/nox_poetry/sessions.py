@@ -170,7 +170,8 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            self.poetry.export(path)
+            requirements = self.poetry.export()
+            path.write_text(requirements)
             hashfile.write_text(digest)
 
         return path
