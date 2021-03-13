@@ -327,3 +327,20 @@ def test_install_with_url_dependency(datadir: Path) -> None:
     packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
+
+
+def test_install_with_path_dependency(datadir: Path) -> None:
+    """It installs the package."""
+    project = Project(datadir / "path-dependency")
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the local package."""
+        session.install(".")
+
+    run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    expected = [project.package, *project.dependencies]
+    packages = list_packages(project, test)
+
+    assert set(expected) == set(packages)
