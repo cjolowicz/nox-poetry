@@ -66,15 +66,11 @@ class Project:
     @property
     def dependencies(self) -> List[Package]:
         """Return the package dependencies."""
-        table = self._get_config("dependencies")
+        data = self._read_toml("poetry.lock")
         dependencies: List[str] = [
-            package
-            for package, info in table.items()
-            if not (
-                package == "python"
-                or isinstance(info, dict)
-                and info.get("optional", None)
-            )
+            package["name"]
+            for package in data["package"]
+            if package["category"] == "main" and not package["optional"]
         ]
         return [self.get_dependency(package) for package in dependencies]
 
