@@ -15,7 +15,7 @@ class FakeSession:
         """Initialize."""
         self.path = path
 
-    def run(self, *args: str, **kargs: Any) -> str:
+    def run_always(self, *args: str, **kargs: Any) -> str:
         """Run."""
         path = Path("dist") / "example.whl"
         path.touch()

@@ -102,7 +102,7 @@ class _PoetrySession:
 
             args = tuple(rewrite(arg, extras) for arg, extras in args_extras)
 
-            self.session.run("pip", "uninstall", "--yes", package, silent=True)
+            self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
         requirements = self.export_requirements()
         Session_install(self.session, f"--constraint={requirements}", *args, **kwargs)
@@ -133,7 +133,7 @@ class _PoetrySession:
         package = self.build_package(distribution_format=distribution_format)
         requirements = self.export_requirements()
 
-        self.session.run("pip", "uninstall", "--yes", package, silent=True)
+        self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
         suffix = ",".join(extras)
         if suffix.strip():
