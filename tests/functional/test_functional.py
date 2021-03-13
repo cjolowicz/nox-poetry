@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import nox.sessions
+import pytest
 from tests.functional.conftest import list_packages
 from tests.functional.conftest import Project
 from tests.functional.conftest import run_nox_with_noxfile
@@ -329,6 +330,8 @@ def test_install_with_url_dependency(datadir: Path) -> None:
     assert set(expected) == set(packages)
 
 
+# https://github.com/python-poetry/poetry/issues/3468
+@pytest.mark.xfail(reason="Poetry exports path requirements in an invalid format.")
 def test_install_with_path_dependency(datadir: Path) -> None:
     """It installs the package."""
     project = Project(datadir / "path-dependency")
