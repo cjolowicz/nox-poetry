@@ -1,5 +1,4 @@
 """Fixtures for functional tests."""
-import functools
 import inspect
 import os
 import re
@@ -119,21 +118,6 @@ def _write_noxfile(
 
     path = project.path / "noxfile.py"
     path.write_text(text)
-
-
-WriteNoxfile = Callable[
-    [
-        Iterable[SessionFunction],
-        Iterable[ModuleType],
-    ],
-    None,
-]
-
-
-@pytest.fixture
-def write_noxfile(project: Project) -> WriteNoxfile:
-    """Write a noxfile with the given session functions."""
-    return functools.partial(_write_noxfile, project)
 
 
 def run_nox_with_noxfile(
