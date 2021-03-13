@@ -145,28 +145,14 @@ def write_noxfile(project: Project) -> WriteNoxfile:
     return functools.partial(_write_noxfile, project)
 
 
-def _run_nox_with_noxfile(
+def run_nox_with_noxfile(
     project: Project,
     sessions: Iterable[SessionFunction],
     imports: Iterable[ModuleType],
 ) -> None:
+    """Write a noxfile and run Nox in the project."""
     _write_noxfile(project, sessions, imports)
     _run_nox(project)
-
-
-RunNoxWithNoxfile = Callable[
-    [
-        Iterable[SessionFunction],
-        Iterable[ModuleType],
-    ],
-    None,
-]
-
-
-@pytest.fixture
-def run_nox_with_noxfile(project: Project) -> RunNoxWithNoxfile:
-    """Write a noxfile and run Nox in the project."""
-    return functools.partial(_run_nox_with_noxfile, project)
 
 
 _CANONICALIZE_PATTERN = re.compile(r"[-_.]+")
