@@ -52,6 +52,9 @@ This enables ``session.install`` to install packages at the versions specified i
         session.run("pytest")
 
 
+**Disclaimer:** *This project is not affiliated with Nox, and not an official Nox plugin.*
+
+
 Installation
 ------------
 
