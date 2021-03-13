@@ -1,7 +1,6 @@
 """Fixtures for functional tests."""
 import inspect
 import os
-import re
 import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
@@ -16,6 +15,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import tomlkit
+from packaging.utils import canonicalize_name
 
 
 if TYPE_CHECKING:
@@ -134,14 +134,6 @@ def run_nox_with_noxfile(
     _run_nox(project)
 
 
-_CANONICALIZE_PATTERN = re.compile(r"[-_.]+")
-
-
-def _canonicalize_name(name: str) -> str:
-    # From ``packaging.utils.canonicalize_name`` (PEP 503)
-    return _CANONICALIZE_PATTERN.sub("-", name).lower()
-
-
 def list_packages(project: Project, session: SessionFunction) -> List[Package]:
     """List the installed packages for a session in the given project."""
     bindir = "Scripts" if sys.platform == "win32" else "bin"
@@ -164,7 +156,7 @@ def list_packages(project: Project, session: SessionFunction) -> List[Package]:
                 # But use the known version for the local package.
                 return project.package
 
-        name = _canonicalize_name(name)
+        name = canonicalize_name(name)
         return Package(name, version)
 
     return [parse(line) for line in process.stdout.splitlines()]
