@@ -7,9 +7,7 @@ from tests.functional.conftest import run_nox_with_noxfile
 import nox_poetry.patch
 
 
-def test_install_local_using_patch(
-    project: Project,
-) -> None:
+def test_install_local_using_patch(project: Project) -> None:
     """It installs the local package."""
 
     @nox.session
@@ -25,9 +23,7 @@ def test_install_local_using_patch(
     assert set(expected) == set(packages)
 
 
-def test_install_local_using_patch_with_extras(
-    project: Project,
-) -> None:
+def test_install_local_using_patch_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -47,9 +43,7 @@ def test_install_local_using_patch_with_extras(
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel(
-    project: Project,
-) -> None:
+def test_install_local_wheel(project: Project) -> None:
     """It builds and installs a wheel from the local package."""
 
     @nox.session
@@ -65,9 +59,7 @@ def test_install_local_wheel(
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel_with_extras(
-    project: Project,
-) -> None:
+def test_install_local_wheel_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -87,9 +79,7 @@ def test_install_local_wheel_with_extras(
     assert set(expected) == set(packages)
 
 
-def test_installroot_wheel(
-    project: Project,
-) -> None:
+def test_installroot_wheel(project: Project) -> None:
     """It builds and installs a wheel from the local package."""
 
     @nox.session
@@ -105,9 +95,7 @@ def test_installroot_wheel(
     assert set(expected) == set(packages)
 
 
-def test_installroot_wheel_with_extras(
-    project: Project,
-) -> None:
+def test_installroot_wheel_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -129,9 +117,7 @@ def test_installroot_wheel_with_extras(
     assert set(expected) == set(packages)
 
 
-def test_installroot_sdist(
-    project: Project,
-) -> None:
+def test_installroot_sdist(project: Project) -> None:
     """It builds and installs an sdist from the local package."""
 
     @nox.session
@@ -147,9 +133,7 @@ def test_installroot_sdist(
     assert set(expected) == set(packages)
 
 
-def test_installroot_sdist_with_extras(
-    project: Project,
-) -> None:
+def test_installroot_sdist_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -171,9 +155,7 @@ def test_installroot_sdist_with_extras(
     assert set(expected) == set(packages)
 
 
-def test_install_dependency_using_patch(
-    project: Project,
-) -> None:
+def test_install_dependency_using_patch(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox.session
@@ -189,9 +171,7 @@ def test_install_dependency_using_patch(
     assert set(expected) == set(packages)
 
 
-def test_install_dependency_without_patch(
-    project: Project,
-) -> None:
+def test_install_dependency_without_patch(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox.session
@@ -207,9 +187,7 @@ def test_install_dependency_without_patch(
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel_and_dependency_using_patch(
-    project: Project,
-) -> None:
+def test_install_local_wheel_and_dependency_using_patch(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox.session
@@ -229,9 +207,7 @@ def test_install_local_wheel_and_dependency_using_patch(
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel_and_dependency_without_patch(
-    project: Project,
-) -> None:
+def test_install_local_wheel_and_dependency_without_patch(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox.session
@@ -251,9 +227,7 @@ def test_install_local_wheel_and_dependency_without_patch(
     assert set(expected) == set(packages)
 
 
-def test_session_install_local(
-    project: Project,
-) -> None:
+def test_session_install_local(project: Project) -> None:
     """It installs the local package."""
 
     @nox_poetry.session
@@ -269,9 +243,7 @@ def test_session_install_local(
     assert set(expected) == set(packages)
 
 
-def test_session_install_local_with_extras(
-    project: Project,
-) -> None:
+def test_session_install_local_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox_poetry.session
@@ -291,9 +263,7 @@ def test_session_install_local_with_extras(
     assert set(expected) == set(packages)
 
 
-def test_session_install_dependency(
-    project: Project,
-) -> None:
+def test_session_install_dependency(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox_poetry.session
@@ -309,9 +279,7 @@ def test_session_install_dependency(
     assert set(expected) == set(packages)
 
 
-def test_session_install_local_wheel_and_dependency(
-    project: Project,
-) -> None:
+def test_session_install_local_wheel_and_dependency(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox_poetry.session
@@ -331,9 +299,7 @@ def test_session_install_local_wheel_and_dependency(
     assert set(expected) == set(packages)
 
 
-def test_session_parametrize(
-    project: Project,
-) -> None:
+def test_session_parametrize(project: Project) -> None:
     """It forwards parameters to sessions."""
 
     @nox_poetry.session
