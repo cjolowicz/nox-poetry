@@ -25,7 +25,7 @@ nox-poetry
 .. |Tests| image:: https://github.com/cjolowicz/nox-poetry/workflows/Tests/badge.svg
    :target: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
    :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/master/graph/badge.svg
+.. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/cjolowicz/nox-poetry
    :alt: Codecov
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
