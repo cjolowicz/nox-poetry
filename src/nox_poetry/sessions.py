@@ -191,7 +191,7 @@ class _PoetrySession:
             The file URL for the distribution package.
         """
         wheel = Path("dist") / self.poetry.build(format=distribution_format)
-        url = f"file://{wheel.resolve().as_posix()}"
+        url = wheel.resolve().as_uri()
 
         if DistributionFormat(distribution_format) is DistributionFormat.SDIST:
             url += f"#egg={self.poetry.config.name}"
