@@ -1,0 +1,39 @@
+[[package]]
+category = "main"
+description = ""
+develop = true
+name = "example"
+optional = false
+python-versions = "^3.6.1"
+version = "0.1.0"
+
+[package.dependencies]
+first = "^2.0.0"
+
+[package.extras]
+pygments = ["Pygments (^2.7.1)"]
+
+[package.source]
+reference = ""
+type = "directory"
+url = "../example"
+
+[[package]]
+category = "main"
+description = "Return the first true value of an iterable."
+name = "first"
+optional = false
+python-versions = "*"
+version = "2.0.2"
+
+[metadata]
+content-hash = "5b4bb67e14af611647b481be0b303a180d88713c270fd4f73f47e2f1321f7696"
+lock-version = "1.0"
+python-versions = "^3.6.1"
+
+[metadata.files]
+example = []
+first = [
+    {file = "first-2.0.2-py2.py3-none-any.whl", hash = "sha256:8d8e46e115ea8ac652c76123c0865e3ff18372aef6f03c22809ceefcea9dec86"},
+    {file = "first-2.0.2.tar.gz", hash = "sha256:ff285b08c55f8c97ce4ea7012743af2495c9f1291785f163722bd36f6af6d3bf"},
+]

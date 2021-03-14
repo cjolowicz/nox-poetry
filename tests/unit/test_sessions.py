@@ -8,6 +8,7 @@ import nox.registry
 import pytest
 
 import nox_poetry
+from nox_poetry.sessions import to_constraints  # type: ignore[attr-defined]
 
 
 IterSessions = Callable[[], Iterator[str]]
@@ -136,3 +137,29 @@ def test_session_export_requirements(proxy: nox_poetry.Session) -> None:
 def test_session_build_package(proxy: nox_poetry.Session) -> None:
     """It exports the requirements."""
     proxy.poetry.build_package(distribution_format=nox_poetry.SDIST)
+
+
+@pytest.mark.parametrize(
+    "requirements,expected",
+    [
+        ("", ""),
+        (" ", ""),
+        ("first @ https://github.com/hynek/first/archive/main.zip", ""),
+        ("https://github.com/hynek/first/archive/main.zip", ""),
+        ("first==2.0.2", "first==2.0.2"),
+        ("httpx[http2]==0.17.0", "httpx==0.17.0"),
+        (
+            "regex==2020.10.28; python_version == '3.5'",
+            'regex==2020.10.28; python_version == "3.5"',
+        ),
+    ],
+)
+def test_to_constraints(requirements: str, expected: str) -> None:
+    """It converts requirements to constraints."""
+    assert to_constraints(requirements) == expected
+
+
+def test_invalid_constraint() -> None:
+    """It raises an exception."""
+    with pytest.raises(Exception):
+        to_constraints("example @ /tmp/example")

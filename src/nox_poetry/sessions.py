@@ -5,10 +5,13 @@ import re
 from pathlib import Path
 from typing import Any
 from typing import Iterable
+from typing import Iterator
 from typing import Optional
 from typing import Tuple
 
 import nox
+from packaging.requirements import InvalidRequirement
+from packaging.requirements import Requirement
 
 from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
@@ -50,6 +53,39 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
     if match:
         return match.group(1), match.group(2)
     return arg, None
+
+
+def to_constraint(requirement_string: str, line: int) -> Optional[str]:
+    """Convert requirement to constraint."""
+    if any(
+        requirement_string.startswith(prefix)
+        for prefix in ("-e ", "file://", "git+https://", "http://", "https://")
+    ):
+        return None
+
+    try:
+        requirement = Requirement(requirement_string)
+    except InvalidRequirement as error:
+        raise RuntimeError(f"line {line}: {requirement_string!r}: {error}")
+
+    if not (requirement.name and requirement.specifier):
+        return None
+
+    constraint = f"{requirement.name}{requirement.specifier}"
+    return f"{constraint}; {requirement.marker}" if requirement.marker else constraint
+
+
+def to_constraints(requirements: str) -> str:
+    """Convert requirements to constraints."""
+
+    def _to_constraints() -> Iterator[str]:
+        lines = requirements.strip().splitlines()
+        for line, requirement in enumerate(lines, start=1):
+            constraint = to_constraint(requirement, line)
+            if constraint is not None:
+                yield constraint
+
+    return "\n".join(_to_constraints())
 
 
 class _PoetrySession:
@@ -170,7 +206,8 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            self.poetry.export(path)
+            constraints = to_constraints(self.poetry.export())
+            path.write_text(constraints)
             hashfile.write_text(digest)
 
         return path

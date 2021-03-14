@@ -1,0 +1,19 @@
+[[package]]
+category = "main"
+description = ""
+name = "poyo"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "0.5.0"
+
+[package.source]
+reference = ""
+type = "url"
+url = "https://github.com/hackebrot/poyo/archive/master.zip"
+[metadata]
+content-hash = "ff110fa8bd529837779d5f342f0367a2707ef9f31ece6f059ba47a616e5ebcb4"
+lock-version = "1.0"
+python-versions = "^3.6.1"
+
+[metadata.files]
+poyo = []

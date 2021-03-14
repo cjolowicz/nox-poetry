@@ -1,8 +1,6 @@
 """Fixtures for functional tests."""
-import functools
 import inspect
 import os
-import re
 import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
@@ -17,6 +15,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import tomlkit
+from packaging.utils import canonicalize_name
 
 
 if TYPE_CHECKING:
@@ -53,6 +52,10 @@ class Project:
         data = self._read_toml("poetry.lock")
         for package in data["package"]:
             if package["name"] == name:
+                url = package.get("source", {}).get("url")
+                if url is not None:
+                    # Abuse Package.version to store the URL (for ``list_packages``).
+                    return Package(name, url)
                 return Package(name, package["version"])
         raise ValueError(f"{name}: package not found")
 
@@ -66,15 +69,11 @@ class Project:
     @property
     def dependencies(self) -> List[Package]:
         """Return the package dependencies."""
-        table = self._get_config("dependencies")
+        data = self._read_toml("poetry.lock")
         dependencies: List[str] = [
-            package
-            for package, info in table.items()
-            if not (
-                package == "python"
-                or isinstance(info, dict)
-                and info.get("optional", None)
-            )
+            package["name"]
+            for package in data["package"]
+            if package["category"] == "main" and not package["optional"]
         ]
         return [self.get_dependency(package) for package in dependencies]
 
@@ -109,15 +108,6 @@ def _run_nox(project: Project) -> CompletedProcess:
         raise RuntimeError(f"{error}\n{error.stderr}")
 
 
-RunNox = Callable[[], CompletedProcess]
-
-
-@pytest.fixture
-def run_nox(project: Project) -> RunNox:
-    """Invoke Nox in the project."""
-    return functools.partial(_run_nox, project)
-
-
 SessionFunction = Callable[..., Any]
 
 
@@ -134,54 +124,18 @@ def _write_noxfile(
     path.write_text(text)
 
 
-WriteNoxfile = Callable[
-    [
-        Iterable[SessionFunction],
-        Iterable[ModuleType],
-    ],
-    None,
-]
-
-
-@pytest.fixture
-def write_noxfile(project: Project) -> WriteNoxfile:
-    """Write a noxfile with the given session functions."""
-    return functools.partial(_write_noxfile, project)
-
-
-def _run_nox_with_noxfile(
+def run_nox_with_noxfile(
     project: Project,
     sessions: Iterable[SessionFunction],
     imports: Iterable[ModuleType],
 ) -> None:
+    """Write a noxfile and run Nox in the project."""
     _write_noxfile(project, sessions, imports)
     _run_nox(project)
 
 
-RunNoxWithNoxfile = Callable[
-    [
-        Iterable[SessionFunction],
-        Iterable[ModuleType],
-    ],
-    None,
-]
-
-
-@pytest.fixture
-def run_nox_with_noxfile(project: Project) -> RunNoxWithNoxfile:
-    """Write a noxfile and run Nox in the project."""
-    return functools.partial(_run_nox_with_noxfile, project)
-
-
-_CANONICALIZE_PATTERN = re.compile(r"[-_.]+")
-
-
-def _canonicalize_name(name: str) -> str:
-    # From ``packaging.utils.canonicalize_name`` (PEP 503)
-    return _CANONICALIZE_PATTERN.sub("-", name).lower()
-
-
-def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
+def list_packages(project: Project, session: SessionFunction) -> List[Package]:
+    """List the installed packages for a session in the given project."""
     bindir = "Scripts" if sys.platform == "win32" else "bin"
     pip = project.path / ".nox" / session.__name__ / bindir / "pip"
     process = subprocess.run(  # noqa: S603
@@ -194,19 +148,15 @@ def _list_packages(project: Project, session: SessionFunction) -> List[Package]:
 
     def parse(line: str) -> Package:
         name, _, version = line.partition("==")
-        name = _canonicalize_name(name)
-        if not version and name.startswith(f"{project.package.name} @ file://"):
-            # Local package is listed without version, but it does not matter.
-            return project.package
+        if not version and " @ " in line:
+            # Abuse Package.version to store the URL or path.
+            name, _, version = line.partition(" @ ")
+
+            if name == project.package.name:
+                # But use the known version for the local package.
+                return project.package
+
+        name = canonicalize_name(name)
         return Package(name, version)
 
     return [parse(line) for line in process.stdout.splitlines()]
-
-
-ListPackages = Callable[[SessionFunction], List[Package]]
-
-
-@pytest.fixture
-def list_packages(project: Project) -> ListPackages:
-    """Return a function that lists the installed packages for a session."""
-    return functools.partial(_list_packages, project)

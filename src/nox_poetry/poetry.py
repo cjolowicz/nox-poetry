@@ -61,22 +61,25 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self, path: Path) -> None:
+    def export(self) -> str:
         """Export the lock file to requirements format.
 
-        Args:
-            path: The destination path.
+        Returns:
+            The generated requirements as text.
         """
-        self.session.run_always(
+        output = self.session.run_always(
             "poetry",
             "export",
             "--format=requirements.txt",
-            f"--output={path}",
             "--dev",
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
             external=True,
+            silent=True,
+            stderr=None,
         )
+        assert isinstance(output, str)  # noqa: S101
+        return output
 
     def build(self, *, format: str) -> str:
         """Build the package.
