@@ -2,11 +2,13 @@
 import functools
 import hashlib
 import re
+import warnings
 from pathlib import Path
 from typing import Any
 from typing import Iterable
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import nox
 
@@ -41,6 +43,52 @@ def session(*args: Any, **kwargs: Any) -> Any:
     return nox.session(wrapper, **kwargs)  # type: ignore[call-overload]
 
 
+class _SessionProxy:
+    """Proxy for :class:`nox.sessions.Session`."""
+
+    def __init__(self, session: nox.Session) -> None:
+        """Initialize."""
+        self._session = session
+
+    def __getattr__(self, name: str) -> Any:
+        """Delegate attribute access to nox.Session."""
+        return getattr(self._session, name)
+
+
+class Session(_SessionProxy):
+    """Proxy for :class:`nox.sessions.Session`, passed to session functions.
+
+    This class overrides :meth:`nox.sessions.Session.install` with
+    :meth:`PoetrySession.install`.
+    """
+
+    def __init__(self, session: nox.Session) -> None:
+        """Initialize."""
+        super().__init__(session)
+        self._poetry = PoetrySession(session)
+
+    @property
+    def poetry(self) -> "PoetrySession":
+        """Provide access to Poetry-related functionality.
+
+        .. deprecated:: 0.9
+           Use :class:`PoetrySession` instead.
+        """  # noqa: DAR
+        warnings.warn(
+            "nox_poetry.Session.poetry is deprecated"
+            ", use nox_poetry.PoetrySession instead",
+            category=FutureWarning,
+        )
+        return self._poetry
+
+    def install(self, *args: str, **kwargs: Any) -> None:
+        """Install packages into a Nox session using Poetry.
+
+        See :meth:`PoetrySession.install` for details.
+        """
+        return self.poetry.install(*args, **kwargs)
+
+
 _EXTRAS_PATTERN = re.compile(r"^(.+)(\[[^\]]+\])$")
 
 
@@ -52,12 +100,12 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
     return arg, None
 
 
-class _PoetrySession:
+class PoetrySession:
     """Poetry-related utilities for session functions."""
 
-    def __init__(self, session: nox.Session) -> None:
+    def __init__(self, session: Union[nox.Session, Session]) -> None:
         """Initialize."""
-        self.session = session
+        self.session = session if isinstance(session, nox.Session) else session._session
         self.poetry = Poetry(session)
 
     def install(self, *args: str, **kwargs: Any) -> None:
@@ -199,40 +247,3 @@ class _PoetrySession:
             url += f"#egg={self.poetry.config.name}"
 
         return url
-
-
-class _SessionProxy:
-    """Proxy for :class:`nox.sessions.Session`."""
-
-    def __init__(self, session: nox.Session) -> None:
-        """Initialize."""
-        self._session = session
-
-    def __getattr__(self, name: str) -> Any:
-        """Delegate attribute access to nox.Session."""
-        return getattr(self._session, name)
-
-
-class Session(_SessionProxy):
-    """Proxy for :class:`nox.sessions.Session`, passed to session functions.
-
-    This class overrides :meth:`session.install
-    <nox_poetry.sessions._PoetrySession.install>`, and provides Poetry-related
-    utilities:
-
-    - :meth:`Session.poetry.installroot
-      <nox_poetry.sessions._PoetrySession.installroot>`
-    - :meth:`Session.poetry.build_package
-      <nox_poetry.sessions._PoetrySession.build_package>`
-    - :meth:`Session.poetry.export_requirements
-      <nox_poetry.sessions._PoetrySession.export_requirements>`
-    """
-
-    def __init__(self, session: nox.Session) -> None:
-        """Initialize."""
-        super().__init__(session)
-        self.poetry = _PoetrySession(session)
-
-    def install(self, *args: str, **kwargs: Any) -> None:
-        """Install packages into a Nox session using Poetry."""
-        return self.poetry.install(*args, **kwargs)

@@ -6,6 +6,7 @@ from textwrap import dedent
 
 import nox
 
+from nox_poetry import PoetrySession
 from nox_poetry import Session
 from nox_poetry import session
 
@@ -98,7 +99,9 @@ def precommit(session: Session) -> None:
 @session(python="3.9")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    requirements = session.poetry.export_requirements()
+    poetry = PoetrySession(session)
+    requirements = poetry.export_requirements()
+
     session.install("safety")
     # Ignore CVE-2020-28476 affecting all versions of tornado
     # https://github.com/tornadoweb/tornado/issues/2981
