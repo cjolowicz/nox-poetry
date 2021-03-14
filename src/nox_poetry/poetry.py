@@ -67,7 +67,7 @@ class Poetry:
         Args:
             path: The destination path.
         """
-        self.session.run(
+        self.session.run_always(
             "poetry",
             "export",
             "--format=requirements.txt",
@@ -102,7 +102,7 @@ class Poetry:
         if not isinstance(format, DistributionFormat):
             format = DistributionFormat(format)
 
-        output = self.session.run(
+        output = self.session.run_always(
             "poetry",
             "build",
             f"--format={format}",
