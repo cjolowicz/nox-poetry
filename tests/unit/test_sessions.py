@@ -152,6 +152,11 @@ def test_session_build_package(proxy: nox_poetry.Session) -> None:
             "regex==2020.10.28; python_version == '3.5'",
             'regex==2020.10.28; python_version == "3.5"',
         ),
+        ("-e ../lib/foo", ""),
+        (
+            "--extra-index-url https://example.com/pypi/simple",
+            "",
+        ),
     ],
 )
 def test_to_constraints(requirements: str, expected: str) -> None:
