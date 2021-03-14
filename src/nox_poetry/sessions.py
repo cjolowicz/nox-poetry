@@ -160,7 +160,9 @@ class _PoetrySession:
         Returns:
             The path to the requirements file.
         """
-        tmpdir = Path(self.session.create_tmp())
+        tmpdir = Path(self.session.virtualenv.location) / "tmp"
+        tmpdir.mkdir(exist_ok=True)
+
         path = tmpdir / "requirements.txt"
         hashfile = tmpdir / f"{path.name}.hash"
 

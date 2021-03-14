@@ -8,12 +8,20 @@ from _pytest.monkeypatch import MonkeyPatch
 from nox.sessions import Session
 
 
+class FakeVirtualenv:
+    """Fake virtual environment."""
+
+    def __init__(self, path: Path) -> None:
+        """Initialize."""
+        self.location = str(path)
+
+
 class FakeSession:
     """Fake session."""
 
     def __init__(self, path: Path) -> None:
         """Initialize."""
-        self.path = path
+        self.virtualenv = FakeVirtualenv(path)
 
     def run_always(self, *args: str, **kargs: Any) -> str:
         """Run."""
@@ -23,11 +31,6 @@ class FakeSession:
 
     def install(self, *args: str, **kargs: Any) -> None:
         """Install."""
-        pass
-
-    def create_tmp(self, *args: str, **kargs: Any) -> str:
-        """Create temporary directory."""
-        return str(self.path)
 
 
 @pytest.fixture
