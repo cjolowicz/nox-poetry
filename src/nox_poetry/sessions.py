@@ -59,7 +59,7 @@ def to_constraint(requirement_string: str, line: int) -> Optional[str]:
     """Convert requirement to constraint."""
     if any(
         requirement_string.startswith(prefix)
-        for prefix in ("-e ", "file://", "git+https://", "http://", "https://")
+        for prefix in ("-", "file://", "git+https://", "http://", "https://")
     ):
         return None
 
