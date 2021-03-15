@@ -156,7 +156,7 @@ def test_session_build_package(proxy: nox_poetry.Session) -> None:
         (
             """
             --extra-index-url https://example.com/pypi/simple
-            
+
             boltons==20.2.1
             """,
             "boltons==20.2.1",
