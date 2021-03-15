@@ -61,7 +61,7 @@ def to_constraint(requirement_string: str, line: int) -> Optional[str]:
         any(
             requirement_string.startswith(prefix)
             for prefix in ("-", "file://", "git+https://", "http://", "https://")
-		) 
+	) 
         or requirement_string.strip() == ""  # ignore empty lines as well
     ):
         return None
