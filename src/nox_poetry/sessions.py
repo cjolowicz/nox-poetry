@@ -57,12 +57,9 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
 
 def to_constraint(requirement_string: str, line: int) -> Optional[str]:
     """Convert requirement to constraint."""
-    if (
-        any(
-            requirement_string.startswith(prefix)
-            for prefix in ("-", "file://", "git+https://", "http://", "https://")
-        )
-        or requirement_string.strip() == ""  # ignore empty lines as well
+    if any(
+        requirement_string.startswith(prefix)
+        for prefix in ("-", "file://", "git+https://", "http://", "https://")
     ):
         return None
 
@@ -82,11 +79,12 @@ def to_constraints(requirements: str) -> str:
     """Convert requirements to constraints."""
 
     def _to_constraints() -> Iterator[str]:
-        lines = requirements.strip().splitlines()
+        lines = requirements.splitlines()
         for line, requirement in enumerate(lines, start=1):
-            constraint = to_constraint(requirement, line)
-            if constraint is not None:
-                yield constraint
+            if requirement.strip():
+                constraint = to_constraint(requirement, line)
+                if constraint is not None:
+                    yield constraint
 
     return "\n".join(_to_constraints())
 
