@@ -116,8 +116,7 @@ def proxy(session: nox.Session) -> nox_poetry.Session:
 
 def test_session_getattr(proxy: nox_poetry.Session) -> None:
     """It delegates to the real session."""
-    # Fixed in https://github.com/theacodes/nox/pull/377
-    assert proxy.virtualenv.location  # type: ignore[attr-defined]
+    assert proxy._runner.envdir
 
 
 def test_session_install(proxy: nox_poetry.Session) -> None:
