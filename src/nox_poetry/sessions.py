@@ -197,8 +197,11 @@ class _PoetrySession:
         Returns:
             The path to the requirements file.
         """
-        tmpdir = Path(self.session.virtualenv.location) / "tmp"
-        tmpdir.mkdir(exist_ok=True)
+        # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
+        # have it. We'll just create a fake virtualenv directory in this case.
+
+        tmpdir = Path(self.session._runner.envdir) / "tmp"
+        tmpdir.mkdir(exist_ok=True, parents=True)
 
         path = tmpdir / "requirements.txt"
         hashfile = tmpdir / f"{path.name}.hash"
