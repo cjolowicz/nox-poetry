@@ -29,6 +29,7 @@ class _PoetrySession:
 class Session:
     poetry: _PoetrySession
     _session: nox.Session
+    _runner: nox.sessions.SessionRunner
     def __init__(self, session: nox.Session) -> None: ...
     def install(self, *args: str, **kwargs: Any) -> None: ...
     @property
