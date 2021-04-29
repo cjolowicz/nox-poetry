@@ -4,6 +4,7 @@
   "email": "mail@claudiojolowicz.com",
   "friendly_name": "nox-poetry",
   "github_user": "cjolowicz",
+  "license": "MIT",
   "package_name": "nox_poetry",
   "project_name": "nox-poetry",
   "version": "0.1.0"
