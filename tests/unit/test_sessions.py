@@ -1,12 +1,15 @@
 """Unit tests for the sessions module."""
 from textwrap import dedent
 from typing import Callable
+from typing import cast
 from typing import Iterator
 
 import nox._options
 import nox.manifest
 import nox.registry
 import pytest
+from tests.unit.conftest import FakeSession
+from tests.unit.conftest import FakeSessionFactory
 
 import nox_poetry
 from nox_poetry.sessions import to_constraints  # type: ignore[attr-defined]
@@ -175,3 +178,42 @@ def test_invalid_constraint() -> None:
     """It raises an exception."""
     with pytest.raises(Exception):
         to_constraints("example @ /tmp/example")
+
+
+@pytest.mark.parametrize("no_install", [False, True])
+def test_install_local_no_install(
+    sessionfactory: FakeSessionFactory, no_install: bool
+) -> None:
+    """It returns early with --no-install if the environment is being reused."""
+    session = sessionfactory(no_install=no_install)
+    proxy = nox_poetry.Session(session)
+
+    proxy.install(".")
+
+    assert cast(FakeSession, session).install_called is not no_install
+
+
+@pytest.mark.parametrize("no_install", [False, True])
+def test_install_dependency_no_install(
+    sessionfactory: FakeSessionFactory, no_install: bool
+) -> None:
+    """It returns early with --no-install if the environment is being reused."""
+    session = sessionfactory(no_install=no_install)
+    proxy = nox_poetry.Session(session)
+
+    proxy.install("first")
+
+    assert cast(FakeSession, session).install_called is not no_install
+
+
+@pytest.mark.parametrize("no_install", [False, True])
+def test_installroot_no_install(
+    sessionfactory: FakeSessionFactory, no_install: bool
+) -> None:
+    """It returns early with --no-install if the environment is being reused."""
+    session = sessionfactory(no_install=no_install)
+    proxy = nox_poetry.Session(session)
+
+    proxy.poetry.installroot()
+
+    assert cast(FakeSession, session).install_called is not no_install
