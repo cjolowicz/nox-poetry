@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List
 from typing import Optional
 
-import tomlkit
+import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
 from nox.sessions import Session
 
 
@@ -22,7 +22,7 @@ class Config:
         """Initialize."""
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
-        data = tomlkit.parse(text)
+        data = tomlkit.api.parse(text)
         self._config = data["tool"]["poetry"]
 
     @property
