@@ -9,6 +9,10 @@ import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
 from nox.sessions import Session
 
 
+class CommandSkippedError(Exception):
+    """The command was not executed by Nox."""
+
+
 class DistributionFormat(str, Enum):
     """Type of distribution archive for a Python package."""
 
@@ -67,6 +71,9 @@ class Poetry:
 
         Returns:
             The generated requirements as text.
+
+        Raises:
+            CommandSkippedError: The command `poetry export` was not executed.
         """
         output = self.session.run_always(
             "poetry",
@@ -79,6 +86,13 @@ class Poetry:
             silent=True,
             stderr=None,
         )
+
+        if output is None:
+            raise CommandSkippedError(
+                "The command `poetry export` was not executed"
+                " (a possible cause is specifying `--no-install`)"
+            )
+
         assert isinstance(output, str)  # noqa: S101
         return output
 
@@ -102,6 +116,9 @@ class Poetry:
 
         Returns:
             The basename of the wheel built by Poetry.
+
+        Raises:
+            CommandSkippedError: The command `poetry build` was not executed.
         """
         if not isinstance(format, DistributionFormat):
             format = DistributionFormat(format)
@@ -114,5 +131,12 @@ class Poetry:
             silent=True,
             stderr=None,
         )
+
+        if output is None:
+            raise CommandSkippedError(
+                "The command `poetry build` was not executed"
+                " (a possible cause is specifying `--no-install`)"
+            )
+
         assert isinstance(output, str)  # noqa: S101
         return output.split()[-1]
