@@ -14,7 +14,7 @@ from typing import List
 from typing import TYPE_CHECKING
 
 import pytest
-import tomlkit
+import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
 from packaging.utils import canonicalize_name
 
 
@@ -41,10 +41,10 @@ class Project:
     def _read_toml(self, filename: str) -> Any:
         path = self.path / filename
         text = path.read_text()
-        return tomlkit.parse(text)
+        return tomlkit.api.parse(text)
 
     def _get_config(self, key: str) -> Any:
-        data = self._read_toml("pyproject.toml")
+        data: Any = self._read_toml("pyproject.toml")
         return data["tool"]["poetry"][key]
 
     def get_dependency(self, name: str) -> Package:
