@@ -1,6 +1,7 @@
 """Poetry interface."""
 from enum import Enum
 from pathlib import Path
+from typing import Any
 from typing import List
 from typing import Optional
 
@@ -22,7 +23,7 @@ class Config:
         """Initialize."""
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
-        data = tomlkit.api.parse(text)
+        data: Any = tomlkit.api.parse(text)
         self._config = data["tool"]["poetry"]
 
     @property

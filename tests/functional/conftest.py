@@ -44,7 +44,7 @@ class Project:
         return tomlkit.api.parse(text)
 
     def _get_config(self, key: str) -> Any:
-        data = self._read_toml("pyproject.toml")
+        data: Any = self._read_toml("pyproject.toml")
         return data["tool"]["poetry"][key]
 
     def get_dependency(self, name: str) -> Package:
