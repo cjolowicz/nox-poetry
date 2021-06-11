@@ -1,4 +1,5 @@
 """Poetry interface."""
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -100,6 +101,7 @@ class Poetry:
         def _stripwarnings(lines: Iterable[str]) -> Iterator[str]:
             for line in lines:
                 if line.startswith("Warning:"):
+                    print(line, file=sys.stderr)
                     continue
                 yield line
 
