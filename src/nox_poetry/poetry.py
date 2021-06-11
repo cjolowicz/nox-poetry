@@ -1,7 +1,10 @@
 """Poetry interface."""
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Any
+from typing import Iterable
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -94,7 +97,15 @@ class Poetry:
             )
 
         assert isinstance(output, str)  # noqa: S101
-        return output
+
+        def _stripwarnings(lines: Iterable[str]) -> Iterator[str]:
+            for line in lines:
+                if line.startswith("Warning:"):
+                    print(line, file=sys.stderr)
+                    continue
+                yield line
+
+        return "".join(_stripwarnings(output.splitlines(keepends=True)))
 
     def build(self, *, format: str) -> str:
         """Build the package.

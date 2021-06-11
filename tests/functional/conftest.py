@@ -129,10 +129,10 @@ def run_nox_with_noxfile(
     sessions: Iterable[SessionFunction],
     imports: Iterable[ModuleType],
     *nox_args: str,
-) -> None:
+) -> CompletedProcess:
     """Write a noxfile and run Nox in the project."""
     _write_noxfile(project, sessions, imports)
-    _run_nox(project, *nox_args)
+    return _run_nox(project, *nox_args)
 
 
 def list_packages(project: Project, session: SessionFunction) -> List[Package]:
