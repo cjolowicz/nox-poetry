@@ -87,7 +87,7 @@ def test_wrapper(session: nox.Session) -> None:
 
     [proxy] = calls
 
-    assert proxy._session is session
+    assert proxy._session is session  # type: ignore[attr-defined]
 
 
 def test_wrapper_parametrize(session: nox.Session) -> None:
