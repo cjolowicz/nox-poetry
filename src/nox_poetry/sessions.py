@@ -13,6 +13,7 @@ import nox
 from packaging.requirements import InvalidRequirement
 from packaging.requirements import Requirement
 
+from nox_poetry.poetry import CommandSkippedError
 from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
 
@@ -125,7 +126,10 @@ class _PoetrySession:
         args_extras = [_split_extras(arg) for arg in args]
 
         if "." in [arg for arg, _ in args_extras]:
-            package = self.build_package()
+            try:
+                package = self.build_package()
+            except CommandSkippedError:
+                return
 
             def rewrite(arg: str, extras: Optional[str]) -> str:
                 if arg != ".":
@@ -141,7 +145,11 @@ class _PoetrySession:
 
             self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
-        requirements = self.export_requirements()
+        try:
+            requirements = self.export_requirements()
+        except CommandSkippedError:
+            return
+
         Session_install(self.session, f"--constraint={requirements}", *args, **kwargs)
 
     def installroot(
@@ -167,8 +175,11 @@ class _PoetrySession:
         """
         from nox_poetry.core import Session_install
 
-        package = self.build_package(distribution_format=distribution_format)
-        requirements = self.export_requirements()
+        try:
+            package = self.build_package(distribution_format=distribution_format)
+            requirements = self.export_requirements()
+        except CommandSkippedError:
+            return
 
         self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 

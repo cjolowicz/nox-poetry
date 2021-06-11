@@ -126,6 +126,7 @@ def tests(session: Session, poetry: Optional[str]) -> None:
         "pytest",
         "pytest-datadir",
         "pygments",
+        "typing_extensions",
     )
     if session.python == "3.6":
         session.install("dataclasses")

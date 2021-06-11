@@ -90,13 +90,13 @@ def project(datadir: Path) -> Project:
     return Project(datadir / "example")
 
 
-def _run_nox(project: Project) -> CompletedProcess:
+def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
     env = os.environ.copy()
     env.pop("NOXSESSION", None)
 
     try:
         return subprocess.run(  # noqa: S603, S607
-            ["nox"],
+            ["nox", *nox_args],
             check=True,
             universal_newlines=True,
             stdout=subprocess.PIPE,
@@ -128,10 +128,11 @@ def run_nox_with_noxfile(
     project: Project,
     sessions: Iterable[SessionFunction],
     imports: Iterable[ModuleType],
+    *nox_args: str,
 ) -> None:
     """Write a noxfile and run Nox in the project."""
     _write_noxfile(project, sessions, imports)
-    _run_nox(project)
+    _run_nox(project, *nox_args)
 
 
 def list_packages(project: Project, session: SessionFunction) -> List[Package]:
