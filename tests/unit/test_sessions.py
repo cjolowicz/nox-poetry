@@ -21,7 +21,7 @@ def iter_sessions() -> IterSessions:
     nox.registry._REGISTRY.clear()
 
     def _iter_sessions() -> Iterator[str]:
-        options = nox._options.options.namespace()
+        options = nox._options.options.namespace(posargs=[])
         manifest = nox.manifest.Manifest(nox.registry.get(), options)
         for session in manifest:
             yield session.name
