@@ -393,3 +393,17 @@ def test_installroot_no_install(project: Project) -> None:
     packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
+
+
+def test_poetry_warnings(datadir: Path) -> None:
+    """It writes warnings from Poetry to the console."""
+    project = Project(datadir / "outdated-lockfile")
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the local package."""
+        session.install(".")
+
+    process = run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    assert "Warning:" in process.stderr
