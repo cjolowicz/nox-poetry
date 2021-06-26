@@ -770,7 +770,7 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 name = "poetry"
-version = "1.1.6"
+version = "1.1.7"
 description = "Python dependency management and packaging made easy."
 category = "dev"
 optional = false
@@ -1374,7 +1374,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "8e4d258e6c187bead28a87d717be82e8f0203fadbda5f956d4392662b10c60f0"
+content-hash = "d5839d848f084b6c8b76df78b58718e80d499f02155507ffc7d9b4574ef4037f"
 
 [metadata.files]
 alabaster = [
@@ -1848,8 +1848,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 poetry = [
-    {file = "poetry-1.1.6-py2.py3-none-any.whl", hash = "sha256:768d87fdad55c8b2512996aea74bc389b4772680dcafea90643bdf8eaedf6ca0"},
-    {file = "poetry-1.1.6.tar.gz", hash = "sha256:e7c58a50c14aebc18e7de9df64f1dad74b194f21b8e5257251449f0feb4784fa"},
+    {file = "poetry-1.1.7-py2.py3-none-any.whl", hash = "sha256:82ab6373ee86a37071e455d5c939842554acab425a8a5ab0c9abe58b3d30bd9e"},
+    {file = "poetry-1.1.7.tar.gz", hash = "sha256:3833c7b22411b8393e8e594fede94f0ef7a5260c19f51e272cce76512cffe6c8"},
 ]
 poetry-core = [
     {file = "poetry-core-1.0.3.tar.gz", hash = "sha256:2315c928249fc3207801a81868b64c66273077b26c8d8da465dccf8f488c90c5"},
