@@ -1,0 +1,17 @@
+{
+  "template": {
+    "location": "https://github.com/cjolowicz/cookiecutter-hypermodern-python",
+    "directory": null
+  },
+  "bindings": {
+    "project_name": "nox-poetry",
+    "package_name": "nox_poetry",
+    "friendly_name": "nox-poetry",
+    "author": "Claudio Jolowicz",
+    "email": "mail@claudiojolowicz.com",
+    "github_user": "cjolowicz",
+    "version": "0.8.6",
+    "license": "MIT",
+    "development_status": "Development Status :: 3 - Alpha"
+  }
+}

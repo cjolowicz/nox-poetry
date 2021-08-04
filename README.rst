@@ -1,7 +1,7 @@
 nox-poetry
 ==========
 
-|Status| |PyPI| |Python Version| |License|
+|PyPI| |Status| |Python Version| |License|
 
 |Read the Docs| |Tests| |Codecov|
 
@@ -13,6 +13,9 @@ nox-poetry
 .. |PyPI| image:: https://img.shields.io/pypi/v/nox-poetry.svg
    :target: https://pypi.org/project/nox-poetry/
    :alt: PyPI
+.. |Status| image:: https://img.shields.io/pypi/status/nox-poetry.svg
+   :target: https://pypi.org/project/nox-poetry/
+   :alt: Status
 .. |Python Version| image:: https://img.shields.io/pypi/pyversions/nox-poetry
    :target: https://pypi.org/project/nox-poetry
    :alt: Python Version
