@@ -1,4 +1,4 @@
-pip==21.2.3
+pip==21.2.4
 nox==2021.6.12
 poetry==1.1.7
 virtualenv==20.7.1
