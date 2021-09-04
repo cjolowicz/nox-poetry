@@ -47,7 +47,7 @@ reorder-python-imports = "^2.6.0"
 pre-commit-hooks = "^4.0.1"
 furo = "^2021.8.31"
 Pygments = "^2.10.0"
-poetry = "^1.1.7"
+poetry = "^1.1.8"
 pytest-datadir = "^1.3.1"
 dataclasses = {version = "^0.8", python = "<3.7"}
 typing-extensions = "^3.10.0"
