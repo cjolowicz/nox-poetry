@@ -104,7 +104,7 @@ def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
             env=env,
         )
     except subprocess.CalledProcessError as error:
-        raise RuntimeError(f"{error}\n{error.stderr}")
+        raise RuntimeError(f"{error}\n{error.stderr}") from None
 
 
 SessionFunction = Callable[..., Any]
