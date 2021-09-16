@@ -9,11 +9,11 @@ version = "0.5.0"
 [package.source]
 reference = ""
 type = "url"
-url = "https://github.com/hackebrot/poyo/archive/master.zip"
+url = "https://github.com/hackebrot/poyo/archive/main.zip"
 [metadata]
-content-hash = "ff110fa8bd529837779d5f342f0367a2707ef9f31ece6f059ba47a616e5ebcb4"
 lock-version = "1.0"
 python-versions = "^3.6.1"
+content-hash = "2c73025fdde910832a22b5e63d7f2c3215af1ee383043188a2b2218b18d40cae"
 
 [metadata.files]
 poyo = []

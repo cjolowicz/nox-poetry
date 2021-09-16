@@ -6,7 +6,7 @@ authors = ["Your Name <your.name@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-poyo = {url = "https://github.com/hackebrot/poyo/archive/master.zip"}
+poyo = {url = "https://github.com/hackebrot/poyo/archive/main.zip"}
 
 [tool.poetry.dev-dependencies]
 
