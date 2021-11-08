@@ -43,7 +43,7 @@ Request features on the `Issue Tracker`_.
 How to set up your development environment
 ------------------------------------------
 
-You need Python 3.6+ and Poetry_.
+You need Python 3.7+ and Poetry_.
 
 Install the package with development requirements:
 

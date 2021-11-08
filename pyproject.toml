@@ -10,18 +10,13 @@ repository = "https://github.com/cjolowicz/nox-poetry"
 documentation = "https://nox-poetry.readthedocs.io"
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
 ]
 
 [tool.poetry.urls]
 Changelog = "https://github.com/cjolowicz/nox-poetry/releases"
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.7"
 nox = ">=2020.8.22"
 tomlkit = "^0.7.0"
 packaging = ">=20.9"
