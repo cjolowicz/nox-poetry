@@ -92,9 +92,11 @@ Behind the scenes, nox-poetry uses Poetry to export a `constraints file`_ and bu
 
 For more fine-grained control, additional utilities are available under the ``session.poetry`` attribute:
 
-- ``session.poetry.installroot(distribution_format=[WHEEL|SDIST])``
-- ``session.poetry.build_package(distribution_format=[WHEEL|SDIST])``
+- ``session.poetry.installroot(distribution_format=["wheel"|"sdist"])``
+- ``session.poetry.build_package(distribution_format=["wheel"|"sdist"])``
 - ``session.poetry.export_requirements()``
+
+Note that ``distribution_format`` is a `keyword-only parameter`_.
 
 
 Why?
@@ -191,6 +193,7 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _Poetry: https://python-poetry.org/
 .. _constraints file: https://pip.pypa.io/en/stable/user_guide/#constraints-files
 .. _file an issue: https://github.com/cjolowicz/nox-poetry/issues
+.. _keyword-only parameter: https://docs.python.org/3/glossary.html#keyword-only-parameter
 .. _nox.sessions.Session.install: https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install
 .. _nox.sessions.Session.run: https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.run
 .. _pip install: https://pip.pypa.io/en/stable/reference/pip_install/
