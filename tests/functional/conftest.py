@@ -98,9 +98,8 @@ def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
         return subprocess.run(  # noqa: S603, S607
             ["nox", *nox_args],
             check=True,
-            universal_newlines=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            text=True,
+            capture_output=True,
             cwd=project.path,
             env=env,
         )
@@ -142,9 +141,8 @@ def list_packages(project: Project, session: SessionFunction) -> List[Package]:
     process = subprocess.run(  # noqa: S603
         [str(pip), "freeze"],
         check=True,
-        universal_newlines=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        text=True,
+        capture_output=True,
     )
 
     def parse(line: str) -> Package:
