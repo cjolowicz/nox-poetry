@@ -90,6 +90,7 @@ def precommit(session: Session) -> None:
         "pre-commit",
         "pre-commit-hooks",
         "reorder-python-imports",
+        "pyupgrade",
     )
     session.run("pre-commit", *args)
     if args and args[0] == "install":
