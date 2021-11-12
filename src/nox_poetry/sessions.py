@@ -67,7 +67,7 @@ def to_constraint(requirement_string: str, line: int) -> Optional[str]:
     try:
         requirement = Requirement(requirement_string)
     except InvalidRequirement as error:
-        raise RuntimeError(f"line {line}: {requirement_string!r}: {error}")
+        raise RuntimeError(f"line {line}: {requirement_string!r}: {error}") from error
 
     if not (requirement.name and requirement.specifier):
         return None
