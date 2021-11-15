@@ -7,7 +7,7 @@ from tests.functional.conftest import run_nox_with_noxfile
 import nox_poetry
 
 
-def test_installroot_no_install(project: Project) -> None:
+def test_no_install(project: Project) -> None:
     """It skips installation when --no-install is passed."""
 
     @nox_poetry.session
@@ -24,7 +24,7 @@ def test_installroot_no_install(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_installroot_wheel(project: Project) -> None:
+def test_wheel(project: Project) -> None:
     """It builds and installs a wheel from the local package."""
 
     @nox.session
@@ -40,7 +40,7 @@ def test_installroot_wheel(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_installroot_wheel_with_extras(project: Project) -> None:
+def test_wheel_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -62,7 +62,7 @@ def test_installroot_wheel_with_extras(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_installroot_sdist(project: Project) -> None:
+def test_sdist(project: Project) -> None:
     """It builds and installs an sdist from the local package."""
 
     @nox.session
@@ -78,7 +78,7 @@ def test_installroot_sdist(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_installroot_sdist_with_extras(project: Project) -> None:
+def test_sdist_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
