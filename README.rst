@@ -75,6 +75,16 @@ use the following command to install this package into the same environment:
    $ pipx inject nox nox-poetry
 
 
+Requirements
+------------
+
+- Python 3.7+
+- Poetry >= 1.0.0
+
+You need to have a Poetry installation on your system.
+``nox-poetry`` uses Poetry via its command-line interface.
+
+
 Usage
 -----
 
