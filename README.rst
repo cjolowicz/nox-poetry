@@ -1,18 +1,11 @@
 nox-poetry
 ==========
 
-|PyPI| |Status| |Python Version| |License|
-
-|Read the Docs| |Tests| |Codecov|
-
-|pre-commit| |Black|
+|PyPI| |Python Version| |License| |Read the Docs| |Tests| |Codecov|
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/nox-poetry.svg
    :target: https://pypi.org/project/nox-poetry/
    :alt: PyPI
-.. |Status| image:: https://img.shields.io/pypi/status/nox-poetry.svg
-   :target: https://pypi.org/project/nox-poetry/
-   :alt: Status
 .. |Python Version| image:: https://img.shields.io/pypi/pyversions/nox-poetry
    :target: https://pypi.org/project/nox-poetry
    :alt: Python Version
@@ -28,12 +21,6 @@ nox-poetry
 .. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/cjolowicz/nox-poetry
    :alt: Codecov
-.. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-   :target: https://github.com/pre-commit/pre-commit
-   :alt: pre-commit
-.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
-   :alt: Black
 
 
 Use Poetry_ inside Nox_ sessions
