@@ -122,7 +122,7 @@ def test_installroot_sdist_with_extras(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_install_dependency_without_patch(project: Project) -> None:
+def test_install_dependency(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox.session
@@ -138,7 +138,7 @@ def test_install_dependency_without_patch(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel_and_dependency_without_patch(project: Project) -> None:
+def test_install_local_wheel_and_dependency(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox.session
