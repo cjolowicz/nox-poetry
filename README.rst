@@ -33,7 +33,7 @@ This enables ``session.install`` to install packages at the versions specified i
 
     from nox_poetry import session
 
-    @session(python=["3.8", "3.9"])
+    @session(python=["3.10", "3.9"])
     def tests(session):
         session.install("pytest", ".")
         session.run("pytest")
@@ -92,11 +92,30 @@ For more fine-grained control, additional utilities are available under the ``se
 
 Note that ``distribution_format`` is a `keyword-only parameter`_.
 
+Here is a comparison of the different installation methods:
+
+- Use ``session.install(...)`` to install specific development dependencies, e.g. ``session.install("pytest")``.
+- Use ``session.install(".")`` (or ``session.poetry.installroot()``) to install your own package.
+- Use ``session.run_always("poetry", "install", external=True)`` to install your package with *all* development dependencies.
+
+Please read the next section for the tradeoffs of each method.
+
 
 Why?
 ----
 
-The example session above performs the following steps:
+Let's look at an example:
+
+.. code:: python
+
+    from nox_poetry import session
+
+    @session(python=["3.10", "3.9"])
+    def tests(session):
+        session.install("pytest", ".")
+        session.run("pytest")
+
+This session performs the following steps:
 
 - Build a wheel from the local package.
 - Install the wheel as well as the ``pytest`` package.
@@ -120,7 +139,7 @@ and installing your package and its dependencies using ``poetry install``:
    @nox.session
    def tests(session: Session) -> None:
        """Run the test suite."""
-       session.run("poetry", "install", external=True)
+       session.run_always("poetry", "install", external=True)
        session.run("pytest")
 
 Unfortunately, this approach comes with its own set of problems:
