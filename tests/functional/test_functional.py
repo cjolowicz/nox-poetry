@@ -313,9 +313,9 @@ def test_session_parametrize(project: Project) -> None:
     run_nox_with_noxfile(project, [test], [nox, nox_poetry])
 
 
-def test_install_with_url_dependency(datadir: Path) -> None:
+def test_install_with_url_dependency(shared_datadir: Path) -> None:
     """It installs the package."""
-    project = Project(datadir / "url-dependency")
+    project = Project(shared_datadir / "url-dependency")
 
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:
@@ -332,9 +332,9 @@ def test_install_with_url_dependency(datadir: Path) -> None:
 
 # https://github.com/python-poetry/poetry/issues/3468
 @pytest.mark.xfail(reason="Poetry exports path requirements in an invalid format.")
-def test_install_with_path_dependency(datadir: Path) -> None:
+def test_install_with_path_dependency(shared_datadir: Path) -> None:
     """It installs the package."""
-    project = Project(datadir / "path-dependency")
+    project = Project(shared_datadir / "path-dependency")
 
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:
@@ -395,9 +395,9 @@ def test_installroot_no_install(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_poetry_warnings(datadir: Path) -> None:
+def test_poetry_warnings(shared_datadir: Path) -> None:
     """It writes warnings from Poetry to the console."""
-    project = Project(datadir / "outdated-lockfile")
+    project = Project(shared_datadir / "outdated-lockfile")
 
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:

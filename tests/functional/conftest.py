@@ -85,9 +85,9 @@ class Project:
 
 
 @pytest.fixture
-def project(datadir: Path) -> Project:
+def project(shared_datadir: Path) -> Project:
     """Return an example Poetry project."""
-    return Project(datadir / "example")
+    return Project(shared_datadir / "example")
 
 
 def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
