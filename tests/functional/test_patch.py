@@ -7,7 +7,7 @@ from tests.functional.conftest import run_nox_with_noxfile
 import nox_poetry.patch
 
 
-def test_install_local_using_patch(project: Project) -> None:
+def test_local(project: Project) -> None:
     """It installs the local package."""
 
     @nox.session
@@ -23,7 +23,7 @@ def test_install_local_using_patch(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_install_local_using_patch_with_extras(project: Project) -> None:
+def test_local_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox.session
@@ -43,7 +43,7 @@ def test_install_local_using_patch_with_extras(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_install_dependency_using_patch(project: Project) -> None:
+def test_dependency(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox.session
@@ -59,7 +59,7 @@ def test_install_dependency_using_patch(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_install_local_wheel_and_dependency_using_patch(project: Project) -> None:
+def test_local_wheel_and_dependency(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox.session
