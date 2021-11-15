@@ -1,4 +1,4 @@
-"""Functional tests."""
+"""Functional tests for the `@session` decorator."""
 from pathlib import Path
 
 import nox.sessions
