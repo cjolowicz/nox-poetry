@@ -92,6 +92,14 @@ For more fine-grained control, additional utilities are available under the ``se
 
 Note that ``distribution_format`` is a `keyword-only parameter`_.
 
+Here is a comparison of the different installation methods:
+
+- Use ``session.install(...)`` to install specific development dependencies, e.g. ``session.install("pytest")``.
+- Use ``session.install(".")`` (or ``session.poetry.installroot()``) to install your own package.
+- Use ``session.run_always("poetry", "install", external=True)`` to install your package with *all* development dependencies.
+
+Please read the next section for the tradeoffs of each method.
+
 
 Why?
 ----
@@ -131,7 +139,7 @@ and installing your package and its dependencies using ``poetry install``:
    @nox.session
    def tests(session: Session) -> None:
        """Run the test suite."""
-       session.run("poetry", "install", external=True)
+       session.run_always("poetry", "install", external=True)
        session.run("pytest")
 
 Unfortunately, this approach comes with its own set of problems:
