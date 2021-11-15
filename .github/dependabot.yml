@@ -16,3 +16,5 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    allow:
+      - dependency-type: "all"
