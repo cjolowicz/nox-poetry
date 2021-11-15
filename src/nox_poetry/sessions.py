@@ -189,6 +189,15 @@ class _PoetrySession:
             name = self.poetry.config.name
             package = f"{name}{suffix} @ {package}"
 
+        if distribution_format == DistributionFormat.SDIST:
+            # Remove the package from pip's wheel cache to prevent it from being
+            # installed instead of a wheel built from our sdist. Treat an exit code of 1
+            # as success; this means that the package was not in the wheel cache.
+            name = self.poetry.config.name
+            self.session.run_always(
+                "pip", "cache", "remove", name, success_codes=[0, 1], silent=True
+            )
+
         Session_install(self.session, f"--constraint={requirements}", package)
 
     def export_requirements(self) -> Path:

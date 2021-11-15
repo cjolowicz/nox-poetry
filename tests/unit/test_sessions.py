@@ -127,9 +127,14 @@ def test_session_install(proxy: nox_poetry.Session) -> None:
     proxy.install(".")
 
 
-def test_session_installroot(proxy: nox_poetry.Session) -> None:
+def test_session_installroot_wheel(proxy: nox_poetry.Session) -> None:
     """It installs the package."""
     proxy.poetry.installroot(distribution_format=nox_poetry.WHEEL)
+
+
+def test_session_installroot_sdist(proxy: nox_poetry.Session) -> None:
+    """It installs the package."""
+    proxy.poetry.installroot(distribution_format=nox_poetry.SDIST)
 
 
 def test_session_export_requirements(proxy: nox_poetry.Session) -> None:

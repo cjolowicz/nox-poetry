@@ -33,3 +33,25 @@ def test_no_install_installroot(project: Project) -> None:
     packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
+
+
+def test_stale_wheelcache(project: Project) -> None:
+    """It removes old wheels from the wheel cache."""
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the local package."""
+        session.poetry.installroot(distribution_format="sdist")
+        session.run("python", "-c", 'import example; print(example.__doc__, end="")')
+
+    path = project.path / "src" / "example" / "__init__.py"
+    path.write_text('"a"\n')
+
+    process = run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    assert "a" == process.stdout
+
+    path.write_text('"b"\n')
+    process = run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    assert "b" == process.stdout
