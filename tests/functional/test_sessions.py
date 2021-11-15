@@ -10,7 +10,7 @@ from tests.functional.conftest import run_nox_with_noxfile
 import nox_poetry.patch
 
 
-def test_session_install_local(project: Project) -> None:
+def test_local(project: Project) -> None:
     """It installs the local package."""
 
     @nox_poetry.session
@@ -26,7 +26,7 @@ def test_session_install_local(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_session_install_local_with_extras(project: Project) -> None:
+def test_local_with_extras(project: Project) -> None:
     """It installs the extra."""
 
     @nox_poetry.session
@@ -46,7 +46,7 @@ def test_session_install_local_with_extras(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_session_install_dependency(project: Project) -> None:
+def test_dependency(project: Project) -> None:
     """It installs the pinned dependency."""
 
     @nox_poetry.session
@@ -62,7 +62,7 @@ def test_session_install_dependency(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
-def test_session_install_local_wheel_and_dependency(project: Project) -> None:
+def test_local_wheel_and_dependency(project: Project) -> None:
     """It installs the wheel with pinned dependencies."""
 
     @nox_poetry.session
@@ -93,7 +93,7 @@ def test_session_parametrize(project: Project) -> None:
     run_nox_with_noxfile(project, [test], [nox, nox_poetry])
 
 
-def test_install_with_url_dependency(shared_datadir: Path) -> None:
+def test_url_dependency(shared_datadir: Path) -> None:
     """It installs the package."""
     project = Project(shared_datadir / "url-dependency")
 
@@ -112,7 +112,7 @@ def test_install_with_url_dependency(shared_datadir: Path) -> None:
 
 # https://github.com/python-poetry/poetry/issues/3468
 @pytest.mark.xfail(reason="Poetry exports path requirements in an invalid format.")
-def test_install_with_path_dependency(shared_datadir: Path) -> None:
+def test_path_dependency(shared_datadir: Path) -> None:
     """It installs the package."""
     project = Project(shared_datadir / "path-dependency")
 
@@ -141,7 +141,7 @@ def test_passthrough_env(project: Project) -> None:
     run_nox_with_noxfile(project, [test], [nox_poetry])
 
 
-def test_install_no_install(project: Project) -> None:
+def test_no_install(project: Project) -> None:
     """It skips installation when --no-install is passed."""
 
     @nox_poetry.session
