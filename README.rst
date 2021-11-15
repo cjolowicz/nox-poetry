@@ -96,7 +96,18 @@ Note that ``distribution_format`` is a `keyword-only parameter`_.
 Why?
 ----
 
-The example session above performs the following steps:
+Let's look at an example:
+
+.. code:: python
+
+    from nox_poetry import session
+
+    @session(python=["3.10", "3.9"])
+    def tests(session):
+        session.install("pytest", ".")
+        session.run("pytest")
+
+This session performs the following steps:
 
 - Build a wheel from the local package.
 - Install the wheel as well as the ``pytest`` package.
