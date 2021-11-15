@@ -7,23 +7,6 @@ from tests.functional.conftest import run_nox_with_noxfile
 import nox_poetry
 
 
-def test_no_install(project: Project) -> None:
-    """It skips installation when --no-install is passed."""
-
-    @nox_poetry.session
-    def test(session: nox_poetry.Session) -> None:
-        """Install the local package."""
-        session.poetry.installroot()
-
-    run_nox_with_noxfile(project, [test], [nox_poetry])
-    run_nox_with_noxfile(project, [test], [nox_poetry], "-R")
-
-    expected = [project.package, *project.dependencies]
-    packages = list_packages(project, test)
-
-    assert set(expected) == set(packages)
-
-
 def test_wheel(project: Project) -> None:
     """It builds and installs a wheel from the local package."""
 
