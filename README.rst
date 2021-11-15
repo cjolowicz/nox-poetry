@@ -33,7 +33,7 @@ This enables ``session.install`` to install packages at the versions specified i
 
     from nox_poetry import session
 
-    @session(python=["3.8", "3.9"])
+    @session(python=["3.10", "3.9"])
     def tests(session):
         session.install("pytest", ".")
         session.run("pytest")
