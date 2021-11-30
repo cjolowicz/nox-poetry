@@ -790,14 +790,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "poetry"
-version = "1.1.11"
+version = "1.1.12"
 description = "Python dependency management and packaging made easy."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.dependencies]
-cachecontrol = {version = ">=0.12.4,<0.13.0", extras = ["filecache"]}
+cachecontrol = {version = ">=0.12.9,<0.13.0", extras = ["filecache"], markers = "python_version >= \"3.6\" and python_version < \"4.0\""}
 cachy = ">=0.3.0,<0.4.0"
 cleo = ">=0.8.1,<0.9.0"
 clikit = ">=0.6.2,<0.7.0"
@@ -1426,7 +1426,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0ebbfa39b5378b205967d76fbeea74406e2973b79edb4147fd2a3e75fa5c1e02"
+content-hash = "aa0b9434a4b2c1de3c48ebcd28ccf78bf56297f4661dd912df375a448295dec0"
 
 [metadata.files]
 alabaster = [
@@ -1924,8 +1924,8 @@ pluggy = [
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
 poetry = [
-    {file = "poetry-1.1.11-py2.py3-none-any.whl", hash = "sha256:628e2a933c9f7c28fa0edbee09f9e2e6b25301e610929b5414f3d55ed40fc712"},
-    {file = "poetry-1.1.11.tar.gz", hash = "sha256:7d7d22f55fbebb830cc85b1c69cd7a91fd85f49e5396e7a14b953645a470f69e"},
+    {file = "poetry-1.1.12-py2.py3-none-any.whl", hash = "sha256:3d4dc5d4c7171fb251b32e49a98cecbe2795d5e681ecee2297e2b2d2ccd671fc"},
+    {file = "poetry-1.1.12.tar.gz", hash = "sha256:5c66e2357fe37b552462a88b7d31bfa2ed8e84172208becd666933c776252567"},
 ]
 poetry-core = [
     {file = "poetry-core-1.0.7.tar.gz", hash = "sha256:98c11c755a16ef6c5673c22ca94a3802a7df4746a0853a70b6fae8b9f5cac206"},
