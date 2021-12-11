@@ -213,4 +213,4 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _pip: https://pip.pypa.io/
 .. _pipx: https://pipxproject.github.io/pipx/
 .. github-only
-.. _Contributor Guide: CONTRIBUTING.rst
+.. _Contributor Guide: https://nox-poetry.readthedocs.io/en/latest/contributing.html
