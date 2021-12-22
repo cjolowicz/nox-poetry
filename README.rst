@@ -19,7 +19,7 @@ nox-poetry
    :target: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
    :alt: Tests
 .. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/cjolowicz/nox-poetry
+   :target: https://app.codecov.io/gh/cjolowicz/nox-poetry
    :alt: Codecov
 
 
