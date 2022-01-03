@@ -1341,7 +1341,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.11.2"
+version = "20.13.0"
 description = "Virtual Python Environment builder"
 category = "main"
 optional = false
@@ -2200,8 +2200,8 @@ urllib3 = [
     {file = "urllib3-1.26.7.tar.gz", hash = "sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"},
 ]
 virtualenv = [
-    {file = "virtualenv-20.11.2-py2.py3-none-any.whl", hash = "sha256:efd556cec612fd826dc7ef8ce26a6e4ba2395f494244919acd135fb5ceffa809"},
-    {file = "virtualenv-20.11.2.tar.gz", hash = "sha256:7f9e9c2e878d92a434e760058780b8d67a7c5ec016a66784fe4b0d5e50a4eb5c"},
+    {file = "virtualenv-20.13.0-py2.py3-none-any.whl", hash = "sha256:339f16c4a86b44240ba7223d0f93a7887c3ca04b5f9c8129da7958447d079b09"},
+    {file = "virtualenv-20.13.0.tar.gz", hash = "sha256:d8458cf8d59d0ea495ad9b34c2599487f8a7772d796f9910858376d1600dd2dd"},
 ]
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
