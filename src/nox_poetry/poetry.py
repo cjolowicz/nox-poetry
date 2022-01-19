@@ -8,7 +8,7 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 
-import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
+import tomlkit
 from nox.sessions import Session
 
 
@@ -30,7 +30,7 @@ class Config:
         """Initialize."""
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
-        data: Any = tomlkit.api.parse(text)
+        data: Any = tomlkit.parse(text)
         self._config = data["tool"]["poetry"]
 
     @property
