@@ -6,8 +6,8 @@ from typing import Any
 from typing import Iterable
 from typing import Iterator
 from typing import List
-from typing import Optional
 from typing import Mapping
+from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
@@ -57,10 +57,9 @@ class Config:
         assert isinstance(sources, list)
         required_keys = {"name", "url"}
         for source in sources:
-            assert isinstance(source, dict) and set(source).issuperset(
-                required_keys
-            )
+            assert isinstance(source, dict) and set(source).issuperset(required_keys)
         return sources
+
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.

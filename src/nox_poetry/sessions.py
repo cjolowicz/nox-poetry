@@ -3,14 +3,14 @@ import functools
 import hashlib
 import re
 from pathlib import Path
-from urllib.parse import urlparse
 from typing import Any
 from typing import Iterable
 from typing import Iterator
-from typing import Optional
-from typing import Tuple
 from typing import List
 from typing import Mapping
+from typing import Optional
+from typing import Tuple
+from urllib.parse import urlparse
 
 import nox
 from packaging.requirements import InvalidRequirement
@@ -93,7 +93,9 @@ def to_constraints(requirements: str) -> str:
     return "\n".join(_to_constraints())
 
 
-def to_index_url_args(sources: List[Optional[Mapping[str, str]]]) -> Tuple[Optional[str]]:
+def to_index_url_args(
+    sources: List[Optional[Mapping[str, str]]]
+) -> Tuple[Optional[str]]:
     """Convert the pip sources in to index url args."""
     # TODO: add http basic-auth to the urls generated from the poetry config?
     index_args = ()
@@ -101,29 +103,24 @@ def to_index_url_args(sources: List[Optional[Mapping[str, str]]]) -> Tuple[Optio
     try:
         # look for a default source (overriding the default index url)
         source = next(
-            (
-                source for source in sources
-                if source.get("default", False) == True
-            )
+            source for source in sources if source.get("default", False) == True
         )
     except StopIteration:
         pass
     else:
-        index_args = (
-            f"--index-url={source['url']}",
-        )
-        trusted_hosts.add(urlparse(source['url']).netloc)
+        index_args = (f"--index-url={source['url']}",)
+        trusted_hosts.add(urlparse(source["url"]).netloc)
 
     # add each of the specified sources as extras
     for source in sources:
         if source.get("default", False) != True:
-            index_args += (f"--extra-index-url={source['url']}", )
-            trusted_hosts.add(urlparse(source['url']).netloc)
+            index_args += (f"--extra-index-url={source['url']}",)
+            trusted_hosts.add(urlparse(source["url"]).netloc)
 
     # add the trusted hosts
     index_args = tuple(sorted(index_args))
     for trusted_host in sorted(trusted_hosts):
-        index_args += (f"--trusted-host={trusted_host}", )
+        index_args += (f"--trusted-host={trusted_host}",)
 
     return index_args
 
