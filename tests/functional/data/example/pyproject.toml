@@ -19,3 +19,12 @@ pygments = ["pygments"]
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "pypi-all-source1"
+url = "https://pypi-all-source1/pypi/simple"
+default = true
+
+[[tool.poetry.source]]
+name = "pypi-all-source2"
+url = "https://pypi-all-source2/pypi/simple"
