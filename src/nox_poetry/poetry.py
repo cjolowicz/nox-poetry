@@ -54,10 +54,12 @@ class Config:
     def sources(self) -> List[Optional[Mapping[str, str]]]:
         """Return the pip sources configuration."""
         sources = self._config.get("source", [])
-        assert isinstance(sources, list)
+        assert isinstance(sources, list)  # noqa: S101
         required_keys = {"name", "url"}
         for source in sources:
-            assert isinstance(source, dict) and set(source).issuperset(required_keys)
+            assert isinstance(source, dict) and set(source).issuperset(  # noqa: S101
+                required_keys
+            )
         return sources
 
 

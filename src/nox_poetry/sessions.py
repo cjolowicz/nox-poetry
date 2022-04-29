@@ -103,7 +103,7 @@ def to_index_url_args(
     try:
         # look for a default source (overriding the default index url)
         source = next(
-            source for source in sources if source.get("default", False) == True
+            source for source in sources if source.get("default", False) is True
         )
     except StopIteration:
         pass
@@ -113,7 +113,7 @@ def to_index_url_args(
 
     # add each of the specified sources as extras
     for source in sources:
-        if source.get("default", False) != True:
+        if source.get("default", False) is not True:
             index_args += (f"--extra-index-url={source['url']}",)
             trusted_hosts.add(urlparse(source["url"]).netloc)
 
