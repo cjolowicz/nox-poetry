@@ -1,10 +1,10 @@
 """Functional tests for ``install``."""
 import nox.sessions
-from tests.functional.conftest import list_packages
-from tests.functional.conftest import Project
-from tests.functional.conftest import run_nox_with_noxfile
 
 import nox_poetry
+from tests.functional.conftest import Project
+from tests.functional.conftest import list_packages
+from tests.functional.conftest import run_nox_with_noxfile
 
 
 def test_local_wheel(project: Project) -> None:

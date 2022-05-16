@@ -1,9 +1,8 @@
 """Functional tests for ``session.poetry``."""
-from tests.functional.conftest import list_packages
-from tests.functional.conftest import Project
-from tests.functional.conftest import run_nox_with_noxfile
-
 import nox_poetry
+from tests.functional.conftest import Project
+from tests.functional.conftest import list_packages
+from tests.functional.conftest import run_nox_with_noxfile
 
 
 def test_passthrough_env(project: Project) -> None:
