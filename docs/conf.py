@@ -1,10 +1,7 @@
 """Sphinx configuration."""
-from datetime import datetime
-
-
 project = "nox-poetry"
 author = "Claudio Jolowicz"
-copyright = f"{datetime.now().year}, {author}"
+copyright = "2020, Claudio Jolowicz"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
