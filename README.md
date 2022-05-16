@@ -10,7 +10,6 @@
 
 [pypi_]: https://pypi.org/project/nox-poetry/
 [python version]: https://pypi.org/project/nox-poetry
-[license]: https://opensource.org/licenses/MIT
 [read the docs]: https://nox-poetry.readthedocs.io/
 [tests]: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
 [codecov]: https://app.codecov.io/gh/cjolowicz/nox-poetry
@@ -159,8 +158,8 @@ To learn more, see the [Contributor Guide].
 
 ## License
 
-`nox-poetry` is free and open source software,
-distributed under the terms of the [MIT license].
+Distributed under the terms of the [MIT license][license],
+_nox-poetry_ is free and open source software.
 
 ## Issues
 
@@ -172,8 +171,6 @@ please [file an issue] along with a detailed description.
 This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
 
 [@cjolowicz]: https://github.com/cjolowicz
-[cookiecutter]: https://github.com/audreyr/cookiecutter
-[mit license]: https://opensource.org/licenses/MIT
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 [nox]: https://nox.thea.codes/
 [poetry]: https://python-poetry.org/
@@ -188,4 +185,5 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 
 <!-- github-only -->
 
+[license]: https://github.com/cjolowicz/nox-poetry/blob/main/LICENSE
 [contributor guide]: https://github.com/cjolowicz/nox-poetry/blob/main/CONTRIBUTING.md
