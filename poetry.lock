@@ -319,7 +319,7 @@ pipenv = ["pipenv"]
 
 [[package]]
 name = "filelock"
-version = "3.4.2"
+version = "3.7.0"
 description = "A platform independent file lock."
 category = "main"
 optional = false
@@ -1620,8 +1620,8 @@ dparse = [
     {file = "dparse-0.5.1.tar.gz", hash = "sha256:a1b5f169102e1c894f9a7d5ccf6f9402a836a5d24be80a986c7ce9eaed78f367"},
 ]
 filelock = [
-    {file = "filelock-3.4.2-py3-none-any.whl", hash = "sha256:cf0fc6a2f8d26bd900f19bf33915ca70ba4dd8c56903eeb14e1e7a2fd7590146"},
-    {file = "filelock-3.4.2.tar.gz", hash = "sha256:38b4f4c989f9d06d44524df1b24bd19e167d851f19b50bf3e3559952dddc5b80"},
+    {file = "filelock-3.7.0-py3-none-any.whl", hash = "sha256:c7b5fdb219b398a5b28c8e4c1893ef5f98ece6a38c6ab2c22e26ec161556fed6"},
+    {file = "filelock-3.7.0.tar.gz", hash = "sha256:b795f1b42a61bbf8ec7113c341dad679d772567b936fbd1bf43c9a238e673e20"},
 ]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
