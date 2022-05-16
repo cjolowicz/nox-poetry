@@ -33,12 +33,13 @@ repos:
         language: system
         types: [python]
         require_serial: true
-      - id: reorder-python-imports
-        name: Reorder python imports
-        entry: reorder-python-imports
+      - id: isort
+        name: isort
+        entry: isort
+        require_serial: true
         language: system
-        types: [python]
-        args: [--application-directories=src]
+        types_or: [cython, pyi, python]
+        args: ["--filter-files"]
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
         entry: trailing-whitespace-fixer

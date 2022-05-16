@@ -2,8 +2,9 @@
 import sys
 from pathlib import Path
 from typing import Any
-from typing import cast
 from typing import Optional
+from typing import cast
+
 
 if sys.version_info >= (3, 8):
     from typing import Protocol

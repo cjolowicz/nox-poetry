@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from textwrap import dedent
 from types import ModuleType
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import Iterable
 from typing import List
-from typing import TYPE_CHECKING
 
 import pytest
 import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
