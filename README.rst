@@ -19,7 +19,7 @@ nox-poetry
    :target: https://github.com/cjolowicz/nox-poetry/actions?workflow=Tests
    :alt: Tests
 .. |Codecov| image:: https://codecov.io/gh/cjolowicz/nox-poetry/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/cjolowicz/nox-poetry
+   :target: https://app.codecov.io/gh/cjolowicz/nox-poetry
    :alt: Codecov
 
 
@@ -213,4 +213,4 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _pip: https://pip.pypa.io/
 .. _pipx: https://pipxproject.github.io/pipx/
 .. github-only
-.. _Contributor Guide: CONTRIBUTING.rst
+.. _Contributor Guide: https://nox-poetry.readthedocs.io/en/latest/contributing.html
