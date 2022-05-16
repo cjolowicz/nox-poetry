@@ -18,3 +18,4 @@ updates:
       interval: daily
     allow:
       - dependency-type: "all"
+    versioning-strategy: lockfile-only
