@@ -35,8 +35,10 @@ def export_requirements(session: nox.sessions.Session) -> Path:
     return Session(session).poetry.export_requirements()
 
 
-def build_package(session: nox.sessions.Session, *, distribution_format: str) -> str:
-    """Build a distribution archive for the package.  # noqa: DAR
+def build_package(
+    session: nox.sessions.Session, *, distribution_format: str
+) -> str:  # noqa: DAR
+    """Build a distribution archive for the package.
 
     .. deprecated:: 0.8
        Use :func:`session` instead.
