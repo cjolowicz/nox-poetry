@@ -121,8 +121,6 @@ class _PoetrySession:
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for :meth:`nox.sessions.Session.run`.
         """
-        from nox_poetry.core import Session_install
-
         args_extras = [_split_extras(arg) for arg in args]
 
         if "." in [arg for arg, _ in args_extras]:
@@ -150,7 +148,7 @@ class _PoetrySession:
         except CommandSkippedError:
             return
 
-        Session_install(self.session, f"--constraint={requirements}", *args, **kwargs)
+        self.session.install(f"--constraint={requirements}", *args, **kwargs)
 
     def installroot(
         self,
@@ -173,8 +171,6 @@ class _PoetrySession:
             distribution_format: The distribution format, either wheel or sdist.
             extras: Extras to install for the package.
         """
-        from nox_poetry.core import Session_install
-
         try:
             package = self.build_package(distribution_format=distribution_format)
             requirements = self.export_requirements()
@@ -198,7 +194,7 @@ class _PoetrySession:
                 "pip", "cache", "remove", name, success_codes=[0, 1], silent=True
             )
 
-        Session_install(self.session, f"--constraint={requirements}", package)
+        self.session.install(f"--constraint={requirements}", package)
 
     def export_requirements(self) -> Path:
         """Export a requirements file from Poetry.

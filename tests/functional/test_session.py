@@ -4,7 +4,7 @@ from pathlib import Path
 import nox.sessions
 import pytest
 
-import nox_poetry.patch
+import nox_poetry
 from tests.functional.conftest import Project
 from tests.functional.conftest import list_packages
 from tests.functional.conftest import run_nox_with_noxfile
