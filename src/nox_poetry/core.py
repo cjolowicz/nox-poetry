@@ -24,20 +24,6 @@ def _deprecate(name: str, replacement: Optional[str] = None) -> None:
     warnings.warn(message, category=FutureWarning, stacklevel=2)
 
 
-def build_package(
-    session: nox.sessions.Session, *, distribution_format: str
-) -> str:  # noqa: DAR
-    """Build a distribution archive for the package.
-
-    .. deprecated:: 0.8
-       Use :func:`session` instead.
-    """
-    _deprecate("build_package", "session.poetry.build_package")
-    return Session(session).poetry.build_package(
-        distribution_format=distribution_format
-    )
-
-
 def install(session: nox.sessions.Session, *args: str, **kwargs: Any) -> None:
     """Install packages into a Nox session using Poetry.
 
