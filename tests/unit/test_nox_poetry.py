@@ -21,7 +21,7 @@ from nox_poetry.poetry import Poetry
 )
 def test_install(session: Session, args: Iterable[str]) -> None:
     """It installs the specified packages."""
-    nox_poetry.install(session, *args)
+    nox_poetry.Session(session).install(*args)
 
 
 @pytest.mark.parametrize(
