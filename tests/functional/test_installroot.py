@@ -13,7 +13,9 @@ def test_wheel(project: Project) -> None:
     @nox.session
     def test(session: nox.sessions.Session) -> None:
         """Install the local package."""
-        nox_poetry.installroot(session, distribution_format=nox_poetry.WHEEL)
+        nox_poetry.Session(session).poetry.installroot(
+            distribution_format=nox_poetry.WHEEL
+        )
 
     run_nox_with_noxfile(project, [test], [nox, nox.sessions, nox_poetry])
 
@@ -29,8 +31,8 @@ def test_wheel_with_extras(project: Project) -> None:
     @nox.session
     def test(session: nox.sessions.Session) -> None:
         """Install the local package."""
-        nox_poetry.installroot(
-            session, distribution_format=nox_poetry.WHEEL, extras=["pygments"]
+        nox_poetry.Session(session).poetry.installroot(
+            distribution_format=nox_poetry.WHEEL, extras=["pygments"]
         )
 
     run_nox_with_noxfile(project, [test], [nox, nox.sessions, nox_poetry])
@@ -51,7 +53,9 @@ def test_sdist(project: Project) -> None:
     @nox.session
     def test(session: nox.sessions.Session) -> None:
         """Install the local package."""
-        nox_poetry.installroot(session, distribution_format=nox_poetry.SDIST)
+        nox_poetry.Session(session).poetry.installroot(
+            distribution_format=nox_poetry.SDIST
+        )
 
     run_nox_with_noxfile(project, [test], [nox, nox.sessions, nox_poetry])
 
@@ -67,8 +71,8 @@ def test_sdist_with_extras(project: Project) -> None:
     @nox.session
     def test(session: nox.sessions.Session) -> None:
         """Install the local package."""
-        nox_poetry.installroot(
-            session, distribution_format=nox_poetry.SDIST, extras=["pygments"]
+        nox_poetry.Session(session).poetry.installroot(
+            distribution_format=nox_poetry.SDIST, extras=["pygments"]
         )
 
     run_nox_with_noxfile(project, [test], [nox, nox.sessions, nox_poetry])
