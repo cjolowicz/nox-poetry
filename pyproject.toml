@@ -9,7 +9,7 @@ homepage = "https://github.com/cjolowicz/nox-poetry"
 repository = "https://github.com/cjolowicz/nox-poetry"
 documentation = "https://nox-poetry.readthedocs.io"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
 ]
 
 [tool.poetry.urls]
