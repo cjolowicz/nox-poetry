@@ -35,13 +35,15 @@ def test_install(session: Session, args: Iterable[str]) -> None:
 )
 def test_installroot(session: Session, distribution_format: str) -> None:
     """It installs the package."""
-    nox_poetry.installroot(session, distribution_format=distribution_format)
+    nox_poetry.Session(session).poetry.installroot(
+        distribution_format=distribution_format
+    )
 
 
 def test_installroot_invalid_format(session: Session) -> None:
     """It raises an error."""
     with pytest.raises(ValueError):
-        nox_poetry.installroot(session, distribution_format="egg")
+        nox_poetry.Session(session).poetry.installroot(distribution_format="egg")
 
 
 @pytest.mark.parametrize(
@@ -60,8 +62,8 @@ def test_installroot_with_extras(
     extras: Iterable[str],
 ) -> None:
     """It installs the package with extras."""
-    nox_poetry.installroot(
-        session, distribution_format=distribution_format, extras=extras
+    nox_poetry.Session(session).poetry.installroot(
+        distribution_format=distribution_format, extras=extras
     )
 
 
