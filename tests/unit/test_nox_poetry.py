@@ -79,13 +79,6 @@ def test_export_requirements(session: Session) -> None:
     nox_poetry.Session(session).poetry.export_requirements()
 
 
-def test_patch(session: Session) -> None:
-    """It patches Session.install."""
-    import nox_poetry.patch  # noqa: F401
-
-    Session.install(session, ".")
-
-
 def test_poetry_config(session: Session) -> None:
     """It caches the configuration when accessed multiple times."""
     poetry = Poetry(session)
