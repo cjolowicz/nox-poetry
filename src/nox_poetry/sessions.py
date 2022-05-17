@@ -199,16 +199,14 @@ class _PoetrySession:
     def export_requirements(self) -> Path:
         """Export a requirements file from Poetry.
 
-        This function uses `poetry export`_ to generate a :ref:`requirements
-        file <Requirements Files>` containing the project dependencies at the
-        versions specified in ``poetry.lock``. The requirements file includes
-        both core and development dependencies.
+        This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
+        to generate a :ref:`requirements file <Requirements Files>` containing the
+        project dependencies at the versions specified in ``poetry.lock``. The
+        requirements file includes both core and development dependencies.
 
         The requirements file is stored in a per-session temporary directory,
         together with a hash digest over ``poetry.lock`` to avoid generating the
         file when the dependencies have not changed since the last run.
-
-        .. _poetry export: https://python-poetry.org/docs/cli/#export
 
         Returns:
             The path to the requirements file.
@@ -237,11 +235,10 @@ class _PoetrySession:
     ) -> str:
         """Build a distribution archive for the package.
 
-        This function uses `poetry build`_ to build a wheel or sdist archive for
-        the local package, as specified via the ``distribution_format`` parameter.
-        It returns a file URL with the absolute path to the built archive.
-
-        .. _poetry build: https://python-poetry.org/docs/cli/#export
+        This function uses `poetry build <https://python-poetry.org/docs/cli/#build>`_
+        to build a wheel or sdist archive for the local package, as specified via the
+        ``distribution_format`` parameter. It returns a file URL with the absolute path
+        to the built archive.
 
         Args:
             distribution_format: The distribution format, either wheel or sdist.
