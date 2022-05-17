@@ -4,7 +4,6 @@
    Use :func:`session` instead.
 """
 import warnings
-from pathlib import Path
 from typing import Any
 from typing import Iterable
 from typing import Optional
@@ -23,16 +22,6 @@ def _deprecate(name: str, replacement: Optional[str] = None) -> None:
     if replacement is not None:
         message += f" and invoke {replacement}"
     warnings.warn(message, category=FutureWarning, stacklevel=2)
-
-
-def export_requirements(session: nox.sessions.Session) -> Path:
-    """Export a requirements file from Poetry.
-
-    .. deprecated:: 0.8
-       Use :func:`session` instead.
-    """  # noqa: D
-    _deprecate("export_requirements", "session.poetry.export_requirements")
-    return Session(session).poetry.export_requirements()
 
 
 def build_package(

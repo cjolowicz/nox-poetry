@@ -73,8 +73,8 @@ def test_build_package(session: Session, distribution_format: str) -> None:
 
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
-    nox_poetry.export_requirements(session).touch()
-    nox_poetry.export_requirements(session)
+    nox_poetry.Session(session).poetry.export_requirements().touch()
+    nox_poetry.Session(session).poetry.export_requirements()
 
 
 def test_patch(session: Session) -> None:

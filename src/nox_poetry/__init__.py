@@ -27,7 +27,6 @@ Two constants are defined to specify the format for distribution archives:
 - :const:`SDIST`
 """
 from nox_poetry.core import build_package
-from nox_poetry.core import export_requirements
 from nox_poetry.core import install
 from nox_poetry.core import installroot
 from nox_poetry.poetry import DistributionFormat
@@ -43,7 +42,6 @@ SDIST: str = DistributionFormat.SDIST
 
 __all__ = [
     "build_package",
-    "export_requirements",
     "install",
     "installroot",
     "Session",
