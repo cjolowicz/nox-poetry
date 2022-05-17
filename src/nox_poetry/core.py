@@ -13,9 +13,6 @@ import nox.sessions
 from nox_poetry.sessions import Session
 
 
-Session_install = nox.sessions.Session.install
-
-
 def _deprecate(name: str, replacement: Optional[str] = None) -> None:
     message = f"nox_poetry.{name} is deprecated, use @nox_poetry.session instead"
     if replacement is not None:
