@@ -138,6 +138,7 @@ class Poetry:
             "poetry",
             "build",
             f"--format={format}",
+            "--no-ansi",
             external=True,
             silent=True,
             stderr=None,
