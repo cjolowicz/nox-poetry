@@ -1228,7 +1228,7 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "sphinx-basic-ng"
-version = "0.0.1a11"
+version = "0.0.1a12"
 description = "A modern skeleton for Sphinx themes."
 category = "dev"
 optional = false
@@ -2163,8 +2163,8 @@ sphinx-autobuild = [
     {file = "sphinx_autobuild-2021.3.14-py3-none-any.whl", hash = "sha256:8fe8cbfdb75db04475232f05187c776f46f6e9e04cacf1e49ce81bdac649ccac"},
 ]
 sphinx-basic-ng = [
-    {file = "sphinx_basic_ng-0.0.1a11-py3-none-any.whl", hash = "sha256:9aecb5345816998789ef76658a83e3c0a12aafa14b17d40e28cd4aaeb94d1517"},
-    {file = "sphinx_basic_ng-0.0.1a11.tar.gz", hash = "sha256:bf9a8fda0379c7d2ab51c9543f2b18e014b77fb295b49d64f3c1a910c863b34f"},
+    {file = "sphinx_basic_ng-0.0.1a12-py3-none-any.whl", hash = "sha256:e8b6efd2c5ece014156de76065eda01ddfca0fee465aa020b1e3c12f84570bbe"},
+    {file = "sphinx_basic_ng-0.0.1a12.tar.gz", hash = "sha256:cffffb14914ddd26c94b1330df1d72dab5a42e220aaeb5953076a40b9c50e801"},
 ]
 sphinxcontrib-applehelp = [
     {file = "sphinxcontrib-applehelp-1.0.2.tar.gz", hash = "sha256:a072735ec80e7675e3f432fcae8610ecf509c5f1869d17e2eecff44389cdbc58"},
