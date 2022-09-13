@@ -8,13 +8,14 @@ from typing import List
 from typing import Mapping
 from typing import NoReturn
 from typing import Optional
-from typing import overload
 from typing import Sequence
 from typing import TypeVar
 from typing import Union
+from typing import overload
 
 import nox.sessions
 import nox.virtualenv
+
 
 Python = Optional[Union[str, Sequence[str], bool]]
 

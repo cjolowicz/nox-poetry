@@ -21,7 +21,7 @@ from nox_poetry.poetry import Poetry
 )
 def test_install(session: Session, args: Iterable[str]) -> None:
     """It installs the specified packages."""
-    nox_poetry.install(session, *args)
+    nox_poetry.Session(session).install(*args)
 
 
 @pytest.mark.parametrize(
@@ -35,13 +35,15 @@ def test_install(session: Session, args: Iterable[str]) -> None:
 )
 def test_installroot(session: Session, distribution_format: str) -> None:
     """It installs the package."""
-    nox_poetry.installroot(session, distribution_format=distribution_format)
+    nox_poetry.Session(session).poetry.installroot(
+        distribution_format=distribution_format
+    )
 
 
 def test_installroot_invalid_format(session: Session) -> None:
     """It raises an error."""
     with pytest.raises(ValueError):
-        nox_poetry.installroot(session, distribution_format="egg")
+        nox_poetry.Session(session).poetry.installroot(distribution_format="egg")
 
 
 @pytest.mark.parametrize(
@@ -60,28 +62,23 @@ def test_installroot_with_extras(
     extras: Iterable[str],
 ) -> None:
     """It installs the package with extras."""
-    nox_poetry.installroot(
-        session, distribution_format=distribution_format, extras=extras
+    nox_poetry.Session(session).poetry.installroot(
+        distribution_format=distribution_format, extras=extras
     )
 
 
 @pytest.mark.parametrize("distribution_format", [nox_poetry.WHEEL, nox_poetry.SDIST])
 def test_build_package(session: Session, distribution_format: str) -> None:
     """It builds the package."""
-    nox_poetry.build_package(session, distribution_format=distribution_format)
+    nox_poetry.Session(session).poetry.build_package(
+        distribution_format=distribution_format
+    )
 
 
 def test_export_requirements(session: Session) -> None:
     """It exports the requirements."""
-    nox_poetry.export_requirements(session).touch()
-    nox_poetry.export_requirements(session)
-
-
-def test_patch(session: Session) -> None:
-    """It patches Session.install."""
-    import nox_poetry.patch  # noqa: F401
-
-    Session.install(session, ".")
+    nox_poetry.Session(session).poetry.export_requirements().touch()
+    nox_poetry.Session(session).poetry.export_requirements()
 
 
 def test_poetry_config(session: Session) -> None:

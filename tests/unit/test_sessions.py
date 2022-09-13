@@ -1,18 +1,18 @@
 """Unit tests for the sessions module."""
 from textwrap import dedent
 from typing import Callable
-from typing import cast
 from typing import Iterator
+from typing import cast
 
 import nox._options
 import nox.manifest
 import nox.registry
 import pytest
-from tests.unit.conftest import FakeSession
-from tests.unit.conftest import FakeSessionFactory
 
 import nox_poetry
 from nox_poetry.sessions import to_constraints  # type: ignore[attr-defined]
+from tests.unit.conftest import FakeSession
+from tests.unit.conftest import FakeSessionFactory
 
 
 IterSessions = Callable[[], Iterator[str]]

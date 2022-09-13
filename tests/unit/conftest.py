@@ -2,8 +2,9 @@
 import sys
 from pathlib import Path
 from typing import Any
-from typing import cast
 from typing import Optional
+from typing import cast
+
 
 if sys.version_info >= (3, 8):
     from typing import Protocol
@@ -11,7 +12,6 @@ else:
     from typing_extensions import Protocol
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from nox.sessions import Session
 
 
@@ -54,11 +54,10 @@ class FakeSessionFactory(Protocol):
 
 
 @pytest.fixture
-def sessionfactory(tmp_path: Path, monkeypatch: MonkeyPatch) -> FakeSessionFactory:
+def sessionfactory(tmp_path: Path) -> FakeSessionFactory:
     """Return a factory for a fake Nox session."""
 
     def _sessionfactory(*, no_install: bool) -> Session:
-        monkeypatch.setattr("nox_poetry.core.Session_install", FakeSession.install)
         session = FakeSession(tmp_path, no_install=no_install)
         return cast(Session, session)
 

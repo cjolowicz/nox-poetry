@@ -156,8 +156,6 @@ class _PoetrySession:
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for :meth:`nox.sessions.Session.run`.
         """
-        from nox_poetry.core import Session_install
-
         args_extras = [_split_extras(arg) for arg in args]
 
         if "." in [arg for arg, _ in args_extras]:
@@ -187,7 +185,7 @@ class _PoetrySession:
 
         args += to_index_url_args(self.poetry.config.sources)
 
-        Session_install(self.session, f"--constraint={requirements}", *args, **kwargs)
+        self.session.install(f"--constraint={requirements}", *args, **kwargs)
 
     def installroot(
         self,
@@ -210,8 +208,6 @@ class _PoetrySession:
             distribution_format: The distribution format, either wheel or sdist.
             extras: Extras to install for the package.
         """
-        from nox_poetry.core import Session_install
-
         try:
             package = self.build_package(distribution_format=distribution_format)
             requirements = self.export_requirements()
@@ -235,21 +231,19 @@ class _PoetrySession:
                 "pip", "cache", "remove", name, success_codes=[0, 1], silent=True
             )
 
-        Session_install(self.session, f"--constraint={requirements}", package)
+        self.session.install(f"--constraint={requirements}", package)
 
     def export_requirements(self) -> Path:
         """Export a requirements file from Poetry.
 
-        This function uses `poetry export`_ to generate a :ref:`requirements
-        file <Requirements Files>` containing the project dependencies at the
-        versions specified in ``poetry.lock``. The requirements file includes
-        both core and development dependencies.
+        This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
+        to generate a :ref:`requirements file <Requirements Files>` containing the
+        project dependencies at the versions specified in ``poetry.lock``. The
+        requirements file includes both core and development dependencies.
 
         The requirements file is stored in a per-session temporary directory,
         together with a hash digest over ``poetry.lock`` to avoid generating the
         file when the dependencies have not changed since the last run.
-
-        .. _poetry export: https://python-poetry.org/docs/cli/#export
 
         Returns:
             The path to the requirements file.
@@ -278,11 +272,10 @@ class _PoetrySession:
     ) -> str:
         """Build a distribution archive for the package.
 
-        This function uses `poetry build`_ to build a wheel or sdist archive for
-        the local package, as specified via the ``distribution_format`` parameter.
-        It returns a file URL with the absolute path to the built archive.
-
-        .. _poetry build: https://python-poetry.org/docs/cli/#export
+        This function uses `poetry build <https://python-poetry.org/docs/cli/#build>`_
+        to build a wheel or sdist archive for the local package, as specified via the
+        ``distribution_format`` parameter. It returns a file URL with the absolute path
+        to the built archive.
 
         Args:
             distribution_format: The distribution format, either wheel or sdist.

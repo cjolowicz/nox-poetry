@@ -11,8 +11,8 @@
     "author": "Claudio Jolowicz",
     "email": "mail@claudiojolowicz.com",
     "github_user": "cjolowicz",
-    "version": "0.8.6",
+    "version": "0.9.0",
     "license": "MIT",
-    "development_status": "Development Status :: 3 - Alpha"
+    "development_status": "Development Status :: 5 - Production/Stable"
   }
 }
