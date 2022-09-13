@@ -22,9 +22,9 @@ build-backend = "poetry.core.masonry.api"
 
 [[tool.poetry.source]]
 name = "pypi-all-source1"
-url = "https://pypi-all-source1/pypi/simple"
+url = "https://pypi.python.org/simple"
 default = true
 
 [[tool.poetry.source]]
 name = "pypi-all-source2"
-url = "https://pypi-all-source2/pypi/simple"
+url = "https://pypi.python.org/all"
