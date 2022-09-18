@@ -1,8 +1,10 @@
 """Poetry interface."""
+import os
 import sys
 from enum import Enum
+from packaging.version import Version
 from pathlib import Path
-from typing import Any
+from typing import Any, Tuple
 from typing import Iterable
 from typing import Iterator
 from typing import List
@@ -10,6 +12,11 @@ from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
+
+from importlib import metadata
+
+POETRY_VERSION = Version(metadata.version("poetry"))
+POETRY_VERSION_1_2_0 = Version("1.2.0")
 
 
 class CommandSkippedError(Exception):
@@ -69,7 +76,13 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self) -> str:
+    def export(
+        self,
+        extras: bool = True,
+        without_hashes: bool = True,
+        include_groups: Tuple[str] = ("dev",),
+        exclude_groups: Tuple[str] = (),
+    ) -> str:
         """Export the lock file to requirements format.
 
         Returns:
@@ -78,13 +91,29 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
-        output = self.session.run_always(
+        args = [
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--dev",
-            *[f"--extras={extra}" for extra in self.config.extras],
-            "--without-hashes",
+        ]
+
+        if without_hashes:
+            args.append("--without-hashes")
+
+        if extras:
+            args.extend(f"--extras={extra}" for extra in self.config.extras)
+
+        if POETRY_VERSION >= POETRY_VERSION_1_2_0:
+            if include_groups:
+                args.append(f"--with={','.join(include_groups)}")
+
+            if exclude_groups:
+                args.append(f"--without={','.join(exclude_groups)}")
+        else:
+            args.append("--dev")
+
+        output = self.session.run_always(
+            *args,
             external=True,
             silent=True,
             stderr=None,
