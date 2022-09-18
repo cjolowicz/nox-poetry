@@ -9,13 +9,13 @@ from typing import Mapping
 from typing import NoReturn
 from typing import Optional
 from typing import Sequence
+from typing import Tuple
 from typing import TypeVar
 from typing import Union
 from typing import overload
 
 import nox.sessions
 import nox.virtualenv
-
 
 Python = Optional[Union[str, Sequence[str], bool]]
 
@@ -24,7 +24,15 @@ class _PoetrySession:
     def installroot(
         self, *, distribution_format: str = ..., extras: Iterable[str] = ...
     ) -> None: ...
-    def export_requirements(self) -> Path: ...
+    def export_requirements(
+        self,
+        *,
+        filename: str = ...,
+        as_constraints: bool = ...,
+        extras: bool = ...,
+        with_hashes: bool = ...,
+        groups: Tuple[str] = ...,
+    ) -> Path: ...
     def build_package(self, *, distribution_format: str = ...) -> str: ...
 
 class Session(nox.Session):
