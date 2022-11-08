@@ -137,7 +137,7 @@ class Poetry:
         output = self.session.run_always(
             "poetry",
             "build",
-            f"--format={format}",
+            f"--format={format.value}",
             "--no-ansi",
             external=True,
             silent=True,
