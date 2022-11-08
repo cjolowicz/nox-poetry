@@ -14,7 +14,8 @@ from nox_poetry import session
 
 
 package = "nox_poetry"
-python_versions = ["3.11", "3.10", "3.9", "3.8", "3.7"]
+poetry_version = "1.2.2"
+python_versions = ["3.11", "3.10", "3.9", "3.8"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
@@ -152,7 +153,10 @@ def mypy(session: Session) -> None:
 @session
 @nox.parametrize(
     "python,poetry",
-    [(python_versions[0], "1.0.10"), *((python, None) for python in python_versions)],
+    [
+        (python_versions[0], poetry_version),
+        *((python, None) for python in python_versions),
+    ],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""

@@ -50,8 +50,10 @@ $ pipx inject nox nox-poetry
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.8+
 - Poetry >= 1.0.0
+
+Note: for Python 3.7, please use nox-poetry 1.0.2.
 
 You need to have a Poetry installation on your system.
 `nox-poetry` uses Poetry via its command-line interface.
