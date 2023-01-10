@@ -80,7 +80,7 @@ description = "foo"
 authors = []
 
 [tool.poetry.dependencies]
-"bar" = {{version = "0.1.0", source = "baz"}}
+"thispackagedoesnotexist" = {{version = "0.1.0", source = "baz"}}
 
 [[tool.poetry.source]]
 name = "baz"
