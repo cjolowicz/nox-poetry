@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
-Name: bar
+Name: thispackagedoesnotexist
 Version: 0.1.0
-Summary: bar
+Summary: thispackagedoesnotexist
 Classifier: Programming Language :: Python :: 2
 Classifier: Programming Language :: Python :: 2.7
 Classifier: Programming Language :: Python :: 3
