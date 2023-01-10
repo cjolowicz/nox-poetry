@@ -85,6 +85,7 @@ class Poetry:
             "--dev",
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
+            "--with-credentials",
             external=True,
             silent=True,
             stderr=None,
