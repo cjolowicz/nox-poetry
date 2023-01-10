@@ -176,10 +176,11 @@ def test_session_build_package(proxy: nox_poetry.Session) -> None:
             dedent(
                 """
                 --extra-index-url https://example.com/pypi/simple
-
                 boltons==20.2.1
                 """
-            ),
+            )
+            .lstrip("\n")
+            .rstrip("\n"),
         ),
     ],
 )
