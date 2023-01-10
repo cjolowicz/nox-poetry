@@ -58,6 +58,8 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
 
 def to_constraint(requirement_string: str, line: int) -> Optional[str]:
     """Convert requirement to constraint."""
+    if requirement_string.startswith("--extra-index-url"):
+        return requirement_string
     if any(
         requirement_string.startswith(prefix)
         for prefix in ("-", "file://", "git+https://", "http://", "https://")
