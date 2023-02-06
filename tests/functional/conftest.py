@@ -90,6 +90,12 @@ def project(shared_datadir: Path) -> Project:
     return Project(shared_datadir / "example")
 
 
+@pytest.fixture
+def v1_2_0_project(shared_datadir: Path) -> Project:
+    """Return an example Poetry project using v1.2.0 dependency groups."""
+    return Project(shared_datadir / "v1.2.0-example")
+
+
 def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
     env = os.environ.copy()
     env.pop("NOXSESSION", None)
