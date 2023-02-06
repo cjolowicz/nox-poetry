@@ -152,7 +152,7 @@ def mypy(session: Session) -> None:
 @session
 @nox.parametrize(
     "python,poetry",
-    [(python_versions[0], "1.0.10"), *((python, None) for python in python_versions)],
+    [(python_versions[0], "1.2.0"), *((python, None) for python in python_versions)],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
