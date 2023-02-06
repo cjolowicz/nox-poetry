@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "example"
+name = "example-v1.2.0"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <your.name@example.com>"]
@@ -14,10 +14,10 @@ pyflakes = "^2.1.1"
 pycodestyle = "^2.5.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = ">=6.2.5"
+isort = ">=5.10.1"
 
 [tool.poetry.group.lint.dependencies]
-flake8 = ">=4.0.1"
+darglint = ">=1.8.1"
 
 [tool.poetry.extras]
 pygments = ["pygments"]

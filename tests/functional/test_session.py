@@ -158,22 +158,3 @@ def test_poetry_warnings(shared_datadir: Path) -> None:
     process = run_nox_with_noxfile(project, [test], [nox_poetry])
 
     assert "Warning:" in process.stderr
-
-
-def test_only_group_dev_dependencies(project: Project) -> None:
-    """It installs only dev-dependencies on <1.2.0 example pyproject.toml."""
-
-    @nox_poetry.session
-    def test(session: nox_poetry.Session) -> None:
-        """Install the local package."""
-        session.install(only_groups=["dev"])
-
-    run_nox_with_noxfile(project, [test], [nox_poetry])
-
-    expected = [
-        project.get_dependency("pyflakes"),
-        project.get_dependency("pycodestyle"),
-    ]
-    packages = list_packages(project, test)
-
-    assert set(expected) == set(packages)

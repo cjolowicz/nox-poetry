@@ -7,7 +7,6 @@ from typing import Iterable
 from typing import Iterator
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 import tomlkit
 from nox.sessions import Session
@@ -72,16 +71,12 @@ class Poetry:
 
     def export(
         self,
-        extras: bool = True,
-        without_hashes: bool = True,
-        include_groups: Tuple[str] = ("dev",),
-        exclude_groups: Tuple[str] = (),
+        only_groups: Optional[List[str]] = None,
     ) -> str:
         """Export the lock file to requirements format.
 
         Args:
             only_groups: optional list of poetry depedency groups to --only install.
-                Defaults to ["main", "dev"].
 
         Returns:
             The generated requirements as text.
@@ -93,19 +88,14 @@ class Poetry:
             "poetry",
             "export",
             "--format=requirements.txt",
+            *[f"--extras={extra}" for extra in self.config.extras],
+            "--without-hashes",
         ]
 
-        if without_hashes:
-            args.append("--without-hashes")
-
-        if extras:
-            args.extend(f"--extras={extra}" for extra in self.config.extras)
-
-        if include_groups:
-            args.append(f"--with={','.join(include_groups)}")
-
-        if exclude_groups:
-            args.append(f"--without={','.join(exclude_groups)}")
+        if only_groups:
+            args.extend(f"--only={group}" for group in only_groups)
+        else:
+            args.append("--with=dev")
 
         output = self.session.run_always(
             *args,

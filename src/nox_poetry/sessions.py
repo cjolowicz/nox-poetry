@@ -99,9 +99,7 @@ class _PoetrySession:
         self.session = session
         self.poetry = Poetry(session)
 
-    def install(
-        self, *args: str, only_groups: Optional[List[str]] = None, **kwargs: Any
-    ) -> None:
+    def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry.
 
         This function installs packages into the session's virtual environment. It
@@ -120,8 +118,6 @@ class _PoetrySession:
         lock file.
 
         Args:
-            only_groups: optional list of poetry depedency groups to --only install.
-                Defaults to ["main", "dev"].
             args: Command-line arguments for ``pip install``.
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for :meth:`nox.sessions.Session.run`.
@@ -149,7 +145,7 @@ class _PoetrySession:
             self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
         try:
-            requirements = self.export_requirements(filename="constraints.txt")
+            requirements = self.export_requirements()
         except CommandSkippedError:
             return
 
@@ -178,7 +174,7 @@ class _PoetrySession:
         """
         try:
             package = self.build_package(distribution_format=distribution_format)
-            requirements = self.export_requirements(filename="constraints.txt")
+            requirements = self.export_requirements()
         except CommandSkippedError:
             return
 
@@ -201,7 +197,7 @@ class _PoetrySession:
 
         self.session.install(f"--constraint={requirements}", package)
 
-    def install_groups(self, groups: Tuple[str], *args, **kwargs) -> None:
+    def install_groups(self, groups: List[str], *args, **kwargs) -> None:
         """Install all packages in the given Poetry dependency groups.
 
         Args:
@@ -211,44 +207,38 @@ class _PoetrySession:
                 as those for :meth:`nox.sessions.Session.run`.
         """
         try:
-            requirements = self.export_requirements(
-                as_constraints=False,
-                extras=False,
-                groups=groups,
-            )
+            requirements = self.export_requirements(only_groups=groups)
         except CommandSkippedError:
             return
 
-        self.install("-r", str(requirements), *args, **kwargs)
+        self.session.install("-r", str(requirements), *args, **kwargs)
 
     def export_requirements(
         self,
-        *,
-        filename: str = "requirements.txt",
-        as_constraints: bool = True,
-        extras: bool = True,
-        without_hashes: bool = True,
-        groups: Tuple[str] = ("dev",),
+        only_groups: Optional[List[str]] = None,
     ) -> Path:
         """Export a requirements file from Poetry.
 
         This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
         to generate a :ref:`requirements file <Requirements Files>` containing the
-        project dependencies at the versions specified in ``poetry.lock``. The
-        requirements file includes both core and development dependencies.
+        project dependencies at the versions specified in ``poetry.lock``.
 
-        The requirements file is stored in a per-session temporary directory,
-        together with a hash digest over ``poetry.lock`` to avoid generating the
-        file when the dependencies or only_groups have not changed since the last run.
+        If a list of only_groups is not provided, then a constraints.txt file will be
+        generated that includes both main and dev group dependencies.
+
+        If a list of only_groups is provided, then a requirements.txt file will be
+        generated that includes only the specified group dependencies.
+
+        Each constraints/requirements file is stored in a per-session temporary
+        directory, together with a hash digest over ``poetry.lock`` to avoid generating
+        the file when the dependencies or only_groups have not changed since the last
+        run.
 
         Args:
-            filename: name of generated requirements/constraints file
-            as_constraints: determine format of exported requirements
-            extras: determine whether to include extras in export
-            without_hashes: determine whether to include hashes. Defaults to true
-                because of known bug with poetry + virtualenv interactions.
-                https://github.com/cjolowicz/hypermodern-python/issues/174
-            groups: the groups to export
+            only_groups: optional list of poetry depedency groups to --only install.
+                Passing only_groups will generate a requirements.txt file to install
+                all packages in those groups, rather than generating a constraints.txt
+                file for installing individual packages.
 
         Returns:
             The path to the requirements file.
@@ -256,9 +246,19 @@ class _PoetrySession:
         # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
         # have it. We'll just create a fake virtualenv directory in this case.
 
+        """
+        If no only_groups are provided, then export requirements as a constraints.txt
+        file. Otherwise, export requirements as a requirements.txt file.
+        """
+        export_as_constraints = not only_groups
+
         tmpdir = Path(self.session._runner.envdir) / "tmp"
         tmpdir.mkdir(exist_ok=True, parents=True)
 
+        if export_as_constraints:
+            filename = "constraints.txt"
+        else:
+            filename = ",".join(only_groups) + "-" + "requirements.txt"
         path = tmpdir / filename
         hashfile = tmpdir / f"{path.name}.hash"
 
@@ -266,12 +266,8 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            contents = self.poetry.export(
-                include_groups=groups,
-                extras=extras,
-                without_hashes=without_hashes,
-            )
-            if as_constraints:
+            contents = self.poetry.export(only_groups=only_groups)
+            if export_as_constraints:
                 contents = to_constraints(contents)
             path.write_text(contents)
             hashfile.write_text(digest)
@@ -339,7 +335,7 @@ class Session(_SessionProxy):
         """Install packages into a Nox session using Poetry."""
         return self.poetry.install(*args, **kwargs)
 
-    def install_groups(self, groups: Tuple[str], *args, **kwargs) -> None:
+    def install_groups(self, groups: List[str], *args, **kwargs) -> None:
         """Install all packages in the given Poetry dependency groups.
 
         Args:

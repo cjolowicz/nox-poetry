@@ -91,9 +91,9 @@ def project(shared_datadir: Path) -> Project:
 
 
 @pytest.fixture
-def v1_2_0_project(shared_datadir: Path) -> Project:
+def group_project(shared_datadir: Path) -> Project:
     """Return an example Poetry project using v1.2.0 dependency groups."""
-    return Project(shared_datadir / "v1.2.0-example")
+    return Project(shared_datadir / "example-v1.2.0")
 
 
 def _run_nox(project: Project, *nox_args: str) -> CompletedProcess:
