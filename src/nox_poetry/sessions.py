@@ -14,7 +14,6 @@ import nox
 from packaging.requirements import InvalidRequirement
 from packaging.requirements import Requirement
 
-from nox_poetry.consts import DEFAULT_POETRY_GROUPS
 from nox_poetry.poetry import CommandSkippedError
 from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
@@ -150,7 +149,7 @@ class _PoetrySession:
             self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
         try:
-            requirements = self.export_requirements(only_groups)
+            requirements = self.export_requirements(filename="constraints.txt")
         except CommandSkippedError:
             return
 
@@ -179,7 +178,7 @@ class _PoetrySession:
         """
         try:
             package = self.build_package(distribution_format=distribution_format)
-            requirements = self.export_requirements()
+            requirements = self.export_requirements(filename="constraints.txt")
         except CommandSkippedError:
             return
 
@@ -202,7 +201,35 @@ class _PoetrySession:
 
         self.session.install(f"--constraint={requirements}", package)
 
-    def export_requirements(self, only_groups: Optional[List[str]] = None) -> Path:
+    def install_groups(self, groups: Tuple[str], *args, **kwargs) -> None:
+        """Install all packages in the given Poetry dependency groups.
+
+        Args:
+            groups: The poetry dependency groups to install.
+            args: Command-line arguments for ``pip install``.
+            kwargs: Keyword-arguments for ``session.install``. These are the same
+                as those for :meth:`nox.sessions.Session.run`.
+        """
+        try:
+            requirements = self.export_requirements(
+                as_constraints=False,
+                extras=False,
+                groups=groups,
+            )
+        except CommandSkippedError:
+            return
+
+        self.install("-r", str(requirements), *args, **kwargs)
+
+    def export_requirements(
+        self,
+        *,
+        filename: str = "requirements.txt",
+        as_constraints: bool = True,
+        extras: bool = True,
+        without_hashes: bool = True,
+        groups: Tuple[str] = ("dev",),
+    ) -> Path:
         """Export a requirements file from Poetry.
 
         This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
@@ -215,8 +242,13 @@ class _PoetrySession:
         file when the dependencies or only_groups have not changed since the last run.
 
         Args:
-            only_groups: optional list of poetry depedency groups to --only install.
-                Defaults to ["main", "dev"].
+            filename: name of generated requirements/constraints file
+            as_constraints: determine format of exported requirements
+            extras: determine whether to include extras in export
+            without_hashes: determine whether to include hashes. Defaults to true
+                because of known bug with poetry + virtualenv interactions.
+                https://github.com/cjolowicz/hypermodern-python/issues/174
+            groups: the groups to export
 
         Returns:
             The path to the requirements file.
@@ -224,13 +256,9 @@ class _PoetrySession:
         # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
         # have it. We'll just create a fake virtualenv directory in this case.
 
-        if not only_groups:
-            only_groups = DEFAULT_POETRY_GROUPS
-
         tmpdir = Path(self.session._runner.envdir) / "tmp"
         tmpdir.mkdir(exist_ok=True, parents=True)
 
-        filename = ",".join(only_groups) + "-" + "requirements.txt"
         path = tmpdir / filename
         hashfile = tmpdir / f"{path.name}.hash"
 
@@ -238,8 +266,14 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            constraints = to_constraints(self.poetry.export(only_groups))
-            path.write_text(constraints)
+            contents = self.poetry.export(
+                include_groups=groups,
+                extras=extras,
+                without_hashes=without_hashes,
+            )
+            if as_constraints:
+                contents = to_constraints(contents)
+            path.write_text(contents)
             hashfile.write_text(digest)
 
         return path
@@ -304,3 +338,14 @@ class Session(_SessionProxy):
     def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry."""
         return self.poetry.install(*args, **kwargs)
+
+    def install_groups(self, groups: Tuple[str], *args, **kwargs) -> None:
+        """Install all packages in the given Poetry dependency groups.
+
+        Args:
+            groups: The poetry dependency groups to install.
+            args: Command-line arguments for ``pip install``.
+            kwargs: Keyword-arguments for ``session.install``. These are the same
+                as those for :meth:`nox.sessions.Session.run`.
+        """
+        return self.poetry.install_groups(groups, *args, **kwargs)

@@ -7,11 +7,10 @@ from typing import Iterable
 from typing import Iterator
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 import tomlkit
 from nox.sessions import Session
-
-from nox_poetry.consts import DEFAULT_POETRY_GROUPS
 
 
 class CommandSkippedError(Exception):
@@ -71,7 +70,13 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self, only_groups: Optional[List[str]] = None) -> str:
+    def export(
+        self,
+        extras: bool = True,
+        without_hashes: bool = True,
+        include_groups: Tuple[str] = ("dev",),
+        exclude_groups: Tuple[str] = (),
+    ) -> str:
         """Export the lock file to requirements format.
 
         Args:
@@ -84,16 +89,26 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
-        if not only_groups:
-            only_groups = DEFAULT_POETRY_GROUPS
-
-        output = self.session.run_always(
+        args = [
             "poetry",
             "export",
             "--format=requirements.txt",
-            *[f"--only={group}" for group in only_groups],
-            *[f"--extras={extra}" for extra in self.config.extras],
-            "--without-hashes",
+        ]
+
+        if without_hashes:
+            args.append("--without-hashes")
+
+        if extras:
+            args.extend(f"--extras={extra}" for extra in self.config.extras)
+
+        if include_groups:
+            args.append(f"--with={','.join(include_groups)}")
+
+        if exclude_groups:
+            args.append(f"--without={','.join(exclude_groups)}")
+
+        output = self.session.run_always(
+            *args,
             external=True,
             silent=True,
             stderr=None,
