@@ -71,7 +71,7 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self, only_groups: Optional[list[str]] = None) -> str:
+    def export(self, only_groups: Optional[List[str]] = None) -> str:
         """Export the lock file to requirements format.
 
         Args:

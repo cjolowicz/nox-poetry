@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 from typing import Iterable
 from typing import Iterator
+from typing import List
 from typing import Optional
 from typing import Tuple
 
@@ -100,7 +101,7 @@ class _PoetrySession:
         self.poetry = Poetry(session)
 
     def install(
-        self, *args: str, only_groups: Optional[list[str]] = None, **kwargs: Any
+        self, *args: str, only_groups: Optional[List[str]] = None, **kwargs: Any
     ) -> None:
         """Install packages into a Nox session using Poetry.
 
@@ -201,7 +202,7 @@ class _PoetrySession:
 
         self.session.install(f"--constraint={requirements}", package)
 
-    def export_requirements(self, only_groups: Optional[list[str]] = None) -> Path:
+    def export_requirements(self, only_groups: Optional[List[str]] = None) -> Path:
         """Export a requirements file from Poetry.
 
         This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
