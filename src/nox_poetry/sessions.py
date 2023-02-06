@@ -13,6 +13,7 @@ import nox
 from packaging.requirements import InvalidRequirement
 from packaging.requirements import Requirement
 
+from nox_poetry.consts import DEFAULT_POETRY_GROUPS
 from nox_poetry.poetry import CommandSkippedError
 from nox_poetry.poetry import DistributionFormat
 from nox_poetry.poetry import Poetry
@@ -98,7 +99,9 @@ class _PoetrySession:
         self.session = session
         self.poetry = Poetry(session)
 
-    def install(self, *args: str, **kwargs: Any) -> None:
+    def install(
+        self, *args: str, only_groups: Optional[list[str]] = None, **kwargs: Any
+    ) -> None:
         """Install packages into a Nox session using Poetry.
 
         This function installs packages into the session's virtual environment. It
@@ -117,6 +120,8 @@ class _PoetrySession:
         lock file.
 
         Args:
+            only_groups: optional list of poetry depedency groups to --only install.
+                Defaults to ["main", "dev"].
             args: Command-line arguments for ``pip install``.
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for :meth:`nox.sessions.Session.run`.
@@ -144,7 +149,7 @@ class _PoetrySession:
             self.session.run_always("pip", "uninstall", "--yes", package, silent=True)
 
         try:
-            requirements = self.export_requirements()
+            requirements = self.export_requirements(only_groups)
         except CommandSkippedError:
             return
 
@@ -196,7 +201,7 @@ class _PoetrySession:
 
         self.session.install(f"--constraint={requirements}", package)
 
-    def export_requirements(self) -> Path:
+    def export_requirements(self, only_groups: Optional[list[str]] = None) -> Path:
         """Export a requirements file from Poetry.
 
         This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
@@ -206,7 +211,11 @@ class _PoetrySession:
 
         The requirements file is stored in a per-session temporary directory,
         together with a hash digest over ``poetry.lock`` to avoid generating the
-        file when the dependencies have not changed since the last run.
+        file when the dependencies or only_groups have not changed since the last run.
+
+        Args:
+            only_groups: optional list of poetry depedency groups to --only install.
+                Defaults to ["main", "dev"].
 
         Returns:
             The path to the requirements file.
@@ -214,17 +223,21 @@ class _PoetrySession:
         # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
         # have it. We'll just create a fake virtualenv directory in this case.
 
+        if not only_groups:
+            only_groups = DEFAULT_POETRY_GROUPS
+
         tmpdir = Path(self.session._runner.envdir) / "tmp"
         tmpdir.mkdir(exist_ok=True, parents=True)
 
-        path = tmpdir / "requirements.txt"
+        filename = ",".join(only_groups) + "-" + "requirements.txt"
+        path = tmpdir / filename
         hashfile = tmpdir / f"{path.name}.hash"
 
         lockdata = Path("poetry.lock").read_bytes()
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            constraints = to_constraints(self.poetry.export())
+            constraints = to_constraints(self.poetry.export(only_groups))
             path.write_text(constraints)
             hashfile.write_text(digest)
 

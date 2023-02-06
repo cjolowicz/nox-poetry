@@ -11,6 +11,8 @@ from typing import Optional
 import tomlkit
 from nox.sessions import Session
 
+from nox_poetry.consts import DEFAULT_POETRY_GROUPS
+
 
 class CommandSkippedError(Exception):
     """The command was not executed by Nox."""
@@ -69,8 +71,12 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self) -> str:
+    def export(self, only_groups: Optional[list[str]] = None) -> str:
         """Export the lock file to requirements format.
+
+        Args:
+            only_groups: optional list of poetry depedency groups to --only install.
+                Defaults to ["main", "dev"].
 
         Returns:
             The generated requirements as text.
@@ -78,11 +84,14 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
+        if not only_groups:
+            only_groups = DEFAULT_POETRY_GROUPS
+
         output = self.session.run_always(
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--dev",
+            *[f"--only={group}" for group in only_groups],
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
             external=True,
