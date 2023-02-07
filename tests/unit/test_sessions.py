@@ -250,5 +250,8 @@ def test_install_groups_old_poetry(
         "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: False
     )
 
+    proxy.install
+    proxy.poetry.install_groups
+
     with pytest.raises(nox_poetry.poetry.IncompatiblePoetryVersionError):
         proxy.install_groups(["dev"])
