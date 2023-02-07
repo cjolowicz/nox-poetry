@@ -20,7 +20,7 @@ def test_dev_dependencies(project: Project) -> None:
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:
         """Install the local package."""
-        session.install_groups(["dev"])
+        session.install_groups("dev")
 
     run_nox_with_noxfile(project, [test], [nox_poetry])
 
@@ -40,7 +40,7 @@ def test_group_dev(group_project: Project) -> None:
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:
         """Install the local package."""
-        session.install_groups(["dev"])
+        session.install_groups("dev")
 
     run_nox_with_noxfile(group_project, [test], [nox_poetry])
 
@@ -60,7 +60,7 @@ def test_two_groups(group_project: Project) -> None:
     @nox_poetry.session
     def test(session: nox_poetry.Session) -> None:
         """Install the local package."""
-        session.install_groups(["test", "lint"])
+        session.install_groups("test", "lint")
 
     run_nox_with_noxfile(group_project, [test], [nox_poetry])
 

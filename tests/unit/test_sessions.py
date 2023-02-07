@@ -237,7 +237,7 @@ def test_install_groups_no_install(
         "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: True
     )
 
-    proxy.poetry.install_groups(["dev"])
+    proxy.poetry.install_groups("dev")
 
     assert cast(FakeSession, session).install_called is not no_install
 
@@ -250,8 +250,17 @@ def test_install_groups_old_poetry(
         "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: False
     )
 
-    proxy.install
-    proxy.poetry.install_groups
-
     with pytest.raises(nox_poetry.poetry.IncompatiblePoetryVersionError):
-        proxy.install_groups(["dev"])
+        proxy.install_groups("dev")
+
+
+def test_install_groups_no_args(
+    proxy: nox_poetry.Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """It raises ValueError if no args are passed to install_groups."""
+    monkeypatch.setattr(
+        "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: False
+    )
+
+    with pytest.raises(ValueError):
+        proxy.install_groups()

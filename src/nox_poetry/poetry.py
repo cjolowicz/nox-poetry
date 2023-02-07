@@ -90,12 +90,12 @@ class Poetry:
 
     def export(
         self,
-        only_groups: Optional[List[str]] = None,
+        groups: Optional[List[str]] = None,
     ) -> str:
         """Export the lock file to requirements format.
 
         Args:
-            only_groups: optional list of poetry depedency groups to --only install.
+            groups: optional list of poetry depedency groups to --only install.
 
         Returns:
             The generated requirements as text.
@@ -111,8 +111,8 @@ class Poetry:
             "--without-hashes",
         ]
 
-        if only_groups:
-            args.extend(f"--only={group}" for group in only_groups)
+        if groups:
+            args.extend(f"--only={group}" for group in groups)
         elif self.config.is_compatible_with_group_deps():
             args.append("--with=dev")
         else:
