@@ -222,3 +222,33 @@ def test_installroot_no_install(
     proxy.poetry.installroot()
 
     assert cast(FakeSession, session).install_called is not no_install
+
+
+@pytest.mark.parametrize("no_install", [False, True])
+def test_install_groups_no_install(
+    sessionfactory: FakeSessionFactory,
+    monkeypatch: pytest.MonkeyPatch,
+    no_install: bool,
+) -> None:
+    """It returns early with --no-install if the environment is being reused."""
+    session = sessionfactory(no_install=no_install)
+    proxy = nox_poetry.Session(session)
+    monkeypatch.setattr(
+        "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: True
+    )
+
+    proxy.poetry.install_groups(["dev"])
+
+    assert cast(FakeSession, session).install_called is not no_install
+
+
+def test_install_groups_old_poetry(
+    proxy: nox_poetry.Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """It prevents session.install_group() from running on old version of poetry."""
+    monkeypatch.setattr(
+        "nox_poetry.poetry.Config.is_compatible_with_group_deps", lambda _: False
+    )
+
+    with pytest.raises(nox_poetry.poetry.IncompatiblePoetryVersionError):
+        proxy.install_groups(["dev"])

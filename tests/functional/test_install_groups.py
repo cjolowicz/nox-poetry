@@ -1,10 +1,19 @@
 """Functional tests for the `install_groups`."""
+import pytest
+
 import nox_poetry
 from tests.functional.conftest import Project
 from tests.functional.conftest import list_packages
 from tests.functional.conftest import run_nox_with_noxfile
 
 
+skipif_poetry_version_is_under_1_2_0 = pytest.mark.skipif(
+    not nox_poetry.poetry.Config.is_compatible_with_group_deps(),
+    reason="session.install_groups() requires poetry>=1.2.0",
+)
+
+
+@skipif_poetry_version_is_under_1_2_0
 def test_dev_dependencies(project: Project) -> None:
     """It installs only dev-dependencies on <1.2.0 example pyproject.toml."""
 
@@ -24,6 +33,7 @@ def test_dev_dependencies(project: Project) -> None:
     assert set(expected) == set(packages)
 
 
+@skipif_poetry_version_is_under_1_2_0
 def test_group_dev(group_project: Project) -> None:
     """It installs only dev group on >=1.2.0 example pyproject.toml."""
 
@@ -43,6 +53,7 @@ def test_group_dev(group_project: Project) -> None:
     assert set(expected) == set(packages)
 
 
+@skipif_poetry_version_is_under_1_2_0
 def test_two_groups(group_project: Project) -> None:
     """It installs only 2 dependency groups on >=1.2.0 example pyproject.toml."""
 

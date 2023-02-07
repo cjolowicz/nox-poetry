@@ -1,6 +1,7 @@
 """Poetry interface."""
 import sys
 from enum import Enum
+from importlib import metadata
 from pathlib import Path
 from typing import Any
 from typing import Iterable
@@ -10,6 +11,11 @@ from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
+from packaging.version import Version
+
+
+class IncompatiblePoetryVersionError(Exception):
+    """Installed poetry version does not meet requirements."""
 
 
 class CommandSkippedError(Exception):
@@ -25,6 +31,12 @@ class DistributionFormat(str, Enum):
 
 class Config:
     """Poetry configuration."""
+
+    """Current installed version of poetry."""
+    VERSION = Version(metadata.version("poetry"))
+
+    """Minimum version of poetry that can support group dependencies"""
+    MINIMUM_VERSION_SUPPORTING_GROUP_DEPS = Version("1.2.0")
 
     def __init__(self, project: Path) -> None:
         """Initialize."""
@@ -48,6 +60,11 @@ class Config:
             isinstance(extra, str) for extra in extras
         )
         return list(extras)
+
+    @classmethod
+    def is_compatible_with_group_deps(cls) -> bool:
+        """Test that installed version of poetry can support group dependencies."""
+        return cls.VERSION >= cls.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS
 
 
 class Poetry:
@@ -94,8 +111,10 @@ class Poetry:
 
         if only_groups:
             args.extend(f"--only={group}" for group in only_groups)
-        else:
+        elif self.config.is_compatible_with_group_deps():
             args.append("--with=dev")
+        else:
+            args.append("--dev")
 
         output = self.session.run_always(
             *args,
