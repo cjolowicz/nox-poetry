@@ -32,9 +32,6 @@ class DistributionFormat(str, Enum):
 class Config:
     """Poetry configuration."""
 
-    """Current installed version of poetry."""
-    VERSION = Version(metadata.version("poetry"))
-
     """Minimum version of poetry that can support group dependencies"""
     MINIMUM_VERSION_SUPPORTING_GROUP_DEPS = Version("1.2.0")
 
@@ -62,9 +59,14 @@ class Config:
         return list(extras)
 
     @classmethod
+    def version(cls) -> Version:
+        """Current installed version of poetry."""
+        return Version(metadata.version("poetry"))
+
+    @classmethod
     def is_compatible_with_group_deps(cls) -> bool:
         """Test that installed version of poetry can support group dependencies."""
-        return cls.VERSION >= cls.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS
+        return cls.version() >= cls.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS
 
 
 class Poetry:

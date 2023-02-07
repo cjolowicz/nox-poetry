@@ -68,8 +68,10 @@ def test_export_with_warnings(
     "poetry_version,expected", [("1.1.10", False), ("1.2.0", True), ("1.3.0", True)]
 )
 def test_is_compatible_with_group_deps(
-    session: nox.Session, monkeypatch: pytest.MonkeyPatch, poetry_version, expected
+    monkeypatch: pytest.MonkeyPatch, poetry_version: str, expected: bool
 ) -> None:
     """It is only compatible if installed version of poetry is >=1.2.0."""
-    monkeypatch.setattr("nox_poetry.poetry.Config.VERSION", Version(poetry_version))
+    monkeypatch.setattr(
+        "nox_poetry.poetry.Config.version", lambda: Version(poetry_version)
+    )
     assert poetry.Config.is_compatible_with_group_deps() is expected

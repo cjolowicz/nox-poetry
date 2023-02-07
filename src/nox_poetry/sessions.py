@@ -339,22 +339,25 @@ class Session(_SessionProxy):
     def install_groups(self, groups: List[str], *args, **kwargs) -> None:
         """Install all packages in the given Poetry dependency groups.
 
-        Raises:
-            IncompatiblePoetryVersionError: The version of poetry installed is less than
-                v1.2.0, which is not compatible with installing dependency groups.
-
         Args:
             groups: The poetry dependency groups to install.
             args: Command-line arguments for ``pip install``.
             kwargs: Keyword-arguments for ``session.install``. These are the same
                 as those for :meth:`nox.sessions.Session.run`.
+
+        Raises:
+            IncompatiblePoetryVersionError: The version of poetry installed is less than
+                v1.2.0, which is not compatible with installing dependency groups.
+
+        Returns:
+            None
         """
         if not self.poetry.poetry.config.is_compatible_with_group_deps():
             raise IncompatiblePoetryVersionError(
                 f"Installed version of poetry must be >="
                 f" {self.poetry.poetry.config.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS} in"
                 " order to install dependency groups. Current version installed:"
-                f" {self.poetry.poetry.config.VERSION}"
+                f" {self.poetry.poetry.config.version()}"
             )
 
         return self.poetry.install_groups(groups, *args, **kwargs)
