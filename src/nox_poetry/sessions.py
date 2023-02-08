@@ -254,13 +254,6 @@ class _PoetrySession:
         Returns:
             The path to the requirements file.
         """
-        # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
-        # have it. We'll just create a fake virtualenv directory in this case.
-
-        """
-        If no groups are provided, then export requirements as a constraints.txt
-        file. Otherwise, export requirements as a requirements.txt file.
-        """
         if groups and not self.poetry.config.is_compatible_with_group_deps():
             raise IncompatiblePoetryVersionError(
                 f"Installed version of poetry must be >="
@@ -269,6 +262,9 @@ class _PoetrySession:
                 f" {self.poetry.config.version()}"
             )
 
+        # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
+        # have it. We'll just create a fake virtualenv directory in this case.
+
         tmpdir = Path(self.session._runner.envdir) / "tmp"
         tmpdir.mkdir(exist_ok=True, parents=True)
 
@@ -276,6 +272,7 @@ class _PoetrySession:
             filename = ",".join(groups) + "-" + "requirements.txt"
         else:
             filename = "constraints.txt"
+
         path = tmpdir / filename
         hashfile = tmpdir / f"{path.name}.hash"
 
