@@ -1,7 +1,6 @@
 """Poetry interface."""
 import sys
 from enum import Enum
-from importlib import metadata
 from pathlib import Path
 from typing import Any
 from typing import Iterable
@@ -12,6 +11,12 @@ from typing import Optional
 import tomlkit
 from nox.sessions import Session
 from packaging.version import Version
+
+
+if sys.version_info >= (3, 8):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
 
 
 class IncompatiblePoetryVersionError(Exception):
