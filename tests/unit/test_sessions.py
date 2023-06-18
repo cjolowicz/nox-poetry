@@ -105,7 +105,7 @@ def test_wrapper_parametrize(session: nox.Session) -> None:
     tests(session, 1)  # type: ignore[no-untyped-call]
     tests(session, 2)  # type: ignore[no-untyped-call]
 
-    proxies, numbers = zip(*calls)
+    proxies, numbers = zip(*calls)  # noqa: B905
 
     assert all(proxy._session is session for proxy in proxies)
     assert numbers == (1, 2)
