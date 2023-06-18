@@ -151,6 +151,11 @@ def list_packages(project: Project, session: SessionFunction) -> List[Package]:
             # Abuse Package.version to store the URL or path.
             name, _, version = line.partition(" @ ")
 
+            # Strip hashes returned by pip freeze.
+            pos = version.rfind("#sha256=")
+            if pos != -1:
+                version = version[:pos]
+
             if name == project.package.name:
                 # But use the known version for the local package.
                 return project.package

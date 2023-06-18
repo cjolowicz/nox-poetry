@@ -140,12 +140,9 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
-    deps = [".", "mypy", "pytest"] + (
-        ["types-dataclasses"] if session.python == "3.6" else []
-    )
-    session.install(*deps)
+    session.install(".", "mypy", "pytest")
     session.run("mypy", *args)
-    if not session.posargs:
+    if not session.posargs and session.python == python_versions[0]:
         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
 
 

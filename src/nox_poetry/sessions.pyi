@@ -16,7 +16,6 @@ from typing import overload
 import nox.sessions
 import nox.virtualenv
 
-
 Python = Optional[Union[str, Sequence[str], bool]]
 
 class _PoetrySession:
