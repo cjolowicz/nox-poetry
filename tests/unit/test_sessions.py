@@ -181,7 +181,7 @@ def test_to_constraints(requirements: str, expected: str) -> None:
 
 def test_invalid_constraint() -> None:
     """It raises an exception."""
-    with pytest.raises(Exception):
+    with pytest.raises(RuntimeError):
         to_constraints("example @ /tmp/example")
 
 
