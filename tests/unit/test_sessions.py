@@ -161,7 +161,10 @@ def test_session_build_package(proxy: nox_poetry.Session) -> None:
             'regex==2020.10.28; python_version == "3.5"',
         ),
         ("-e ../lib/foo", ""),
-        ("--extra-index-url https://example.com/pypi/simple", ""),
+        (
+            "--extra-index-url https://example.com/pypi/simple",
+            "--extra-index-url https://example.com/pypi/simple",
+        ),
         (
             dedent(
                 """
@@ -170,7 +173,14 @@ def test_session_build_package(proxy: nox_poetry.Session) -> None:
                 boltons==20.2.1
                 """
             ),
-            "boltons==20.2.1",
+            dedent(
+                """
+                --extra-index-url https://example.com/pypi/simple
+                boltons==20.2.1
+                """
+            )
+            .lstrip("\n")
+            .rstrip("\n"),
         ),
     ],
 )
