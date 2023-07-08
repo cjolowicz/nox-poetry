@@ -49,6 +49,12 @@ class Config:
         )
         return list(extras)
 
+    @property
+    def dependency_groups(self) -> List[str]:
+        """Return the dependency groups."""
+        groups = self._config.get("group", {})
+        return list(groups)
+
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
