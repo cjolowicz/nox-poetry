@@ -125,13 +125,17 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
+        dependency_groups = (
+            [f"--with={group}" for group in self.config.dependency_groups]
+            if self.has_dependency_groups
+            else ["--dev"]
+        )
+
         output = self.session.run_always(
             "poetry",
             "export",
             "--format=requirements.txt",
-            *[f"--with={group}" for group in self.config.dependency_groups]
-            if self.has_dependency_groups
-            else ["--dev"],
+            *dependency_groups,
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
             external=True,
