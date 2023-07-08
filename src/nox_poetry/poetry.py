@@ -90,7 +90,7 @@ class Poetry:
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--dev",
+            *[f"--with={group}" for group in self.config.dependency_groups],
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
             external=True,
