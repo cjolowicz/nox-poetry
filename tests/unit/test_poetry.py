@@ -119,6 +119,31 @@ def test_poetry_invalid_version(
         poetry.Poetry(session).version
 
 
+@pytest.mark.parametrize(
+    ("version", "expected"),
+    [
+        ("1.0.10", False),
+        ("1.1.15", False),
+        ("1.2.2", True),
+        ("1.6.0.dev0", True),
+    ],
+)
+def test_poetry_has_dependency_groups(
+    session: nox.Session,
+    monkeypatch: pytest.MonkeyPatch,
+    version: str,
+    expected: bool,
+) -> None:
+    """It returns True if Poetry supports dependency groups."""
+
+    def _run(*args: Any, **kwargs: Any) -> str:
+        return version
+
+    monkeypatch.setattr("nox.command.run", _run)
+
+    assert poetry.Poetry(session).has_dependency_groups is expected
+
+
 def test_export_with_warnings(
     session: nox.Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
