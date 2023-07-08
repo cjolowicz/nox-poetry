@@ -1,6 +1,8 @@
 """Unit tests for the poetry module."""
 from pathlib import Path
+from textwrap import dedent
 from typing import Any
+from typing import Callable
 from typing import Dict
 
 import nox._options
@@ -12,34 +14,44 @@ import pytest
 from nox_poetry import poetry
 
 
-def test_config_non_ascii(tmp_path: Path) -> None:
+CreateConfig = Callable[[str], poetry.Config]
+
+
+@pytest.fixture
+def create_config(tmp_path: Path) -> CreateConfig:
+    """Factory fixture for a Poetry config."""
+
+    def _(text: str) -> poetry.Config:
+        path = tmp_path / "pyproject.toml"
+        path.write_text(dedent(text), encoding="utf-8")
+
+        return poetry.Config(path.parent)
+
+    return _
+
+
+def test_config_non_ascii(create_config: CreateConfig) -> None:
     """It decodes non-ASCII characters in pyproject.toml."""
-    text = """\
-[tool.poetry]
-name = "África"
-"""
-
-    path = tmp_path / "pyproject.toml"
-    path.write_text(text, encoding="utf-8")
-
-    config = poetry.Config(path.parent)
+    config = create_config(
+        """
+        [tool.poetry]
+        name = "África"
+        """
+    )
     assert config.name == "África"
 
 
-def test_config_dependency_groups(tmp_path: Path) -> None:
+def test_config_dependency_groups(create_config: CreateConfig) -> None:
     """It returns the dependency groups from pyproject.toml."""
-    text = """\
-[tool.poetry.group.tests.dependencies]
-pytest = "^1.0.0"
+    config = create_config(
+        """
+        [tool.poetry.group.tests.dependencies]
+        pytest = "^1.0.0"
 
-[tool.poetry.group.docs.dependencies]
-sphinx = "^1.0.0"
-"""
-
-    path = tmp_path / "pyproject.toml"
-    path.write_text(text, encoding="utf-8")
-
-    config = poetry.Config(path.parent)
+        [tool.poetry.group.docs.dependencies]
+        sphinx = "^1.0.0"
+        """
+    )
     assert config.dependency_groups == ["tests", "docs"]
 
 
