@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "example-v1.2.0"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <your.name@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+first = "^2.0.0"
+Pygments = {version = "^2.7.1", optional = true}
+
+[tool.poetry.group.dev.dependencies]
+pyflakes = "^2.1.1"
+pycodestyle = "^2.5.0"
+
+[tool.poetry.group.test.dependencies]
+isort = ">=5.10.1"
+
+[tool.poetry.group.lint.dependencies]
+darglint = ">=1.8.1"
+
+[tool.poetry.extras]
+pygments = ["pygments"]
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"

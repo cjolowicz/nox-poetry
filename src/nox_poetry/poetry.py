@@ -10,6 +10,17 @@ from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
+from packaging.version import Version
+
+
+if sys.version_info >= (3, 8):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
+
+
+class IncompatiblePoetryVersionError(Exception):
+    """Installed poetry version does not meet requirements."""
 
 
 class CommandSkippedError(Exception):
@@ -25,6 +36,9 @@ class DistributionFormat(str, Enum):
 
 class Config:
     """Poetry configuration."""
+
+    """Minimum version of poetry that can support group dependencies"""
+    MINIMUM_VERSION_SUPPORTING_GROUP_DEPS = Version("1.2.0")
 
     def __init__(self, project: Path) -> None:
         """Initialize."""
@@ -49,6 +63,16 @@ class Config:
         )
         return list(extras)
 
+    @classmethod
+    def version(cls) -> Version:
+        """Current installed version of poetry."""
+        return Version(metadata.version("poetry"))
+
+    @classmethod
+    def is_compatible_with_group_deps(cls) -> bool:
+        """Test that installed version of poetry can support group dependencies."""
+        return cls.version() >= cls.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS
+
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
@@ -69,8 +93,14 @@ class Poetry:
             self._config = Config(Path.cwd())
         return self._config
 
-    def export(self) -> str:
+    def export(
+        self,
+        groups: Optional[List[str]] = None,
+    ) -> str:
         """Export the lock file to requirements format.
+
+        Args:
+            groups: optional list of poetry depedency groups to --only install.
 
         Returns:
             The generated requirements as text.
@@ -78,13 +108,23 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
-        output = self.session.run_always(
+        args = [
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--dev",
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
+        ]
+
+        if groups:
+            args.extend(f"--only={group}" for group in groups)
+        elif self.config.is_compatible_with_group_deps():
+            args.append("--with=dev")
+        else:
+            args.append("--dev")
+
+        output = self.session.run_always(
+            *args,
             external=True,
             silent=True,
             stderr=None,

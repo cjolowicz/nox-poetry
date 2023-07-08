@@ -80,6 +80,7 @@ Here is a comparison of the different installation methods:
 - Use `session.install(...)` to install specific development dependencies, e.g. `session.install("pytest")`.
 - Use `session.install(".")` (or `session.poetry.installroot()`) to install your own package.
 - Use `session.run_always("poetry", "install", external=True)` to install your package with _all_ development dependencies.
+- Use `session.install_groups(...)` to install all depedencies in given dependency groups (only available for poetry >= 1.2.0).
 
 Please read the next section for the tradeoffs of each method.
 

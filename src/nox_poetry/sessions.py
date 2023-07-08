@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 from typing import Iterable
 from typing import Iterator
+from typing import List
 from typing import Optional
 from typing import Tuple
 
@@ -15,6 +16,7 @@ from packaging.requirements import Requirement
 
 from nox_poetry.poetry import CommandSkippedError
 from nox_poetry.poetry import DistributionFormat
+from nox_poetry.poetry import IncompatiblePoetryVersionError
 from nox_poetry.poetry import Poetry
 
 
@@ -196,36 +198,92 @@ class _PoetrySession:
 
         self.session.install(f"--constraint={requirements}", package)
 
-    def export_requirements(self) -> Path:
+    def install_groups(self, *args: str, **kwargs: Any) -> None:
+        """Install all packages in the given Poetry dependency groups.
+
+        Args:
+            args: The poetry dependency groups to install.
+            kwargs: Keyword-arguments for ``session.install``. These are the same
+                as those for :meth:`nox.sessions.Session.run`.
+
+        Raises:
+            ValueError: if no groups are provided to install.
+        """
+        groups = [*args]
+        if not groups:
+            raise ValueError("At least one argument required to install_groups().")
+
+        try:
+            requirements = self.export_requirements(groups=groups)
+        except CommandSkippedError:
+            return
+
+        self.session.install("-r", str(requirements), **kwargs)
+
+    def export_requirements(
+        self,
+        groups: Optional[List[str]] = None,
+    ) -> Path:
         """Export a requirements file from Poetry.
 
         This function uses `poetry export <https://python-poetry.org/docs/cli/#export>`_
         to generate a :ref:`requirements file <Requirements Files>` containing the
-        project dependencies at the versions specified in ``poetry.lock``. The
-        requirements file includes both core and development dependencies.
+        project dependencies at the versions specified in ``poetry.lock``.
 
-        The requirements file is stored in a per-session temporary directory,
-        together with a hash digest over ``poetry.lock`` to avoid generating the
-        file when the dependencies have not changed since the last run.
+        If a list of groups is not provided, then a constraints.txt file will be
+        generated that includes both main and dev group dependencies.
+
+        If a list of groups is provided, then a requirements.txt file will be
+        generated that includes only the specified group dependencies.
+
+        Each constraints/requirements file is stored in a per-session temporary
+        directory, together with a hash digest over ``poetry.lock`` to avoid generating
+        the file when the dependencies or groups have not changed since the last
+        run.
+
+        Args:
+            groups: optional list of poetry depedency groups to --only install.
+                Passing groups will generate a requirements.txt file to install
+                all packages in those groups, rather than generating a constraints.txt
+                file for installing individual packages.
+
+        Raises:
+            IncompatiblePoetryVersionError: The version of poetry installed is less than
+                v1.2.0, which is not compatible with installing dependency groups.
 
         Returns:
             The path to the requirements file.
         """
+        if groups and not self.poetry.config.is_compatible_with_group_deps():
+            raise IncompatiblePoetryVersionError(
+                f"Installed version of poetry must be >="
+                f" {self.poetry.config.MINIMUM_VERSION_SUPPORTING_GROUP_DEPS} in"
+                " order to install dependency groups. Current version installed:"
+                f" {self.poetry.config.version()}"
+            )
+
         # Avoid ``session.virtualenv.location`` because PassthroughEnv does not
         # have it. We'll just create a fake virtualenv directory in this case.
 
         tmpdir = Path(self.session._runner.envdir) / "tmp"
         tmpdir.mkdir(exist_ok=True, parents=True)
 
-        path = tmpdir / "requirements.txt"
+        if groups:
+            filename = ",".join(groups) + "-" + "requirements.txt"
+        else:
+            filename = "constraints.txt"
+
+        path = tmpdir / filename
         hashfile = tmpdir / f"{path.name}.hash"
 
         lockdata = Path("poetry.lock").read_bytes()
         digest = hashlib.blake2b(lockdata).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            constraints = to_constraints(self.poetry.export())
-            path.write_text(constraints)
+            contents = self.poetry.export(groups=groups)
+            if not groups:
+                contents = to_constraints(contents)
+            path.write_text(contents)
             hashfile.write_text(digest)
 
         return path
@@ -290,3 +348,7 @@ class Session(_SessionProxy):
     def install(self, *args: str, **kwargs: Any) -> None:
         """Install packages into a Nox session using Poetry."""
         return self.poetry.install(*args, **kwargs)
+
+    def install_groups(self, *args: str, **kwargs: Any) -> None:
+        """Install all packages from given Poetry dependency groups."""
+        return self.poetry.install_groups(*args, **kwargs)
