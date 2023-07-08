@@ -55,6 +55,16 @@ def test_config_dependency_groups(create_config: CreateConfig) -> None:
     assert config.dependency_groups == ["tests", "docs"]
 
 
+def test_config_no_dependency_groups(create_config: CreateConfig) -> None:
+    """It returns an empty list."""
+    config = create_config(
+        """
+        [tool.poetry]
+        """
+    )
+    assert config.dependency_groups == []
+
+
 @pytest.fixture
 def session(monkeypatch: pytest.MonkeyPatch) -> nox.Session:
     """Fixture for a Nox session."""
