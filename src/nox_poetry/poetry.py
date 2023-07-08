@@ -1,4 +1,5 @@
 """Poetry interface."""
+import re
 import sys
 from enum import Enum
 from pathlib import Path
@@ -58,6 +59,9 @@ class Config:
         return list(groups)
 
 
+VERSION_PATTERN = re.compile(r"[0-9]+(\.[0-9+])+[-+.0-9a-zA-Z]+")
+
+
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
 
@@ -69,6 +73,30 @@ class Poetry:
         """Initialize."""
         self.session = session
         self._config: Optional[Config] = None
+
+    @property
+    def version(self) -> str:
+        """Return the Poetry version."""
+        output = self.session.run_always(
+            "poetry",
+            "--version",
+            "--no-ansi",
+            external=True,
+            silent=True,
+            stderr=None,
+        )
+        if output is None:
+            raise CommandSkippedError(  # pragma: no cover
+                "The command `poetry --version` was not executed"
+                " (a possible cause is specifying `--no-install`)"
+            )
+
+        assert isinstance(output, str)  # noqa: S101
+
+        if match := VERSION_PATTERN.search(output):
+            return match.group()
+
+        return ""  # raise RuntimeError("Cannot parse output of `poetry --version`")
 
     @property
     def config(self) -> Config:
