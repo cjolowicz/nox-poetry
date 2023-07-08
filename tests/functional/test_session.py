@@ -158,3 +158,20 @@ def test_poetry_warnings(shared_datadir: Path) -> None:
     process = run_nox_with_noxfile(project, [test], [nox_poetry])
 
     assert "Warning:" in process.stderr
+
+
+def test_dependency_group(shared_datadir: Path) -> None:
+    """It pins packages in dependency groups."""
+    project = Project(shared_datadir / "dependency-group")
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the dependencies."""
+        session.install(".", "pyflakes")
+
+    run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    expected = [project.package, *project.locked_packages]
+    packages = list_packages(project, test)
+
+    assert set(expected) == set(packages)
