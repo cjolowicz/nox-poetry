@@ -93,6 +93,12 @@ def session(monkeypatch: pytest.MonkeyPatch) -> nox.Session:
     return nox.Session(runner)
 
 
+def test_poetry_version(session: nox.Session) -> None:
+    """It returns the Poetry version."""
+    version = poetry.Poetry(session).version
+    assert all(part.isnumeric() for part in version.split(".")[:3])
+
+
 def test_export_with_warnings(
     session: nox.Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
