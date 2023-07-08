@@ -3,11 +3,18 @@ from pathlib import Path
 
 import nox.sessions
 import pytest
+from packaging.version import Version
 
 import nox_poetry
 from tests.functional.conftest import Project
 from tests.functional.conftest import list_packages
 from tests.functional.conftest import run_nox_with_noxfile
+
+
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
 
 
 def test_local(project: Project) -> None:
@@ -160,6 +167,10 @@ def test_poetry_warnings(shared_datadir: Path) -> None:
     assert "Warning:" in process.stderr
 
 
+@pytest.mark.skipif(
+    Version(version("poetry")) < Version("1.2"),
+    reason="Poetry < 1.2 does not support dependency groups",
+)
 def test_dependency_group(shared_datadir: Path) -> None:
     """It pins packages in dependency groups."""
     project = Project(shared_datadir / "dependency-group")
