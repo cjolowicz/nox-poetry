@@ -73,10 +73,14 @@ class Poetry:
         """Initialize."""
         self.session = session
         self._config: Optional[Config] = None
+        self._version: Optional[str] = None
 
     @property
     def version(self) -> str:
         """Return the Poetry version."""
+        if self._version is not None:
+            return self._version
+
         output = self.session.run_always(
             "poetry",
             "--version",
@@ -94,7 +98,8 @@ class Poetry:
         assert isinstance(output, str)  # noqa: S101
 
         if match := VERSION_PATTERN.search(output):
-            return match.group()
+            self._version = match.group()
+            return self._version
 
         raise RuntimeError("Cannot parse output of `poetry --version`")
 
