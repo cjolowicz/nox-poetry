@@ -99,6 +99,20 @@ def test_poetry_version(session: nox.Session) -> None:
     assert all(part.isnumeric() for part in version.split(".")[:3])
 
 
+def test_poetry_invalid_version(
+    session: nox.Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """It raises an exception if the Poetry version cannot be parsed."""
+
+    def _run(*args: Any, **kwargs: Any) -> str:
+        return "bogus"
+
+    monkeypatch.setattr("nox.command.run", _run)
+
+    with pytest.raises(RuntimeError):
+        poetry.Poetry(session).version
+
+
 def test_export_with_warnings(
     session: nox.Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
