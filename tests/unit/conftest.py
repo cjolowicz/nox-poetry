@@ -37,6 +37,9 @@ class FakeSession:
         if self.no_install:
             return None
 
+        if args[:2] == ("poetry", "--version"):
+            return "1.1.15"
+
         path = Path("dist") / "example.whl"
         path.touch()
         return path.name

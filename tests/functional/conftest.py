@@ -47,9 +47,11 @@ class Project:
         data: Any = self._read_toml("pyproject.toml")
         return data["tool"]["poetry"][key]
 
-    def get_dependency(self, name: str) -> Package:
+    def get_dependency(self, name: str, data: Any = None) -> Package:
         """Return the package with the given name."""
-        data = self._read_toml("poetry.lock")
+        if data is None:
+            data = self._read_toml("poetry.lock")
+
         for package in data["package"]:
             if package["name"] == name:
                 url = package.get("source", {}).get("url")
@@ -82,6 +84,14 @@ class Project:
         """Return the development dependencies."""
         dependencies: List[str] = list(self._get_config("dev-dependencies"))
         return [self.get_dependency(package) for package in dependencies]
+
+    @property
+    def locked_packages(self) -> List[Package]:
+        """Return all packages from the lockfile."""
+        data = self._read_toml("poetry.lock")
+        return [
+            self.get_dependency(package["name"], data) for package in data["package"]
+        ]
 
 
 @pytest.fixture

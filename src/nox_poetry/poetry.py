@@ -1,4 +1,5 @@
 """Poetry interface."""
+import re
 import sys
 from enum import Enum
 from pathlib import Path
@@ -49,6 +50,17 @@ class Config:
         )
         return list(extras)
 
+    @property
+    def dependency_groups(self) -> List[str]:
+        """Return the dependency groups."""
+        groups = self._config.get("group", {})
+        if not groups and "dev-dependencies" in self._config:
+            return ["dev"]
+        return list(groups)
+
+
+VERSION_PATTERN = re.compile(r"[0-9]+(\.[0-9+])+[-+.0-9a-zA-Z]+")
+
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
@@ -61,6 +73,42 @@ class Poetry:
         """Initialize."""
         self.session = session
         self._config: Optional[Config] = None
+        self._version: Optional[str] = None
+
+    @property
+    def version(self) -> str:
+        """Return the Poetry version."""
+        if self._version is not None:
+            return self._version
+
+        output = self.session.run_always(
+            "poetry",
+            "--version",
+            "--no-ansi",
+            external=True,
+            silent=True,
+            stderr=None,
+        )
+        if output is None:
+            raise CommandSkippedError(
+                "The command `poetry --version` was not executed"
+                " (a possible cause is specifying `--no-install`)"
+            )
+
+        assert isinstance(output, str)  # noqa: S101
+
+        match = VERSION_PATTERN.search(output)
+        if match:
+            self._version = match.group()
+            return self._version
+
+        raise RuntimeError("Cannot parse output of `poetry --version`")
+
+    @property
+    def has_dependency_groups(self) -> bool:
+        """Return True if Poetry version supports dependency groups."""
+        version = tuple(int(part) for part in self.version.split(".")[:2])
+        return version >= (1, 2)
 
     @property
     def config(self) -> Config:
@@ -78,11 +126,17 @@ class Poetry:
         Raises:
             CommandSkippedError: The command `poetry export` was not executed.
         """
+        dependency_groups = (
+            [f"--with={group}" for group in self.config.dependency_groups]
+            if self.has_dependency_groups
+            else ["--dev"]
+        )
+
         output = self.session.run_always(
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--dev",
+            *dependency_groups,
             *[f"--extras={extra}" for extra in self.config.extras],
             "--without-hashes",
             external=True,
@@ -91,7 +145,7 @@ class Poetry:
         )
 
         if output is None:
-            raise CommandSkippedError(
+            raise CommandSkippedError(  # pragma: no cover
                 "The command `poetry export` was not executed"
                 " (a possible cause is specifying `--no-install`)"
             )
