@@ -90,7 +90,7 @@ class Poetry:
             stderr=None,
         )
         if output is None:
-            raise CommandSkippedError(  # pragma: no cover
+            raise CommandSkippedError(
                 "The command `poetry --version` was not executed"
                 " (a possible cause is specifying `--no-install`)"
             )
@@ -140,7 +140,7 @@ class Poetry:
         )
 
         if output is None:
-            raise CommandSkippedError(
+            raise CommandSkippedError(  # pragma: no cover
                 "The command `poetry export` was not executed"
                 " (a possible cause is specifying `--no-install`)"
             )
