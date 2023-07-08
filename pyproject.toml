@@ -49,6 +49,9 @@ pyupgrade = ">=2.31.0"
 isort = ">=5.10.1"
 myst-parser = ">=0.16.1"
 
+[tool.poetry.group.dev.dependencies]
+importlib-metadata = {version = "<6.8", python = "<3.8"}
+
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 
