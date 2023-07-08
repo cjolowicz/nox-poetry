@@ -53,6 +53,8 @@ class Config:
     def dependency_groups(self) -> List[str]:
         """Return the dependency groups."""
         groups = self._config.get("group", {})
+        if not groups and "dev-dependencies" in self._config:
+            return ["dev"]
         return list(groups)
 
 
