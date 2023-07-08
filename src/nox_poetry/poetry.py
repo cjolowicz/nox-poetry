@@ -97,7 +97,8 @@ class Poetry:
 
         assert isinstance(output, str)  # noqa: S101
 
-        if match := VERSION_PATTERN.search(output):
+        match = VERSION_PATTERN.search(output)
+        if match:
             self._version = match.group()
             return self._version
 
