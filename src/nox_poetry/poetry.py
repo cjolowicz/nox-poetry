@@ -104,6 +104,12 @@ class Poetry:
         raise RuntimeError("Cannot parse output of `poetry --version`")
 
     @property
+    def has_dependency_groups(self) -> bool:
+        """Return True if Poetry version supports dependency groups."""
+        version = tuple(int(part) for part in self.version.split(".")[:2])
+        return version >= (1, 2)
+
+    @property
     def config(self) -> Config:
         """Return the package configuration."""
         if self._config is None:
