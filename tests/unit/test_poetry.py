@@ -26,6 +26,23 @@ name = "África"
     assert config.name == "África"
 
 
+def test_config_dependency_groups(tmp_path: Path) -> None:
+    """It returns the dependency groups from pyproject.toml."""
+    text = """\
+[tool.poetry.group.tests.dependencies]
+pytest = "^1.0.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^1.0.0"
+"""
+
+    path = tmp_path / "pyproject.toml"
+    path.write_text(text, encoding="utf-8")
+
+    config = poetry.Config(path.parent)
+    assert config.dependency_groups == ["tests", "docs"]
+
+
 @pytest.fixture
 def session(monkeypatch: pytest.MonkeyPatch) -> nox.Session:
     """Fixture for a Nox session."""
