@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nox-poetry"
-version = "1.0.2"
+version = "1.0.3"
 description = "nox-poetry"
 authors = ["Claudio Jolowicz <mail@claudiojolowicz.com>"]
 license = "MIT"
