@@ -99,6 +99,12 @@ def test_poetry_version(session: nox.Session) -> None:
     assert all(part.isnumeric() for part in version.split(".")[:3])
 
 
+def test_poetry_cached_version(session: nox.Session) -> None:
+    """It caches the Poetry version."""
+    p = poetry.Poetry(session)
+    assert p.version == p.version
+
+
 def test_poetry_invalid_version(
     session: nox.Session, monkeypatch: pytest.MonkeyPatch
 ) -> None:
