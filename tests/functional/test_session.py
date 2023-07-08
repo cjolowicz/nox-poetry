@@ -1,4 +1,5 @@
 """Functional tests for the `@session` decorator."""
+import sys
 from pathlib import Path
 
 import nox.sessions
@@ -11,9 +12,9 @@ from tests.functional.conftest import list_packages
 from tests.functional.conftest import run_nox_with_noxfile
 
 
-try:
+if sys.version_info >= (3, 8):
     from importlib.metadata import version
-except ImportError:
+else:
     from importlib_metadata import version
 
 
