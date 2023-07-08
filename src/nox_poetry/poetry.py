@@ -96,7 +96,7 @@ class Poetry:
         if match := VERSION_PATTERN.search(output):
             return match.group()
 
-        return ""  # raise RuntimeError("Cannot parse output of `poetry --version`")
+        raise RuntimeError("Cannot parse output of `poetry --version`")
 
     @property
     def config(self) -> Config:
