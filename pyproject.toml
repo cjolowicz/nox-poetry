@@ -16,7 +16,7 @@ classifiers = [
 Changelog = "https://github.com/cjolowicz/nox-poetry/releases"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.8"
 nox = ">=2020.8.22"
 tomlkit = ">=0.7"
 packaging = ">=20.9"
@@ -38,7 +38,10 @@ flake8-bugbear = {version = ">=22.1.11", python = ">= 3.8"}
 flake8-docstrings = {version = ">=1.6.0", python = ">= 3.8"}
 flake8-rst-docstrings = {version = ">=0.2.5", python = ">= 3.8"}
 pep8-naming = {version = ">=0.12.1", python = ">= 3.8"}
-darglint = ">=1.8.1"
+# TODO: The 'python < 4' constraint is a workaround to allow poetry to
+#       generate a lock file. Hopefully there's an alternative to darglint
+#       before Python 4 is released.
+darglint = {version = ">=1.8.1", python = "< 4"}
 pre-commit-hooks = ">=4.1.0"
 furo = ">=2022.1.2"
 Pygments = ">=2.11.2"
