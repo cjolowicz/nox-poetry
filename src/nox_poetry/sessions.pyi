@@ -44,4 +44,5 @@ def session(
     name: Optional[str] = ...,
     venv_backend: Any = ...,
     venv_params: Any = ...,
+    tags: Sequence[str] = ...,
 ) -> SessionDecorator: ...
