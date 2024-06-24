@@ -33,12 +33,13 @@ class Config:
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
         data: Any = tomlkit.parse(text)
-        self._config = data["tool"]["poetry"]
+        self._config = data.get("tool", {}).get("poetry", {})
+        self._pyproject = data.get("project", {})
 
     @property
     def name(self) -> str:
         """Return the package name."""
-        name = self._config["name"]
+        name = self._config.get("name", self._pyproject.get("name"))
         assert isinstance(name, str)  # noqa: S101
         return name
 

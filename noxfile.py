@@ -168,10 +168,21 @@ def mypy(session: Session) -> None:
 @session
 @nox.parametrize(
     "python,poetry",
-    [(python_versions[0], "1.6.1"), *((python, None) for python in python_versions)],
+    [
+        (python_versions[0], "poetry==1.6.1"),
+        (
+            python_versions[0],
+            "poetry @ git+https://github.com/radoering/poetry.git@pep621-support",
+        ),
+        *((python, None) for python in python_versions),
+    ],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
+    # Install poetry first to ensure the correct version is used for 'poetry build'.
+    if poetry is not None:
+        session.run_always("python", "-m", "pip", "install", poetry, silent=True)
+
     session.install(".")
     session.install(
         "coverage[toml]",
@@ -182,10 +193,9 @@ def tests(session: Session, poetry: Optional[str]) -> None:
         "typing_extensions",
     )
 
+    # Override nox-poetry's locked Poetry version.
     if poetry is not None:
-        session.run_always(
-            "python", "-m", "pip", "install", f"poetry=={poetry}", silent=True
-        )
+        session.run_always("python", "-m", "pip", "install", poetry, silent=True)
 
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
