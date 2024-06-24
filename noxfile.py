@@ -134,7 +134,25 @@ def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     requirements = session.poetry.export_requirements()
     session.install("safety")
-    session.run("safety", "check", "--full-report", f"--file={requirements}")
+
+    ignore = [
+        # ADVISORY: In Jinja2, the from_string function is prone to Server
+        # Side Template Injection (SSTI) where it takes the "source" parameter as a
+        # template object, renders it, and then returns it. The attacker can exploit
+        # it with {{INJECTION COMMANDS}} in a URI. NOTE: The maintainer and multiple
+        # third parties believe that this vulnerability isn't valid because users
+        # shouldn't use untrusted templates without sandboxing.
+        # CVE-2019-8341
+        "70612",
+    ]
+
+    session.run(
+        "safety",
+        "check",
+        "--full-report",
+        f"--file={requirements}",
+        f"--ignore={','.join(ignore)}",
+    )
 
 
 @session(python=python_versions)
