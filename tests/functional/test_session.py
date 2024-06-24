@@ -182,3 +182,24 @@ def test_dependency_group(shared_datadir: Path) -> None:
     packages = list_packages(project, test)
 
     assert set(expected) == set(packages)
+
+
+@pytest.mark.skipif(
+    Version(version("poetry")) < Version("2.0.0.dev0"),
+    reason=f"Poetry {version('poetry')} < 2.0 does not support PEP 621",
+)
+def test_pep621_pyproject_support(shared_datadir: Path) -> None:
+    """It installs packages from PEP 621 pyproject.toml."""
+    project = Project(shared_datadir / "pep-621")
+
+    @nox_poetry.session
+    def test(session: nox_poetry.Session) -> None:
+        """Install the dependencies."""
+        session.install(".")
+
+    run_nox_with_noxfile(project, [test], [nox_poetry])
+
+    expected = [project.package, *project.locked_packages]
+    packages = list_packages(project, test)
+
+    assert set(expected) == set(packages)

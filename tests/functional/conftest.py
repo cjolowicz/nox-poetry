@@ -46,7 +46,9 @@ class Project:
 
     def _get_config(self, key: str) -> Any:
         data: Any = self._read_toml("pyproject.toml")
-        return data["tool"]["poetry"][key]
+        poetry_config = data.get("tool", {}).get("poetry", {})
+        pyproject = data.get("project", {})
+        return poetry_config.get(key, pyproject.get(key))
 
     def get_dependency(self, name: str, data: Any = None) -> Package:
         """Return the package with the given name."""
