@@ -1,4 +1,5 @@
 """Type stubs for nox_poetry.sessions."""
+
 from pathlib import Path
 from typing import Any
 from typing import Callable

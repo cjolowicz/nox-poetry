@@ -1,4 +1,5 @@
 """Replacements for the ``nox.session`` decorator and the ``nox.Session`` class."""
+
 import functools
 import hashlib
 import re

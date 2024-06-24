@@ -1,4 +1,5 @@
 """Unit tests for the sessions module."""
+
 from textwrap import dedent
 from typing import Callable
 from typing import Iterator

@@ -1,4 +1,5 @@
 """Functional tests for the `@session` decorator."""
+
 import sys
 from pathlib import Path
 
