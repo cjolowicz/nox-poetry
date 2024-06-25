@@ -159,7 +159,7 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
-    session.install(".", "mypy", "pytest", "importlib-metadata")
+    session.install(".", "mypy", "pytest", "importlib-metadata", "poetry")
     session.run("mypy", *args)
     if not session.posargs and session.python == python_versions[0]:
         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
@@ -168,7 +168,7 @@ def mypy(session: Session) -> None:
 @session
 @nox.parametrize(
     "python,poetry",
-    [(python_versions[0], "1.0.10"), *((python, None) for python in python_versions)],
+    [(python_versions[0], "1.6.1"), *((python, None) for python in python_versions)],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
