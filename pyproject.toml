@@ -72,6 +72,7 @@ lines_after_imports = 2
 [tool.mypy]
 strict = true
 warn_unreachable = true
+warn_unused_ignores = true
 pretty = true
 show_column_numbers = true
 show_error_codes = true
