@@ -1,4 +1,5 @@
 """Poetry interface."""
+
 import re
 import sys
 from enum import Enum

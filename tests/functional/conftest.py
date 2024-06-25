@@ -1,4 +1,5 @@
 """Fixtures for functional tests."""
+
 import inspect
 import os
 import subprocess  # noqa: S404

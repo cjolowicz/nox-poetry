@@ -45,7 +45,7 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install --constraint=${{ github.workspace }}/.github/workflows/constraints.txt pip
           pip --version
 
       - name: Upgrade pip in virtual environments
@@ -59,12 +59,12 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt nox
           nox --version
 
       - name: Install nox-poetry
@@ -127,17 +127,17 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install --constraint=${{ github.workspace }}/.github/workflows/constraints.txt pip
           pip --version
 
       - name: Install Poetry
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt nox
           nox --version
 
       - name: Install nox-poetry

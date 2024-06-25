@@ -1,4 +1,5 @@
 """Unit tests."""
+
 from typing import Iterable
 
 import pytest

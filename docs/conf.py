@@ -1,4 +1,5 @@
 """Sphinx configuration."""
+
 project = "nox-poetry"
 author = "Claudio Jolowicz"
 copyright = "2020, Claudio Jolowicz"

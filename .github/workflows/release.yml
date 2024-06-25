@@ -23,12 +23,12 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install --constraint=${{ github.workspace }}/.github/workflows/constraints.txt pip
           pip --version
 
       - name: Install Poetry
         run: |
-          pip install --constraint=.github/workflows/constraints.txt poetry
+          pip install --constraint=${{ github.workspace }}/.github/workflows/constraints.txt poetry
           poetry --version
 
       - name: Check if there is a parent commit

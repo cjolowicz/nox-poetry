@@ -1,4 +1,5 @@
 """Unit tests for the poetry module."""
+
 from pathlib import Path
 from textwrap import dedent
 from typing import Any

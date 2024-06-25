@@ -1,4 +1,5 @@
 """Functional tests for ``session.poetry``."""
+
 import nox_poetry
 from tests.functional.conftest import Project
 from tests.functional.conftest import list_packages
