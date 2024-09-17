@@ -192,7 +192,12 @@ class _PoetrySession:
             # as success; this means that the package was not in the wheel cache.
             name = self.poetry.config.name
             self.session.run_always(
-                "pip", "cache", "remove", name, success_codes=[0, 1], silent=True
+                "pip",
+                "cache",
+                "remove",
+                name,
+                success_codes=[0, 1],
+                silent=True,
             )
 
         self.session.install(f"--constraint={requirements}", package)
