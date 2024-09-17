@@ -3,21 +3,14 @@
 from pathlib import Path
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import Iterable
-from typing import List
-from typing import Mapping
-from typing import NoReturn
-from typing import Optional
 from typing import Sequence
-from typing import TypeVar
-from typing import Union
 from typing import overload
 
 import nox.sessions
 import nox.virtualenv
 
-Python = Optional[Union[str, Sequence[str], bool]]
+Python = str | Sequence[str] | bool | None
 
 class _PoetrySession:
     def install(self, *args: str, **kwargs: Any) -> None: ...
@@ -41,8 +34,8 @@ def session(
     __func: None = ...,
     python: Python = ...,
     py: Python = ...,
-    reuse_venv: Optional[bool] = ...,
-    name: Optional[str] = ...,
+    reuse_venv: bool | None = ...,
+    name: str | None = ...,
     venv_backend: Any = ...,
     venv_params: Any = ...,
     tags: Sequence[str] = ...,

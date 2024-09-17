@@ -1,16 +1,10 @@
 """Fixtures."""
 
-import sys
 from pathlib import Path
 from typing import Any
 from typing import Optional
+from typing import Protocol
 from typing import cast
-
-
-if sys.version_info >= (3, 8):
-    from typing import Protocol
-else:
-    from typing_extensions import Protocol
 
 import pytest
 from nox.sessions import Session

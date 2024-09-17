@@ -57,7 +57,7 @@ class Project:
             if package["name"] == name:
                 url = package.get("source", {}).get("url")
                 if url is not None:
-                    # Abuse Package.version to store the URL (for ``list_packages``).
+                    # Abuse Package.version to store the URL (for ``list_packages``).  # noqa: E501
                     return Package(name, url)
                 return Package(name, package["version"])
         raise ValueError(f"{name}: package not found")

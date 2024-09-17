@@ -111,18 +111,13 @@ def precommit(session: Session) -> None:
         "--show-diff-on-failure",
     ]
     session.install(
-        "black",
         "darglint",
         "flake8",
-        "flake8-bandit",
-        "flake8-bugbear",
         "flake8-docstrings",
         "flake8-rst-docstrings",
-        "isort",
-        "pep8-naming",
         "pre-commit",
         "pre-commit-hooks",
-        "pyupgrade",
+        "ruff",
     )
     session.run("pre-commit", *args)
     if args and args[0] == "install":
@@ -168,7 +163,10 @@ def mypy(session: Session) -> None:
 @session
 @nox.parametrize(
     "python,poetry",
-    [(python_versions[0], "1.6.1"), *((python, None) for python in python_versions)],
+    [
+        (python_versions[0], "1.6.1"),
+        *((python, None) for python in python_versions),
+    ],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
