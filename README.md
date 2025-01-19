@@ -48,6 +48,16 @@ use the following command to install this package into the same environment:
 $ pipx inject nox nox-poetry
 ```
 
+`nox-poetry` relies on functionality from
+[`poetry-export-plugin`](https://github.com/python-poetry/poetry-plugin-export), which
+is bundled by default in Poetry 1, but not in Poetry >= 2. In Poetry 2, define it
+as a required plugin in your `pyproject.toml`:
+
+```toml
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
+```
+
 ## Requirements
 
 - Python 3.8+
