@@ -141,11 +141,20 @@ def safety(session: Session) -> None:
         # ADVISORY: In Jinja2, the from_string function is prone to Server
         # Side Template Injection (SSTI) where it takes the "source" parameter as a
         # template object, renders it, and then returns it. The attacker can exploit
-        # it with {{INJECTION COMMANDS}} in a URI. NOTE: The maintainer and multiple
-        # third parties believe that this vulnerability isn't valid because users
-        # shouldn't use untrusted templates without sandboxing.
+        # it with {{INJECTION COMMANDS}} in a URI.
+        #
+        # NOTE: The maintainer and multiple third parties believe that this
+        # vulnerability isn't valid because users shouldn't use untrusted templates
+        # without sandboxing.
+        #
         # CVE-2019-8341
         "70612",
+        # ADVISORY: Poetry requires virtualenv version 20.26.6 or higher to protect
+        # against potential command injection attacks when running poetry shell in
+        # untrusted projects.
+        #
+        # PVE-2024-73456
+        "74403",
     ]
 
     session.run(
