@@ -4,14 +4,26 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    groups:
+      actions:
+        patterns:
+          - ".*"
   - package-ecosystem: pip
     directory: "/.github/workflows"
     schedule:
       interval: weekly
+    groups:
+      ci:
+        patterns:
+          - ".*"
   - package-ecosystem: pip
     directory: "/docs"
     schedule:
       interval: weekly
+    groups:
+      docs:
+        patterns:
+          - ".*"
   - package-ecosystem: pip
     directory: "/"
     schedule:
@@ -19,7 +31,11 @@ updates:
     allow:
       - dependency-type: "all"
     versioning-strategy: lockfile-only
-    open-pull-requests-limit: 99
     commit-message:
       prefix: "⬆️"
       prefix-development: "⬆️ [dev]"
+    groups:
+      lockfile-dev:
+        dependency-type: "development"
+      lockfile-runtime:
+        dependency-type: "production"
