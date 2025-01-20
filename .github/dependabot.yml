@@ -7,7 +7,7 @@ updates:
     groups:
       actions:
         patterns:
-          - ".*"
+          - "*"
   - package-ecosystem: pip
     directory: "/.github/workflows"
     schedule:
@@ -15,7 +15,7 @@ updates:
     groups:
       ci:
         patterns:
-          - ".*"
+          - "*"
   - package-ecosystem: pip
     directory: "/docs"
     schedule:
@@ -23,7 +23,7 @@ updates:
     groups:
       docs:
         patterns:
-          - ".*"
+          - "*"
   - package-ecosystem: pip
     directory: "/"
     schedule:
