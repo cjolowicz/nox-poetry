@@ -61,8 +61,11 @@ jobs:
               print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
 
       - name: Install Poetry
+        env:
+          PIP_CONSTRAINT: "${{ github.workspace }}/.github/workflows/constraints.txt"
         run: |
-          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt poetry
+          pipx install poetry
+          pipx inject poetry poetry-plugin-export
           poetry --version
 
       - name: Install Nox
@@ -134,8 +137,11 @@ jobs:
           pip --version
 
       - name: Install Poetry
+        env:
+          PIP_CONSTRAINT: "${{ github.workspace }}/.github/workflows/constraints.txt"
         run: |
-          pipx install --pip-args=--constraint=${{ github.workspace }}/.github/workflows/constraints.txt poetry
+          pipx install poetry
+          pipx inject poetry poetry-plugin-export
           poetry --version
 
       - name: Install Nox
