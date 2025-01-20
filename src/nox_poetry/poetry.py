@@ -89,7 +89,7 @@ class Poetry:
             "--no-ansi",
             external=True,
             silent=True,
-            stderr=None,  # type: ignore[arg-type]
+            stderr=None,
         )
         if output is None:
             raise CommandSkippedError(
@@ -143,7 +143,7 @@ class Poetry:
             "--without-hashes",
             external=True,
             silent=True,
-            stderr=None,  # type: ignore[arg-type]
+            stderr=None,
         )
 
         if output is None:
@@ -197,7 +197,7 @@ class Poetry:
             "--no-ansi",
             external=True,
             silent=True,
-            stderr=None,  # type: ignore[arg-type]
+            stderr=None,
         )
 
         if output is None:
