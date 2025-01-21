@@ -1,4 +1,5 @@
-pip==24.1
-nox==2024.4.15
-poetry==1.8.3
+pip==24.3.1
+nox==2024.10.9
+poetry==2.0.1
+poetry-plugin-export==1.9.0
 virtualenv==20.29.1
