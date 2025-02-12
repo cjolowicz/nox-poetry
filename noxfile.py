@@ -182,11 +182,7 @@ def mypy(session: Session) -> None:
     [
         (python_versions[0], "poetry==1.6.1"),
         (python_versions[0], "poetry==1.8.5"),
-        (python_versions[0], "poetry==2.0.0"),
-        (
-            python_versions[0],
-            "poetry @ git+https://github.com/python-poetry/poetry.git@main",
-        ),
+        (python_versions[0], "poetry==2.0.1"),
         *((python, None) for python in python_versions),
     ],
 )
