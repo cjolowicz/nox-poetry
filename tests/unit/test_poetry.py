@@ -88,6 +88,7 @@ def session(monkeypatch: pytest.MonkeyPatch) -> nox.Session:
         """Example session."""
 
     config = nox._options.options.namespace(posargs=[])
+    config.envdir = ".nox"
     [runner] = nox.manifest.Manifest(registry, config)
     runner._create_venv()
 
