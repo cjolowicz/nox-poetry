@@ -252,7 +252,7 @@ class _PoetrySession:
         Returns:
             The file URL for the distribution package.
         """
-        wheel = Path(self.poetry.build(format=distribution_format))
+        wheel = Path("dist") / self.poetry.build(format=distribution_format)
         url = wheel.resolve().as_uri()
 
         if DistributionFormat(distribution_format) is DistributionFormat.SDIST:

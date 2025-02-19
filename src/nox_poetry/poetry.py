@@ -10,9 +10,7 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 
-import build
 import tomlkit
-from build.env import DefaultIsolatedEnv
 from nox.sessions import Session
 
 
@@ -35,7 +33,6 @@ class Config:
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
         data: Any = tomlkit.parse(text)
-        self._build_system = data.get("build-system", {})
         self._config = data.get("tool", {}).get("poetry", {})
         self._pyproject = data.get("project", {})
 
@@ -62,15 +59,6 @@ class Config:
         if not groups and "dev-dependencies" in self._config:
             return ["dev"]
         return list(groups)
-
-    @property
-    def build_system_requires(self) -> set[str]:
-        """Build dependencies.
-
-        The dependencies defined in the ``pyproject.toml``'s
-        ``build-system.requires`` field.
-        """
-        return set(self._build_system.get("requires", []))
 
 
 VERSION_PATTERN = re.compile(r"[0-9]+(\.[0-9+])+[-+.0-9a-zA-Z]+")
@@ -179,23 +167,46 @@ class Poetry:
     def build(self, *, format: str) -> str:
         """Build the package.
 
-        The filename of the archive is retrieved from the output of
-        ``ProjectBuilder.build()``.
+        The filename of the archive is extracted from the output ``build`` writes
+        to standard output, which currently looks like this:
+
+           * Creating isolated environment: venv+pip...
+           * Installing packages in isolated environment:
+             - poetry-core>=1.0.0
+           * Getting build dependencies for sdist...
+           * Building sdist...
+           Successfully built nox_poetry-1.1.0.tar.gz
 
         Args:
             format: The distribution format, either wheel or sdist.
 
         Returns:
-            The full path to the built distribution.
+            The basename of the wheel built by Poetry.
+
+        Raises:
+            CommandSkippedError: The command `poetry build` was not executed
         """
         if not isinstance(format, DistributionFormat):
             format = DistributionFormat(format)
 
-        with DefaultIsolatedEnv() as env:
-            env.install(self.config.build_system_requires)
-            builder = build.ProjectBuilder(
-                self.project,
-                python_executable=env.python_executable,
+        output = self.session.run_always(
+            sys.executable,
+            "-m",
+            "build",
+            self.project,
+            "--outdir",
+            self.project / "dist",
+            f"--{format.value}",
+            external=True,
+            silent=True,
+            stderr=None,
+        )
+
+        if output is None:
+            raise CommandSkippedError(
+                "The command `poetry build` was not executed"
+                " (a possible cause is specifying `--no-install`)"
             )
 
-            return builder.build(distribution=format.value, output_directory="dist")
+        assert isinstance(output, str)  # noqa: S101
+        return output.split()[-1]
