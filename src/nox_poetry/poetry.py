@@ -170,6 +170,8 @@ class Poetry:
         The filename of the archive is extracted from the output ``build`` writes
         to standard output, which currently looks like this:
 
+        .. code-block:: text
+
            * Creating isolated environment: venv+pip...
            * Installing packages in isolated environment:
              - poetry-core>=1.0.0
