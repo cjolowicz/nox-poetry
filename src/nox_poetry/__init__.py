@@ -7,7 +7,7 @@ This enables :meth:`session.install
 versions specified in the Poetry lock file.
 
 Example:
-    >>> @session(python=["3.8", "3.9"])
+    >>> @session(python=["3.9", "3.10"])
     ... def tests(session: Session) -> None:
     ...     session.install("pytest", ".")
     ...     session.run("pytest")
