@@ -197,6 +197,7 @@ def tests(session: Session, poetry: Optional[str]) -> None:
             "pip",
             "install",
             poetry,
+            "poetry-plugin-export",
             silent=True,
         )
 
