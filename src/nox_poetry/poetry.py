@@ -186,7 +186,7 @@ class Poetry:
             The basename of the wheel built by Poetry.
 
         Raises:
-            CommandSkippedError: The command `poetry build` was not executed
+            CommandSkippedError: The command `poetry build` was not executed.
         """
         if not isinstance(format, DistributionFormat):
             format = DistributionFormat(format)
