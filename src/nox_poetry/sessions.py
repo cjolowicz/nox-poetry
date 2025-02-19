@@ -227,7 +227,7 @@ class _PoetrySession:
         hashfile = tmpdir / f"{path.name}.hash"
 
         lockdata = Path("poetry.lock").read_bytes()
-        digest = hashlib.blake2b(lockdata).hexdigest()
+        digest = hashlib.blake2b(lockdata, usedforsecurity=False).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
             constraints = to_constraints(self.poetry.export())
