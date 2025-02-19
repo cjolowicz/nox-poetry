@@ -200,6 +200,7 @@ class Poetry:
             external=True,
             silent=True,
             stderr=None,
+            env={"NO_COLOR": "1"},
         )
 
         if output is None:
