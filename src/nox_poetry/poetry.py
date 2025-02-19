@@ -10,7 +10,9 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 
+import build
 import tomlkit
+from build.env import DefaultIsolatedEnv
 from nox.sessions import Session
 
 
@@ -33,6 +35,7 @@ class Config:
         path = project / "pyproject.toml"
         text = path.read_text(encoding="utf-8")
         data: Any = tomlkit.parse(text)
+        self._build_system = data.get("build-system", {})
         self._config = data.get("tool", {}).get("poetry", {})
         self._pyproject = data.get("project", {})
 
@@ -60,6 +63,15 @@ class Config:
             return ["dev"]
         return list(groups)
 
+    @property
+    def build_system_requires(self) -> set[str]:
+        """Build dependencies.
+
+        The dependencies defined in the ``pyproject.toml``'s
+        ``build-system.requires`` field.
+        """
+        return set(self._build_system.get("requires", []))
+
 
 VERSION_PATTERN = re.compile(r"[0-9]+(\.[0-9+])+[-+.0-9a-zA-Z]+")
 
@@ -74,6 +86,7 @@ class Poetry:
     def __init__(self, session: Session) -> None:
         """Initialize."""
         self.session = session
+        self.project = Path.cwd()
         self._config: Optional[Config] = None
         self._version: Optional[str] = None
 
@@ -116,7 +129,7 @@ class Poetry:
     def config(self) -> Config:
         """Return the package configuration."""
         if self._config is None:
-            self._config = Config(Path.cwd())
+            self._config = Config(self.project)
         return self._config
 
     def export(self) -> str:
@@ -166,45 +179,23 @@ class Poetry:
     def build(self, *, format: str) -> str:
         """Build the package.
 
-        The filename of the archive is extracted from the output Poetry writes
-        to standard output, which currently looks like this::
-
-           Building foobar (0.1.0)
-            - Building wheel
-            - Built foobar-0.1.0-py3-none-any.whl
-
-        This is brittle, but it has the advantage that it does not rely on
-        assumptions such as having a clean ``dist`` directory, or
-        reconstructing the filename from the package metadata. (Poetry does not
-        use PEP 440 for version numbers, so this is non-trivial.)
+        The filename of the archive is retrieved from the output of
+        ``ProjectBuilder.build()``.
 
         Args:
             format: The distribution format, either wheel or sdist.
 
         Returns:
-            The basename of the wheel built by Poetry.
-
-        Raises:
-            CommandSkippedError: The command `poetry build` was not executed.
+            The full path to the built distribution.
         """
         if not isinstance(format, DistributionFormat):
             format = DistributionFormat(format)
 
-        output = self.session.run_always(
-            "poetry",
-            "build",
-            f"--format={format.value}",
-            "--no-ansi",
-            external=True,
-            silent=True,
-            stderr=None,
-        )
-
-        if output is None:
-            raise CommandSkippedError(
-                "The command `poetry build` was not executed"
-                " (a possible cause is specifying `--no-install`)"
+        with DefaultIsolatedEnv() as env:
+            env.install(self.config.build_system_requires)
+            builder = build.ProjectBuilder(
+                self.project,
+                python_executable=env.python_executable,
             )
 
-        assert isinstance(output, str)  # noqa: S101
-        return output.split()[-1]
+            return builder.build(distribution=format.value, output_directory="dist")

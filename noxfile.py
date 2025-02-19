@@ -179,14 +179,24 @@ def mypy(session: Session) -> None:
 @nox.parametrize(
     "python,poetry",
     [
-        (python_versions[0], "poetry==1.6.1"),
-        (python_versions[0], "poetry==1.8.5"),
-        (python_versions[0], "poetry==2.0.1"),
+        (python_versions[0], "poetry~=1.7.0"),
+        (python_versions[0], "poetry~=1.8.0"),
+        (python_versions[0], "poetry~=2.0.0"),
+        (python_versions[0], "poetry~=2.1.0"),
         *((python, None) for python in python_versions),
     ],
 )
 def tests(session: Session, poetry: Optional[str]) -> None:
     """Run the test suite."""
+    session.run_always(
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "poetry-plugin-export",
+        silent=True,
+    )
+
     # Install poetry first to ensure the correct version is used for 'poetry build'.
     if poetry is not None:
         session.run_always(
@@ -195,7 +205,6 @@ def tests(session: Session, poetry: Optional[str]) -> None:
             "pip",
             "install",
             poetry,
-            "poetry-plugin-export",
             silent=True,
         )
 

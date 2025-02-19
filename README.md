@@ -61,7 +61,7 @@ poetry-plugin-export = ">=1.8"
 ## Requirements
 
 - Python 3.9+
-- Poetry >= 1.0.0
+- Poetry >= 1.7
 
 You need to have a Poetry installation on your system.
 `nox-poetry` uses Poetry via its command-line interface.
