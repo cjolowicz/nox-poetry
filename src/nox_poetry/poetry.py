@@ -74,6 +74,7 @@ class Poetry:
     def __init__(self, session: Session) -> None:
         """Initialize."""
         self.session = session
+        self.project = Path.cwd()
         self._config: Optional[Config] = None
         self._version: Optional[str] = None
 
@@ -116,7 +117,7 @@ class Poetry:
     def config(self) -> Config:
         """Return the package configuration."""
         if self._config is None:
-            self._config = Config(Path.cwd())
+            self._config = Config(self.project)
         return self._config
 
     def export(self) -> str:
@@ -166,17 +167,17 @@ class Poetry:
     def build(self, *, format: str) -> str:
         """Build the package.
 
-        The filename of the archive is extracted from the output Poetry writes
-        to standard output, which currently looks like this::
+        The filename of the archive is extracted from the output ``build`` writes
+        to standard output, which currently looks like this:
 
-           Building foobar (0.1.0)
-            - Building wheel
-            - Built foobar-0.1.0-py3-none-any.whl
+        .. code-block:: text
 
-        This is brittle, but it has the advantage that it does not rely on
-        assumptions such as having a clean ``dist`` directory, or
-        reconstructing the filename from the package metadata. (Poetry does not
-        use PEP 440 for version numbers, so this is non-trivial.)
+           * Creating isolated environment: venv+pip...
+           * Installing packages in isolated environment:
+             - poetry-core>=1.0.0
+           * Getting build dependencies for sdist...
+           * Building sdist...
+           Successfully built nox_poetry-1.1.0.tar.gz
 
         Args:
             format: The distribution format, either wheel or sdist.
@@ -191,13 +192,17 @@ class Poetry:
             format = DistributionFormat(format)
 
         output = self.session.run_always(
-            "poetry",
+            sys.executable,
+            "-m",
             "build",
-            f"--format={format.value}",
-            "--no-ansi",
+            self.project,
+            "--outdir",
+            self.project / "dist",
+            f"--{format.value}",
             external=True,
             silent=True,
             stderr=None,
+            env={"NO_COLOR": "1"},
         )
 
         if output is None:
