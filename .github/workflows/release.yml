@@ -45,7 +45,7 @@ jobs:
             bash -o pipefail -c "poetry version | awk '{ print \$2 }'"
 
       - name: Bump version for developmental release
-        if: "! steps.check-version.outputs.tag"
+        if: ${{ !steps.check-version.outputs.tag }}
         run: |
           poetry version patch &&
           version=$(poetry version | awk '{ print $2 }') &&
@@ -59,16 +59,14 @@ jobs:
         if: steps.check-version.outputs.tag
         uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
-          user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
 
       - name: Publish package on TestPyPI
-        if: "! steps.check-version.outputs.tag"
+        if: ${{ !steps.check-version.outputs.tag }}
         uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
-          user: __token__
           password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
         uses: release-drafter/release-drafter@v6.1.0
