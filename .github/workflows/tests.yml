@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5.4.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
@@ -96,7 +96,7 @@ jobs:
           print("::set-output name=result::{}".format(result))
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v4.2.2
+        uses: actions/cache@v4.2.3
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -110,7 +110,7 @@ jobs:
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
-        uses: "actions/upload-artifact@v4.6.1"
+        uses: "actions/upload-artifact@v4.6.2"
         with:
           include-hidden-files: true
           name: coverage-data-${{ runner.os }}-${{ matrix.python }}
@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v4.6.1
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: docs
           path: docs/_build
@@ -131,7 +131,7 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5.4.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.x"
 
@@ -158,7 +158,7 @@ jobs:
           pip install .
 
       - name: Download coverage data
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@v4.3.0
         with:
           merge-multiple: true
           pattern: coverage-data-*
@@ -172,4 +172,4 @@ jobs:
           nox --session=coverage -- xml
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v5.4.0
+        uses: codecov/codecov-action@v5.4.2
