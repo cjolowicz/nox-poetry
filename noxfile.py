@@ -25,7 +25,7 @@ python_versions = [
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
-    "safety",
+    "pip-audit",
     "mypy",
     "tests",
     "xdoctest",
@@ -130,38 +130,14 @@ def precommit(session: Session) -> None:
         activate_virtualenv_in_precommit_hooks(session)
 
 
-@session(python=python_versions[0])
-def safety(session: Session) -> None:
+@session(name="pip-audit", python=python_versions[0])
+def pip_audit(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     requirements = session.poetry.export_requirements()
-    session.install("safety")
-
-    ignore = [
-        # ADVISORY: In Jinja2, the from_string function is prone to Server
-        # Side Template Injection (SSTI) where it takes the "source" parameter as a
-        # template object, renders it, and then returns it. The attacker can exploit
-        # it with {{INJECTION COMMANDS}} in a URI.
-        #
-        # NOTE: The maintainer and multiple third parties believe that this
-        # vulnerability isn't valid because users shouldn't use untrusted templates
-        # without sandboxing.
-        #
-        # CVE-2019-8341
-        "70612",
-        # ADVISORY: Poetry requires virtualenv version 20.26.6 or higher to protect
-        # against potential command injection attacks when running poetry shell in
-        # untrusted projects.
-        #
-        # PVE-2024-73456
-        "74403",
-    ]
-
+    session.install("pip-audit")
     session.run(
-        "safety",
-        "check",
-        "--full-report",
-        f"--file={requirements}",
-        f"--ignore={','.join(ignore)}",
+        "pip-audit",
+        f"--requirement={requirements}",
     )
 
 
