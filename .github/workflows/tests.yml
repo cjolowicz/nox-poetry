@@ -110,7 +110,7 @@ jobs:
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
-        uses: "actions/upload-artifact@v4.6.2"
+        uses: "actions/upload-artifact@v5.0.0"
         with:
           include-hidden-files: true
           name: coverage-data-${{ runner.os }}-${{ matrix.python }}
@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v5.0.0
         with:
           name: docs
           path: docs/_build
@@ -158,7 +158,7 @@ jobs:
           pip install .
 
       - name: Download coverage data
-        uses: actions/download-artifact@v5.0.0
+        uses: actions/download-artifact@v6.0.0
         with:
           merge-multiple: true
           pattern: coverage-data-*
