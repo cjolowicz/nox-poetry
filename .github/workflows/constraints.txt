@@ -2,4 +2,4 @@ pip==25.3
 nox==2025.10.16
 poetry==2.2.1
 poetry-plugin-export==1.9.0
-virtualenv==20.35.3
+virtualenv==20.35.4
