@@ -16,6 +16,7 @@ from nox_poetry import session
 
 package = "nox_poetry"
 python_versions = [
+    "3.14",
     "3.13",
     "3.12",
     "3.11",
