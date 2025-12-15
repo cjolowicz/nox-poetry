@@ -9,6 +9,7 @@ from typing import Iterable
 from typing import Iterator
 from typing import Optional
 from typing import Tuple
+from urllib.parse import urlparse
 
 import nox
 from packaging.requirements import InvalidRequirement
@@ -91,6 +92,38 @@ def to_constraints(requirements: str) -> str:
     return "\n".join(_to_constraints())
 
 
+def to_global_pip_args(requirements: str) -> Tuple[Optional[str]]:
+    """Convert the requirements to global pip arguments."""
+    index_args = set()
+    trusted_hosts = set()
+    for requirement in requirements.splitlines():
+        for re_pattern, kwarg_pattern in [
+            (re.compile(r"^(-i|--index-url)[ =]+(?P<url>.*)$"), "--index-url={url}"),
+            (
+                re.compile(r"^--extra-index-url[ =]+(?P<url>.*)$"),
+                "--extra-index-url={url}",
+            ),
+        ]:
+
+            match = re_pattern.match(requirement.strip())
+            if match:
+                index_args.add(kwarg_pattern.format(**match.groupdict()))
+
+                # if there is a url in the captured pattern, ensure the domain gets
+                # added as a trusted host
+                try:
+                    trusted_hosts.add(urlparse(match.group("url")).netloc)
+                except IndexError:
+                    pass
+
+    # add the trusted hosts
+    index_args = tuple(sorted(index_args))
+    for trusted_host in sorted(trusted_hosts):
+        index_args += (f"--trusted-host={trusted_host}",)
+
+    return index_args
+
+
 class _PoetrySession:
     """Poetry-related utilities for session functions."""
 
@@ -148,6 +181,8 @@ class _PoetrySession:
             requirements = self.export_requirements()
         except CommandSkippedError:
             return
+
+        # args += to_global_pip_args(requirements)
 
         self.session.install(f"--constraint={requirements}", *args, **kwargs)
 
@@ -230,8 +265,10 @@ class _PoetrySession:
         digest = hashlib.blake2b(lockdata, usedforsecurity=False).hexdigest()
 
         if not hashfile.is_file() or hashfile.read_text() != digest:
-            constraints = to_constraints(self.poetry.export())
-            path.write_text(constraints)
+            requirements_text = self.poetry.export()
+            constraints = to_constraints(requirements_text)
+            pip_args = "\n".join(to_global_pip_args(requirements_text))
+            path.write_text("\n".join([pip_args, constraints]))
             hashfile.write_text(digest)
 
         return path
