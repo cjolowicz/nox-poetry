@@ -1,8 +1,8 @@
 """Unit tests for the sessions module."""
 
+from collections.abc import Callable
+from collections.abc import Iterator
 from textwrap import dedent
-from typing import Callable
-from typing import Iterator
 from typing import cast
 
 import nox._options

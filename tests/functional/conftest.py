@@ -4,15 +4,14 @@ import inspect
 import os
 import subprocess  # noqa: S404
 import sys
+from collections.abc import Callable
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from textwrap import dedent
 from types import ModuleType
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
-from typing import Iterable
-from typing import List
 
 import pytest
 import tomlkit.api  # https://github.com/sdispater/tomlkit/issues/128
@@ -72,10 +71,10 @@ class Project:
         return Package(name, version)
 
     @property
-    def dependencies(self) -> List[Package]:
+    def dependencies(self) -> list[Package]:
         """Return the package dependencies."""
         data = self._read_toml("poetry.lock")
-        dependencies: List[str] = [
+        dependencies: list[str] = [
             package["name"]
             for package in data["package"]
             if package["category"] == "main" and not package["optional"]
@@ -83,13 +82,13 @@ class Project:
         return [self.get_dependency(package) for package in dependencies]
 
     @property
-    def development_dependencies(self) -> List[Package]:
+    def development_dependencies(self) -> list[Package]:
         """Return the development dependencies."""
-        dependencies: List[str] = list(self._get_config("dev-dependencies"))
+        dependencies: list[str] = list(self._get_config("dev-dependencies"))
         return [self.get_dependency(package) for package in dependencies]
 
     @property
-    def locked_packages(self) -> List[Package]:
+    def locked_packages(self) -> list[Package]:
         """Return all packages from the lockfile."""
         data = self._read_toml("poetry.lock")
         return [
@@ -147,7 +146,7 @@ def run_nox_with_noxfile(
     return _run_nox(project, *nox_args)
 
 
-def list_packages(project: Project, session: SessionFunction) -> List[Package]:
+def list_packages(project: Project, session: SessionFunction) -> list[Package]:
     """List the installed packages for a session in the given project."""
     bindir = "Scripts" if sys.platform == "win32" else "bin"
     pip = project.path / ".nox" / session.__name__ / bindir / "pip"

@@ -3,12 +3,10 @@
 import functools
 import hashlib
 import re
+from collections.abc import Iterable
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
-from typing import Iterable
-from typing import Iterator
-from typing import Optional
-from typing import Tuple
 
 import nox
 from packaging.requirements import InvalidRequirement
@@ -49,7 +47,7 @@ def session(*args: Any, **kwargs: Any) -> Any:
 _EXTRAS_PATTERN = re.compile(r"^(.+)(\[[^\]]+\])$")
 
 
-def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
+def _split_extras(arg: str) -> tuple[str, str | None]:
     # From ``pip._internal.req.constructors._strip_extras``
     match = _EXTRAS_PATTERN.match(arg)
     if match:
@@ -57,7 +55,7 @@ def _split_extras(arg: str) -> Tuple[str, Optional[str]]:
     return arg, None
 
 
-def to_constraint(requirement_string: str, line: int) -> Optional[str]:
+def to_constraint(requirement_string: str, line: int) -> str | None:
     """Convert requirement to constraint."""
     if any(
         requirement_string.startswith(prefix)
@@ -130,7 +128,7 @@ class _PoetrySession:
             except CommandSkippedError:
                 return
 
-            def rewrite(arg: str, extras: Optional[str]) -> str:
+            def rewrite(arg: str, extras: str | None) -> str:
                 if arg != ".":
                     return arg if extras is None else arg + extras
 

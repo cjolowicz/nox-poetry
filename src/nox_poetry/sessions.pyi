@@ -1,10 +1,10 @@
 """Type stubs for nox_poetry.sessions."""
 
+from collections.abc import Callable
+from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
-from typing import Callable
-from typing import Iterable
-from typing import Sequence
 from typing import overload
 
 import nox.sessions
