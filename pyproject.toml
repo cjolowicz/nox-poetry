@@ -16,7 +16,7 @@ classifiers = [
 Changelog = "https://github.com/cjolowicz/nox-poetry/releases"
 
 [tool.poetry.dependencies]
-python = ">=3.9,!=3.9.0,!=3.9.1"
+python = ">=3.10"
 build = ">=1.2"
 nox = ">=2020.8.22"
 packaging = ">=20.9"
@@ -63,7 +63,7 @@ fail_under = 100
 
 [tool.ruff]
 line-length = 88
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [

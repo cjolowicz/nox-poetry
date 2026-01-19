@@ -1,10 +1,9 @@
 """Unit tests for the poetry module."""
 
+from collections.abc import Callable
 from pathlib import Path
 from textwrap import dedent
 from typing import Any
-from typing import Callable
-from typing import Dict
 
 import nox._options
 import nox.command
@@ -80,7 +79,7 @@ def test_config_dev_dependency_group(create_config: CreateConfig) -> None:
 @pytest.fixture
 def session(monkeypatch: pytest.MonkeyPatch) -> nox.Session:
     """Fixture for a Nox session."""
-    registry: Dict[str, Any] = {}
+    registry: dict[str, Any] = {}
     monkeypatch.setattr("nox.registry._REGISTRY", registry)
 
     @nox.session(venv_backend="none")

@@ -1,10 +1,9 @@
 """Global configuration for pytest."""
 
 from importlib.metadata import version
-from typing import List
 
 
-def pytest_report_header() -> List[str]:
+def pytest_report_header() -> list[str]:
     """Return a list of strings to be displayed in the header of the report."""
     return [
         f"poetry: {version('poetry')}",

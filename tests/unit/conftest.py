@@ -2,7 +2,6 @@
 
 from pathlib import Path
 from typing import Any
-from typing import Optional
 from typing import Protocol
 from typing import cast
 
@@ -27,7 +26,7 @@ class FakeSession:
         self.no_install = no_install
         self.install_called = False
 
-    def run_always(self, *args: str, **kargs: Any) -> Optional[str]:
+    def run_always(self, *args: str, **kargs: Any) -> str | None:
         """Run."""
         if self.no_install:
             return None

@@ -2,13 +2,11 @@
 
 import re
 import sys
+from collections.abc import Iterable
+from collections.abc import Iterator
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from typing import Iterable
-from typing import Iterator
-from typing import List
-from typing import Optional
 
 import tomlkit
 from nox.sessions import Session
@@ -44,7 +42,7 @@ class Config:
         return name
 
     @property
-    def extras(self) -> List[str]:
+    def extras(self) -> list[str]:
         """Return the package extras."""
         extras = self._config.get("extras", {})
         assert isinstance(extras, dict) and all(  # noqa: S101
@@ -53,7 +51,7 @@ class Config:
         return list(extras)
 
     @property
-    def dependency_groups(self) -> List[str]:
+    def dependency_groups(self) -> list[str]:
         """Return the dependency groups."""
         groups = self._config.get("group", {})
         if not groups and "dev-dependencies" in self._config:
@@ -75,8 +73,8 @@ class Poetry:
         """Initialize."""
         self.session = session
         self.project = Path.cwd()
-        self._config: Optional[Config] = None
-        self._version: Optional[str] = None
+        self._config: Config | None = None
+        self._version: str | None = None
 
     @property
     def version(self) -> str:

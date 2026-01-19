@@ -6,7 +6,6 @@ import shutil
 import sys
 from pathlib import Path
 from textwrap import dedent
-from typing import Optional
 
 import nox
 
@@ -187,7 +186,7 @@ def mypy(session: Session) -> None:
         *((python, None) for python in python_versions),
     ],
 )
-def tests(session: Session, poetry: Optional[str]) -> None:
+def tests(session: Session, poetry: str | None) -> None:
     """Run the test suite."""
     # Install poetry first to ensure the correct version is used for 'poetry build'.
     if poetry is not None:
