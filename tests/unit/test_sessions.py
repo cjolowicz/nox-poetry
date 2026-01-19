@@ -57,11 +57,11 @@ def test_name(iter_sessions: IterSessions) -> None:
 def test_python(iter_sessions: IterSessions) -> None:
     """It registers the session function for every python version."""
 
-    @nox_poetry.session(python=["3.9", "3.10"])
+    @nox_poetry.session(python=["3.13", "3.14"])
     def tests(session: nox_poetry.Session) -> None:
         pass
 
-    assert set(iter_sessions()) == {"tests", "tests-3.9", "tests-3.10"}
+    assert set(iter_sessions()) == {"tests", "tests-3.13", "tests-3.14"}
 
 
 def test_parametrize(iter_sessions: IterSessions) -> None:

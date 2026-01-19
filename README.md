@@ -23,7 +23,7 @@ This enables `session.install` to install packages at the versions specified in 
 ```python
 from nox_poetry import session
 
-@session(python=["3.10", "3.9"])
+@session(python=["3.14", "3.13"])
 def tests(session):
     session.install("pytest", ".")
     session.run("pytest")
@@ -60,7 +60,7 @@ poetry-plugin-export = ">=1.8"
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.10+
 - Poetry >= 1.8.0
 
 You need to have a Poetry installation on your system.
@@ -100,7 +100,7 @@ Let's look at an example:
 ```python
 from nox_poetry import session
 
-@session(python=["3.10", "3.9"])
+@session(python=["3.14", "3.13"])
 def tests(session):
     session.install("pytest", ".")
     session.run("pytest")
