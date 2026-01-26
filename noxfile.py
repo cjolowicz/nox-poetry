@@ -207,6 +207,7 @@ def tests(session: Session, poetry: str | None) -> None:
         "poetry-plugin-export",
         "pytest",
         "pytest-datadir",
+        "pytest-xdist",
         "pygments",
         "typing_extensions",
     )
@@ -216,7 +217,15 @@ def tests(session: Session, poetry: str | None) -> None:
         session.run_always("python", "-m", "pip", "install", poetry, silent=True)
 
     try:
-        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+        session.run(
+            "coverage",
+            "run",
+            "--parallel",
+            "-m",
+            "pytest",
+            "-n=auto",
+            *session.posargs,
+        )
     finally:
         if session.interactive:
             session.notify("coverage", posargs=[])
