@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 2
 
       - name: Set up Python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.x"
 
@@ -69,7 +69,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
-        uses: release-drafter/release-drafter@v6.1.1
+        uses: release-drafter/release-drafter@v6.2.0
         with:
           publish: ${{ steps.check-version.outputs.tag != '' }}
           tag: ${{ steps.check-version.outputs.tag }}

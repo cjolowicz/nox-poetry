@@ -41,10 +41,10 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
@@ -128,10 +128,10 @@ jobs:
     needs: tests
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.x"
 
