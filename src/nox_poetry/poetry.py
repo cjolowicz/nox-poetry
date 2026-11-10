@@ -48,7 +48,11 @@ class Config:
         assert isinstance(extras, dict) and all(  # noqa: S101
             isinstance(extra, str) for extra in extras
         )
-        return list(extras)
+        pep621 = self._pyproject.get("optional-dependencies", {})
+        assert isinstance(pep621, dict) and all(  # noqa: S101
+            isinstance(extra, str) for extra in pep621
+        )
+        return list(extras) + [extra for extra in pep621 if extra not in extras]
 
     @property
     def dependency_groups(self) -> list[str]:

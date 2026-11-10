@@ -163,3 +163,18 @@ def test_export_with_warnings(
 
     output = poetry.Poetry(session).export()
     assert output == requirements
+
+
+def test_config_extras_pep621(create_config: CreateConfig) -> None:
+    """It returns extras from PEP 621 optional-dependencies."""
+    config = create_config(
+        """
+        [project]
+        name = "example"
+
+        [project.optional-dependencies]
+        tests = ["pytest"]
+        docs = ["sphinx"]
+        """
+    )
+    assert config.extras == ["tests", "docs"]
