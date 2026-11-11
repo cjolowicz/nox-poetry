@@ -41,10 +41,10 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
@@ -86,17 +86,19 @@ jobs:
         shell: python
         run: |
           import hashlib
+          import os
           import sys
 
           python = "py{}.{}".format(*sys.version_info[:2])
           payload = sys.version.encode() + sys.executable.encode()
           digest = hashlib.sha256(payload).hexdigest()
-          result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
+          result = f"${{ runner.os }}-{python}-{digest[:8]}-pre-commit"
 
-          print("::set-output name=result::{}".format(result))
+          with open(os.environ["GITHUB_ENV"], "a") as env_file:
+              env_file.write(f"name=result::{result}")
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v5.0.2
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -105,12 +107,20 @@ jobs:
             ${{ steps.pre-commit-cache.outputs.result }}-
 
       - name: Run Nox
+        if: runner.os == 'Linux' || matrix.session != 'tests'
         run: |
           nox --python=${{ matrix.python }}
 
+      # The matrix of pinned Poetry versions is platform-independent, so only
+      # run it on Linux. Other platforms test the latest Poetry only.
+      - name: Run Nox (latest Poetry only)
+        if: runner.os != 'Linux' && matrix.session == 'tests'
+        run: |
+          nox --session="tests(python='${{ matrix.python }}', poetry=None)"
+
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
-        uses: "actions/upload-artifact@v6.0.0"
+        uses: "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9" # v7.0.2
         with:
           include-hidden-files: true
           name: coverage-data-${{ runner.os }}-${{ matrix.python }}
@@ -118,7 +128,7 @@ jobs:
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: docs
           path: docs/_build
@@ -128,10 +138,10 @@ jobs:
     needs: tests
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.x"
 
@@ -158,7 +168,7 @@ jobs:
           pip install .
 
       - name: Download coverage data
-        uses: actions/download-artifact@v7.0.0
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           merge-multiple: true
           pattern: coverage-data-*
@@ -172,4 +182,4 @@ jobs:
           nox --session=coverage -- xml
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v5.5.2
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
