@@ -106,8 +106,16 @@ jobs:
             ${{ steps.pre-commit-cache.outputs.result }}-
 
       - name: Run Nox
+        if: runner.os == 'Linux' || matrix.session != 'tests'
         run: |
           nox --python=${{ matrix.python }}
+
+      # The matrix of pinned Poetry versions is platform-independent, so only
+      # run it on Linux. Other platforms test the latest Poetry only.
+      - name: Run Nox (latest Poetry only)
+        if: runner.os != 'Linux' && matrix.session == 'tests'
+        run: |
+          nox --session="tests(python='${{ matrix.python }}', poetry=None)"
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
