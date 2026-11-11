@@ -21,7 +21,7 @@ python_versions = [
     "3.11",
     "3.10",
 ]
-nox.needs_version = ">= 2021.6.6"
+nox.needs_version = ">= 2026.10.20"
 nox.options.sessions = (
     "pre-commit",
     "safety",
@@ -179,10 +179,8 @@ def mypy(session: Session) -> None:
     "python,poetry",
     [
         (python_versions[0], "poetry==1.8.5"),
-        (python_versions[0], "poetry==2.0.1"),
-        (python_versions[0], "poetry==2.1.4"),
-        (python_versions[0], "poetry==2.2.1"),
-        (python_versions[0], "poetry==2.3.0"),
+        (python_versions[0], "poetry==2.4.3"),
+        (python_versions[0], "poetry==2.5.1"),
         *((python, None) for python in python_versions),
     ],
 )
