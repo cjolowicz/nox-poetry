@@ -62,6 +62,8 @@ source = ["src", "*/site-packages"]
 
 [tool.coverage.run]
 branch = true
+# Measure code running in subprocesses, such as pytest-xdist workers.
+patch = ["subprocess"]
 source = ["nox_poetry"]
 
 [tool.coverage.report]
