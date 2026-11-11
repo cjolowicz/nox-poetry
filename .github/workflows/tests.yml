@@ -91,9 +91,10 @@ jobs:
           python = "py{}.{}".format(*sys.version_info[:2])
           payload = sys.version.encode() + sys.executable.encode()
           digest = hashlib.sha256(payload).hexdigest()
-          result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
+          result = f"${{ runner.os }}-{python}-{digest[:8]}-pre-commit"
 
-          print("::set-output name=result::{}".format(result))
+          with open(os.environ["GITHUB_ENV"], "a") as env_file:
+              env_file.write(f"name=result::{result}")
 
       - name: Restore pre-commit cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -105,8 +106,16 @@ jobs:
             ${{ steps.pre-commit-cache.outputs.result }}-
 
       - name: Run Nox
+        if: runner.os == 'Linux' || matrix.session != 'tests'
         run: |
           nox --python=${{ matrix.python }}
+
+      # The matrix of pinned Poetry versions is platform-independent, so only
+      # run it on Linux. Other platforms test the latest Poetry only.
+      - name: Run Nox (latest Poetry only)
+        if: runner.os != 'Linux' && matrix.session == 'tests'
+        run: |
+          nox --session="tests(python='${{ matrix.python }}', poetry=None)"
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
