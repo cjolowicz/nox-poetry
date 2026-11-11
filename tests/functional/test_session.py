@@ -158,9 +158,15 @@ def test_poetry_warnings(shared_datadir: Path) -> None:
         """Install the local package."""
         session.install(".")
 
-    process = run_nox_with_noxfile(project, [test], [nox_poetry])
+    # Older versions of Poetry only warn about the outdated lock file, while
+    # recent versions of poetry-plugin-export fail with an error instead. Either
+    # way, the message must be passed through to the console.
+    try:
+        output = run_nox_with_noxfile(project, [test], [nox_poetry]).stderr
+    except RuntimeError as error:
+        output = str(error)
 
-    assert "Warning:" in process.stderr
+    assert "Warning:" in output or "poetry.lock" in output
 
 
 @pytest.mark.skipif(
